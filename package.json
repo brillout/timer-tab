@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "dev": "yarn serve",
+    "serve": "serve ./ --listen 3000"
+  },
+  "dependencies": {
+    "serve": "^11.3.0"
+  }
+}
