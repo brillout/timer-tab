@@ -1,3 +1,5 @@
+import ml from './ml';
+
 const ctObj = {};
 
 export default ctObj;
@@ -532,6 +534,7 @@ ctObj.Timer_dom=(function(){
   } 
 
   var unity={};
+  /*
   ml.safe_call(function(){ 
     var u = window['external'] && window['external']['getUnityObject'] && window['external']['getUnityObject'](1.0);
     (function(){
@@ -564,12 +567,10 @@ ctObj.Timer_dom=(function(){
       if(pauseBtn){
         u['addAction']("/Toggle Pause"                ,function(){pauseBtn.click()});
         u['Launcher']['addAction']("Pause/Resume/Stop",function(){pauseBtn.click()});
-        /*
-        newState!==STATE_CODES.STOPED && u['Launcher']['addAction'](
-          newState===STATE_CODES.RINGING&&"Stop Ringing"||newState===PLAYING&&"Pause"||newState===PAUSED&&"Resume",
-          function(){PAUSE_ELEM.click()}
-        );
-        */
+//      newState!==STATE_CODES.STOPED && u['Launcher']['addAction'](
+//        newState===STATE_CODES.RINGING&&"Stop Ringing"||newState===PLAYING&&"Pause"||newState===PAUSED&&"Resume",
+//        function(){PAUSE_ELEM.click()}
+//      );
       }
       ctInputs.forEach(function(ctInput){
         var actionName = {};
@@ -581,6 +582,7 @@ ctObj.Timer_dom=(function(){
       });
     };
   }); 
+  */
 
   var notify={};
   (function(){ 
