@@ -1,0 +1,926 @@
+/* knowledge
+{{{
+
+ - css variables test: http://jsfiddle.net/3RnFR/
+  - chrome dev channel + enable flag "Enable experimental WebKit features."
+
+ - vh, vw, vmin, vmaxA
+   -font-size not adjusting on window resize: https://bugs.webkit.org/show_bug.cgi?id=106035
+   -not working inside calc: http://jsfiddle.net/EYZs5/
+   -http://caniuse.com/viewport-units
+
+
+ - mobile
+  - picker
+   - http://stackoverflow.com/questions/4946919/invoke-native-date-picker-from-web-app-on-ios-android
+   - http://stackoverflow.com/questions/4576281/jquery-date-time-picker-that-works-well-on-ios-android/4576291#4576291
+  - smoother movements -- html {-webkit-transform:translate3d(0px,0px,0px);}
+
+ - activate the GPU for compositing each page: html { -webkit-transform: translate3d(0, 0, 0); }
+  - made my previous OS version crash
+  - current version (feb 2013) makes pixely and sluggish
+
+}}}
+*/
+
+/*  general structure */
+/* {{{ */
+@media not all and (max-aspect-ratio: 1/1) { 
+.timerInput { width: 300px;min-width:300px; }/*idk why but min-width needed*/
+#head > div:first-child { min-width: 300px; }
+#counter{ width: 270px}
+#head > div:first-child:after {
+  height: 150px;
+}
+#head > div:first-child {
+  min-height: 150px;
+}
+#counter { padding-top: 8px; }
+/*
+#counter { padding-top: 27px; }
+#head > div:first-child { padding-top: 5px; }
+*/
+#middletable,
+#middletable > div
+{
+  height: 100%;
+}
+#bodytable
+{
+  display:table;
+}
+#bodytable > div
+{
+  display:table-row;
+}
+#bodypadding
+{
+  height:7%;
+}
+#allcontent
+{
+  height: 100%;
+  margin: auto;
+}
+body.ringing #yt,
+#allcontent > div:first-child,
+#inputs,
+#stripH
+{
+  height: 150px;
+}
+#allcontent > div
+{
+  display: table-row;
+}
+
+.tr
+{
+  display: table-row;
+}
+.tr > div
+{
+  display: table-cell;
+}
+.timerInput
+{
+  display: table-cell;
+  vertical-align: middle;
+}
+#inputs tr
+{
+  vertical-align: top;
+}
+
+#filler
+{
+  display: table-row;
+}
+
+#vertical
+{
+  height: 100%;
+  display: table;
+}
+#stripH
+{
+  min-width: 100%;
+}
+#vertical,
+#inputs td
+{
+  width: 300px;
+}
+html.stopw #vertical
+{
+  margin-left: 600px;
+}
+html.alarm #vertical
+{
+  margin-left: 300px;
+}
+html.timer #vertical
+{
+  margin-left: 0px;
+}
+/*
+html #vertical
+{
+  -webkit-transform: translateX(600px);
+}
+html.alarm #vertical
+{
+  -webkit-transform: translateX(300px);
+}
+html.timer #vertical
+{
+  -webkit-transform: none;
+}
+*/
+#allcontent,
+#inputs,
+#head
+{
+  display: table;
+}
+
+#stripH
+{
+  position: absolute;
+  height: 150px;
+  width: 100%;
+}
+#stripV
+{
+  position: absolute;
+  height: 200%;
+  width: 300px;
+  bottom:0;
+}
+button{
+  padding: 8px 10px;
+}
+#vertical[data-name]:before{
+  content: attr(data-name);
+  font-size: 2em;
+  position: absolute;
+  display: inline-block;
+  top: -4%;
+  margin-top: -175px;
+  width: 100%;
+  text-align:center;
+}
+} 
+@media all and (max-aspect-ratio: 1/1) { 
+/* layout fiddle; http://jsfiddle.net/Ehebg/ */
+#head > div:first-child:after {
+  height:100%;
+}
+#yt{
+  position: absolute!important;
+  top:0;
+  width:100%;
+  height:100%;
+}
+#head > div:first-child > *{
+  width: 95%;
+}
+#vertical{
+  min-width: 150px;
+  width:100%;
+}
+#middletable > *
+{
+  min-height:450px;
+  height:  100%;
+  display: table;
+}
+.timerInput,
+.timerInput > form,
+#inputs,
+#stripH
+{
+  width: 200px;
+}
+@media all and (max-width:599px) {
+#bodypadding{
+  width:0!important;
+}
+}
+#head > *:first-child{
+  display:block;
+  height:100%;
+}
+
+#allcontent,
+#allcontent > *,
+#allcontent > * > *,
+#allcontent > *:first-child > * > *,
+#stripV
+{
+  height: 100%;
+}
+#vertical,
+#inputs > * > *
+{
+  height: 33.33333%;
+}
+html #vertical
+{
+  top: 66.666667%;
+}
+html.alarm #vertical
+{
+  top: 33.333333%;
+}
+html.timer #vertical
+{
+  top: 0;
+}
+#head > *,
+#head > * > *,
+#counter
+{
+  width: 100%;
+}
+#stopwForm input{
+  display: none!important;
+}
+#head > div:first-child > *:last-child {
+  padding-bottom: 10px;
+}
+#verticalBottom
+{
+  display: none!important;
+}
+
+body{
+  position: relative;
+  min-width: 100%;
+}
+#allcontent > div:nth-child(2) {
+  width: 100%;
+}
+#yt
+{
+  line-height: 0;
+  font-size: 0;
+}
+
+#inputs > .tr
+{
+  display: table;
+}
+#inputs > .tr > div
+{
+  display: table-row;
+}
+#inputs > .tr > div > form
+{
+  display: table-cell;
+  vertical-align: middle;
+}
+
+body
+{
+  display: table;
+  height: 100%;
+}
+#bodytable
+{
+  display:table-row;
+}
+#bodytable > div
+{
+  display:table-cell;
+  height: 100%;
+  vertical-align:middle;
+}
+#bodypadding
+{
+  width:3%;
+}
+
+#stripH
+{
+  position: absolute;
+  height: 100%;
+}
+#stripV
+{
+  position: absolute;
+  width: 400%;
+  right:0;
+}
+
+#head{
+  display: block;
+}
+#head > div
+{
+  display: table-cell;
+}
+
+
+/*
+#allcontent:before
+{
+  content:"";
+  display: table-cell;
+  width: 3%;
+}
+*/
+#allcontent
+{
+  display: table-row;
+}
+#allcontent > div
+{
+  display: table-cell;
+  vertical-align: top;
+}
+button{
+  padding: 10px 8px;
+}
+} 
+/* }}} */
+
+/* strips -- inner layout */
+/* {{{ */
+/* see http://stackoverflow.com/questions/339923/how-to-set-cellpadding-cellspacing-in-css */
+table { border-spacing: 0; }
+table td { padding: 0; }
+/* vertical strip */
+/* {{{ */
+html:not(.alarm) #alarmTime,
+html.alarm body:not(.ringing) #pause {
+  display: none;
+}
+#vertical td
+{
+  padding:0;
+}
+#counter
+{
+  margin-bottom: 5px;
+}
+#inputOverlap
+{
+  height: 150px;
+}
+#yt
+{
+  line-height: 0px;
+  font-size: 0px;
+  width: 100%;
+}
+#head > div:first-child > *,
+#head > div:first-child:after
+{
+  vertical-align: middle;
+  display: inline-block;
+}
+#head > div:first-child:after {
+  content: "";
+  width: 0px;
+}
+/* }}} */
+/* horizontal strip */
+/* {{{ */
+#inputs
+{
+  font-size: 35px;
+}
+#inputs td
+{
+  padding-top: 0;
+  padding-bottom: 0;
+}
+#button
+{
+  font-size: 12px;
+}
+/*
+input.s
+{
+  position: relative;
+  margin-left: -12px;
+  left:         12px;
+}
+*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* hides controler buttons of input[type='number'] */
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+/*
+input.s,
+.win-timepicker-period
+{
+  -ms-transform:scale(0.7);
+  position: relative;
+  top:0.19em;
+  right:0.19em;
+}
+*/
+#inputs input
+{
+	width: 1.5em;
+  text-align: center;/*strangely text-algin value of body doesn't cascade on input*/
+}
+html.nevergoingtohappen { background: red; } /*bugfix for cssmin.js*/
+/*warning: cssmin.js bugy when #inputs input selector used directly before*/
+#inputs input,
+select
+/*
+.win-timepicker-hour,
+.win-timepicker-minute,
+.win-timepicker-period
+*/
+{
+  margin: 0px 7px !important;
+}
+select
+/*
+.win-timepicker-hour,
+.win-timepicker-minute,
+.win-timepicker-period
+*/
+{
+  /*
+  min-width: 64px;
+  */
+  min-width: 50px!important;
+}
+.inputSep
+{
+  display:inline-block;
+  width:0px;
+  position:relative;
+  left:-4px;
+  /*
+  letter-spacing: -3px;
+  position: relative;
+  left: -1px;
+  top: -1px;
+  */
+}
+.inputSep.s
+{
+  left: -3px;
+}
+/*
+.inputSep.s
+{
+  padding: 3px;
+}
+*/
+
+/* }}} */
+/* }}} */
+
+/* transitions & opacity & display */
+/* {{{ */
+#vertical,
+#settingsWrapper > *,
+button,
+input,
+#counter{
+  -webkit-transition-duration: .3s;
+     -moz-transition-duration: .3s;
+      -ms-transition-duration: .3s;
+       -o-transition-duration: .3s;
+          transition-duration: .3s;
+  -webkit-transition-timing-function: ease-in-out;
+     -moz-transition-timing-function: ease-in-out;
+      -ms-transition-timing-function: ease-in-out;
+       -o-transition-timing-function: ease-in-out;
+          transition-timing-function: ease-in-out;
+}
+#vertical
+{
+  -webkit-transition-property: none;
+     -moz-transition-property: none;
+      -ms-transition-property: none;
+       -o-transition-property: none;
+          transition-property: none;
+}
+#settingsWrapper > *
+{
+  -webkit-transition-duration: 0.6667s;
+     -moz-transition-duration: 0.6667s;
+      -ms-transition-duration: 0.6667s;
+       -o-transition-duration: 0.6667s;
+          transition-duration: 0.6667s;
+}
+#settingsWrapper > *,
+#counter
+{
+  -webkit-transition-property: opacity;
+     -moz-transition-property: opacity;
+      -ms-transition-property: opacity;
+       -o-transition-property: opacity;
+          transition-property: opacity;
+}
+button,
+input
+{
+  -webkit-transition-property: background,color;
+     -moz-transition-property: background,color;
+      -ms-transition-property: background,color;
+       -o-transition-property: background,color;
+          transition-property: background,color;
+}
+#yt
+{
+   -webkit-transition: height 1.7s linear;
+      -moz-transition: height 1.7s linear;
+        -o-transition: height 1.7s linear;
+           transition: height 1.7s linear;
+}
+body.ringing #yt
+{
+   -webkit-transition: height 0.7s linear;
+      -moz-transition: height 0.7s linear;
+        -o-transition: height 0.7s linear;
+           transition: height 0.7s linear;
+}
+
+#settingsWrapper > *{ opacity: 0; }
+#settingsWrapper:hover > *,
+html.fullscreenOptions #settingsWrapper > *,
+html.showOptions       #settingsWrapper > *
+{
+  opacity: 100;
+}
+/* }}} */
+
+/* text - I18N */
+/* {{{ */
+/*
+#me > a:before {content: "made by "}
+*/
+#me > a:before {content: ""}
+.timerInput button:before{content:"start\A0\A0"}
+#timerButton:after{content:"Countdown"}
+#alarmButton:after{content:"Alarm Clock"}
+#stopwButton:after{content:"Stopwatch"}
+             #pause:before {content:"pause"}
+body.ringing #pause:before, body.stoped  #pause:before {content:"stop"}
+body.paused  #pause:before {content:"resume"}
+#alarmTime:before{content:"until "}
+#install:after {content:"add to Chrome"}
+#hNoti > span:before {content:"Popup-Notification"}
+#goto_description:before {content:"YouTube Alarm:"}
+#bg_description:before {content:"Background:"}
+#opt_name_desc:before {content:"Name:"}
+.inputSep:before{content:" : "}
+#feedback:after{content: "suggest a Feature"}
+/*#feedback:before{padding-right: 1px;}*//*padding-right: 1px => fix for a:before chrome bug; http://jsfiddle.net/K7KNG/ */
+
+
+html.de #me > a:before {content: "hergestellt von "}
+html.de .timerInput button:before{content:"starte\A0\A0"}
+html.de #alarmButton:after{content:"Wecker"}
+html.de #stopwButton:after{content:"Stoppuhr"}
+html.de body.paused  #pause:before {content:"fortsetzen"}
+html.de #alarmTime:before{content:"bis "}
+html.de #install:after {content:"zu Chrome hinfügen"}
+html.de #hNoti > span:before {content:"Popup-Notifizierung"}
+html.de #bg_description:before {content:"Hintergrund:"}
+html.de #feedback:after{content: "Feature Vorschlagen"}
+
+html.fr #me > a:before {content: "crée par "}
+html.fr .timerInput button:before{content:"lancer\A0\A0"}
+html.fr #timerButton:after{content:"Décompte"}
+html.fr #alarmButton:after{content:"Réveil"}
+html.fr #stopwButton:after{content:"Chronomètre"}
+html.fr body.paused  #pause:before {content:"continuer"}
+html.fr #alarmTime:before{content:"jusqu'à "}
+html.fr #install:after {content:"ajouter à Chrome"}
+html.fr #hNoti > span:before {content:"Notification Popup"}
+html.fr #goto_description:before {content:"Alarme YouTube:"}
+html.fr #bg_description:before {content:"Arrière-Plan:"}
+html.fr #opt_name_desc:before {content:"Nom:"}
+html.fr #feedback:after{content: "proposer un Feature"}
+
+
+/*
+#promo > div > div:nth-of-type(1){ font-size: 166%}
+#promo > div > div:nth-of-type(2){ font-size: 14px}
+#promo > div > div:nth-of-type(1):before{ content: "Stopwatch for Chrome"; }
+#promo > div > div:nth-of-type(2):before{ content: "Featuring multiple Stopwatches and History"; }
+*/
+/*
+#promo > div > div:nth-of-type(1){ font-size: 18px}
+#promo > div > div:nth-of-type(2){ font-size: 14px}
+#promo > div > div:nth-of-type(1):before{ content: "Want your own Website/Webapp?"; }
+#promo > div > div:nth-of-type(2):before{ content: "Let the developer of Timer Tab make your Website/Webapp. Click here."; }
+*/
+#promo > div {text-align: justify;padding: 8px 12px!important;padding-bottom:13px!important;}
+#promo > div > div:nth-of-type(1){ font-size: 23px;white-space: nowrap}
+#promo > div > div:nth-of-type(2){ font-size: 15px}
+#promo > div > div:nth-of-type(1):before{ content: "Facebook Unseen"; }
+#promo > div > div:nth-of-type(1):after{ font-size: 15px;content: "\a0 \a0 \a0 by brillout.com"; }
+#promo > div > div:nth-of-type(2):before{ text-align: justify;content: "Allows you to control if your friends can see that you have read their messages"; }
+/* }}} */
+
+/* text */
+/* {{{ */
+/*bug fix for chrome: no onclick on :before*/
+#hNoti,#install{position: relative}
+/*styles*/
+body.stoped #pause{position:relative;z-index:-1;opacity:.7}
+body.stoped #pause:before{opacity:.5}
+#alarmTime:before{opacity: 0.7;font-size: 15px;white-space: pre;}
+/* }}} */
+
+/* strips */
+/* {{{ */
+#stripH:after,
+#stripV:after
+{
+  content: "";
+  position: absolute;
+  width:  100%;
+  height: 100%;
+  left: 0;/*firefox*/
+  background-color: rgba(255,255,255,0.55);
+}
+#stripV
+{
+  background-color: rgba(0,0,0,.065);
+}
+#stripH
+{
+  background-color: rgba(0,0,0,0.07);
+}
+#stripV:after,
+#stripH:after
+{
+  z-index: -2;
+}
+/* #head would sufficient if not for a chrome bug*/
+/*
+#head,
+*/
+#head > *,
+#inputs
+{
+ position: relative;
+ z-index: 1;
+}
+
+/* }}} */
+
+/* details */
+/* {{{ */
+html,body { height:100% }
+body { margin:0 }
+html{-webkit-tap-highlight-color:rgba(0,0,0,0);}
+/* for mobile: Native-style scrolling.
+http://developer.apple.com/library/safari/#documentation/appleapplications/reference/safaricssref/articles/standardcssproperties.html
+*/
+html { -webkit-overflow-scrolling: touch;}
+#inputs form, #head > div:first-child { text-align:center; }
+#settingsWrapper > div,#settingsWrapper > table { padding: 0 5px; }
+#settingsWrapper{
+  opacity: .7;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 70px;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2NjIiB2aWV3Qm94PSIwIC0xMjggMTUzNiAxNTM2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMDI0IDY0MHEwIDEwNiAtNzUgMTgxdC0xODEgNzV0LTE4MSAtNzV0LTc1IC0xODF0NzUgLTE4MXQxODEgLTc1dDE4MSA3NXQ3NSAxODF6TTE1MzYgNzQ5di0yMjJxMCAtMTIgLTggLTIzdC0yMCAtMTNsLTE4NSAtMjhxLTE5IC01NCAtMzkgLTkxcTM1IC01MCAxMDcgLTEzOHExMCAtMTIgMTAgLTI1dC05IC0yM3EtMjcgLTM3IC05OSAtMTA4dC05NCAtNzFxLTEyIDAgLTI2IDlsLTEzOCAxMDhxLTQ0IC0yMyAtOTEgLTM4IHEtMTYgLTEzNiAtMjkgLTE4NnEtNyAtMjggLTM2IC0yOGgtMjIycS0xNCAwIC0yNC41IDguNXQtMTEuNSAyMS41bC0yOCAxODRxLTQ5IDE2IC05MCAzN2wtMTQxIC0xMDdxLTEwIC05IC0yNSAtOXEtMTQgMCAtMjUgMTFxLTEyNiAxMTQgLTE2NSAxNjhxLTcgMTAgLTcgMjNxMCAxMiA4IDIzcTE1IDIxIDUxIDY2LjV0NTQgNzAuNXEtMjcgNTAgLTQxIDk5bC0xODMgMjdxLTEzIDIgLTIxIDEyLjV0LTggMjMuNXYyMjJxMCAxMiA4IDIzdDE5IDEzIGwxODYgMjhxMTQgNDYgMzkgOTJxLTQwIDU3IC0xMDcgMTM4cS0xMCAxMiAtMTAgMjRxMCAxMCA5IDIzcTI2IDM2IDk4LjUgMTA3LjV0OTQuNSA3MS41cTEzIDAgMjYgLTEwbDEzOCAtMTA3cTQ0IDIzIDkxIDM4cTE2IDEzNiAyOSAxODZxNyAyOCAzNiAyOGgyMjJxMTQgMCAyNC41IC04LjV0MTEuNSAtMjEuNWwyOCAtMTg0cTQ5IC0xNiA5MCAtMzdsMTQyIDEwN3E5IDkgMjQgOXExMyAwIDI1IC0xMHExMjkgLTExOSAxNjUgLTE3MHE3IC04IDcgLTIyIHEwIC0xMiAtOCAtMjNxLTE1IC0yMSAtNTEgLTY2LjV0LTU0IC03MC41cTI2IC01MCA0MSAtOThsMTgzIC0yOHExMyAtMiAyMSAtMTIuNXQ4IC0yMy41eiI+PC9wYXRoPjwvc3ZnPg==');
+}
+#pause:before{
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2NjIiB2aWV3Qm94PSIwIDAgMTUzNiAxNTM2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wIDcwdjEzOTZxMCAyOSAyMC41IDQ5LjV0NDkuNSAyMC41aDQ4OXEyOSAwIDQ5LjUgLTIwLjV0MjAuNSAtNDkuNXYtMTM5NnEwIC0yOSAtMjAuNSAtNDkuNXQtNDkuNSAtMjAuNWgtNDg5cS0yOSAwIC00OS41IDIwLjV0LTIwLjUgNDkuNXpNOTA3IDcwdjEzOTZxMCAyOSAyMC41IDQ5LjV0NDkuNSAyMC41aDQ4OXEyOSAwIDQ5LjUgLTIwLjV0MjAuNSAtNDkuNXYtMTM5NnEwIC0yOSAtMjAuNSAtNDkuNXQtNDkuNSAtMjAuNWgtNDg5IHEtMjkgMCAtNDkuNSAyMC41dC0yMC41IDQ5LjV6Ij48L3BhdGg+PC9zdmc+');
+}
+#goto_description:before,
+#bg_description:before,
+#opt_name_desc:before,
+#settingsWrapper a:before,
+button:before,
+#time:before{
+  background-repeat: no-repeat;
+  background-position: 0px;
+}
+button:before,
+#time:before,
+#goto_description:before,
+#bg_description:before,
+#opt_name_desc:before,
+#settingsWrapper a:before,
+#install:after
+{
+  padding-left: 20px;
+}
+a#feedback:before,
+#time:before{
+  /*
+  content: "\0a";
+  */
+  content: "";
+}
+
+.timerInput button:before,
+body.paused #pause:before
+{
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2FjYWNhIiB2aWV3Qm94PSIwIDAgMTUzNiAxNTM2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wIDcwdjEzOTZxMCAzOSAzNSA2MHEzNyAyMyA2OSAwbDEyMTEgLTY5N3EzNSAtMjUgMzUgLTYxcTAgLTM3IC0zNSAtNjFsLTEyMTEgLTY5N3EtMTYgLTEwIC0zNCAtMTB0LTM1IDEwcS0zNSAyMCAtMzUgNjB6Ij48L3BhdGg+PC9zdmc+');
+}
+body.ringing #pause:before,
+body.stoped #pause:before
+{
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2NjIiB2aWV3Qm94PSIwIDAgMTUzNiAxNTM2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wIDcwdjEzOTZxMCAyOSAyMC41IDQ5LjV0NDkuNSAyMC41aDEzOTZxMjkgMCA0OS41IC0yMC41dDIwLjUgLTQ5LjV2LTEzOTZxMCAtMjkgLTIwLjUgLTQ5LjV0LTQ5LjUgLTIwLjVoLTEzOTZxLTI5IDAgLTQ5LjUgMjAuNXQtMjAuNSA0OS41eiI+PC9wYXRoPjwvc3ZnPg==');
+}
+#time:before{
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYmJiIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNIDI1Ni4wMCwwLjAwQyAxMTQuNjE1LDAuMDAsMC4wMCwxMTQuNjE1LDAuMDAsMjU2LjAwcyAxMTQuNjE1LDI1Ni4wMCwgMjU2LjAwLDI1Ni4wMHMgMjU2LjAwLTExNC42MTUsIDI1Ni4wMC0yNTYuMDBTIDM5Ny4zODUsMC4wMCwgMjU2LjAwLDAuMDB6IE0gMzI5LjM3MiwzNzQuNjI4TCAyMjQuMDAsMjY5LjI1NSBMIDIyNC4wMCwxMjguMDAgbCA2NC4wMCwwLjAwIGwwLjAwLDExNC43NDUgbCA4Ni42MjgsODYuNjI3TCAzMjkuMzcyLDM3NC42Mjh6Ij48L3BhdGg+PC9zdmc+');
+}
+#settingsWrapper a:before{
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYmJiIiB2aWV3Qm94PSItMzUwIC0yMjAgMTQ1MCAxNDUwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0gNTAsMzUwIDYwMCwwIDAsNjAwIC02MDAsMCAwLC02MDAgeiIgc3R5bGU9ImZpbGw6I2ZmZjtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2FhYTtzdHJva2Utd2lkdGg6MTAwO3N0cm9rZS1saW5lam9pbjptaXRlcjtzdHJva2UtbWl0ZXJsaW1pdDo0O3N0cm9rZS1vcGFjaXR5OjE7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1kYXNob2Zmc2V0OjAiIC8+IDxwYXRoIGQ9Im0gNDUwLDE1MCAwLC0xMDAgNTAwLDAgMCw1MDAgLTEwMCwwIEwgNzUwLDQ1MCA0NTAsNzUwIDI1MCw1NTAgNTUwLDI1MCA0NTAsMTUwIHoiIHN0eWxlPSJmaWxsOiNmZmY7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNhYWE7c3Ryb2tlLXdpZHRoOjEwMDtzdHJva2UtbGluZWpvaW46bWl0ZXI7c3Ryb2tlLW1pdGVybGltaXQ6NDtzdHJva2Utb3BhY2l0eToxO3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2UtZGFzaG9mZnNldDowIiAvPjwvc3ZnPg==');
+}
+#bg_description:before
+{
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYWFhIiB2aWV3Qm94PSItMjAwIC0xODAgMjEyMCAyMTIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0gMTI4MC4wMCw2NDAuMDBxIDAuMDAsODAuMDAgNTYuMDAsMTM2LjAwdCAxMzYuMDAsNTYuMDB0IDEzNi4wMC01Ni4wMHQgNTYuMDAtMTM2LjAwdCAtNTYuMDAtMTM2LjAwdCAtMTM2LjAwLTU2LjAwdCAtMTM2LjAwLDU2LjAwdCAtNTYuMDAsMTM2LjAwek0gMjU2LjAwLDEwMjQuMDBsIDAuMDAsNDQ4LjAwIGwgMTQwOC4wMCwwLjAwIGwwLjAwLTE5Mi4wMCBsIC0zMjAuMDAtMzIwLjAwbCAtMTYwLjAwLDE2MC4wMGwgLTUxMi4wMC01MTIuMDB6TSAxNjAuMDAsMzIwLjAwbCAxNjAwLjAwLDAuMDAgcSAxMy4wMCwwLjAwIDIyLjUwLDkuNTB0IDkuNTAsMjIuNTBsIDAuMDAsMTIxNi4wMCBxIDAuMDAsMTMuMDAgLTkuNTAsMjIuNTB0IC0yMi41MCw5LjUwbCAtMTYwMC4wMCwwLjAwIHEgLTEzLjAwLDAuMDAgLTIyLjUwLTkuNTB0IC05LjUwLTIyLjUwbDAuMDAtMTIxNi4wMCBxMC4wMC0xMy4wMCA5LjUwLTIyLjUwdCAyMi41MC05LjUwek0gMC4wMCwzNTIuMDBsIDAuMDAsMTIxNi4wMCBxIDAuMDAsNjYuMDAgNDcuMDAsMTEzLjAwdCAxMTMuMDAsNDcuMDBsIDE2MDAuMDAsMC4wMCBxIDY2LjAwLDAuMDAgMTEzLjAwLTQ3LjAwdCA0Ny4wMC0xMTMuMDBsMC4wMC0xMjE2LjAwIHEwLjAwLTY2LjAwIC00Ny4wMC0xMTMuMDB0IC0xMTMuMDAtNDcuMDBsIC0xNjAwLjAwLDAuMDAgcSAtNjYuMDAsMC4wMCAtMTEzLjAwLDQ3LjAwdCAtNDcuMDAsMTEzLjAweiI+PC9wYXRoPjwvc3ZnPg==');
+}
+#goto_description:before
+{
+  background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYmJiIiB2aWV3Qm94PSItMzAwIC0xODAgMjA5MiAyMDkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0gOTEyLjAwLDE2OTYuMDBxMC4wMC0xNi4wMCAtMTYuMDAtMTYuMDBxIC01OS4wMCwwLjAwIC0xMDEuNTAtNDIuNTB0IC00Mi41MC0xMDEuNTBxMC4wMC0xNi4wMCAtMTYuMDAtMTYuMDB0IC0xNi4wMCwxNi4wMHEwLjAwLDczLjAwIDUxLjUwLDEyNC41MHQgMTI0LjUwLDUxLjUwcSAxNi4wMCwwLjAwIDE2LjAwLTE2LjAwek0gMTcyOC4wMCwxNDA4LjAwcTAuMDAsNTIuMDAgLTM4LjAwLDkwLjAwdCAtOTAuMDAsMzguMDBsIC00NDguMDAsMC4wMCBxMC4wMCwxMDYuMDAgLTc1LjAwLDE4MS4wMHQgLTE4MS4wMCw3NS4wMHQgLTE4MS4wMC03NS4wMHQgLTc1LjAwLTE4MS4wMGwgLTQ0OC4wMCwwLjAwIHEgLTUyLjAwLDAuMDAgLTkwLjAwLTM4LjAwdCAtMzguMDAtOTAuMDBxIDE5MC4wMC0xNjEuMDAgMjg3LjAwLTM5Ny41MHQgOTcuMDAtNDk4LjUwIHEwLjAwLTE2NS4wMCA5Ni4wMC0yNjIuMDB0IDI2NC4wMC0xMTcuMDBxIC04LjAwLTE4LjAwIC04LjAwLTM3LjAwcTAuMDAtNDAuMDAgMjguMDAtNjguMDB0IDY4LjAwLTI4LjAwdCA2OC4wMCwyOC4wMHQgMjguMDAsNjguMDBxMC4wMCwxOS4wMCAtOC4wMCwzNy4wMHEgMTY4LjAwLDIwLjAwIDI2NC4wMCwxMTcuMDB0IDk2LjAwLDI2Mi4wMHEwLjAwLDI2Mi4wMCA5Ny4wMCw0OTguNTB0IDI4Ny4wMCwzOTcuNTB6Ij48L3BhdGg+PC9zdmc+');
+}
+#opt_name_desc:before
+{
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYmJiIiB2aWV3Qm94PSItMjM1IC0yMzUgMTc4MCAxNzgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0gNTM1LjAwLDcuMzM0bCAtNDU0LjAwLDAuMDAgcSAtNDkuMDAsMC4wMCAtODUuMDAsMzUuMDB0IC0zNi4wMCw4Ni4wMGwgMC4wMCw0NTQuMDAgcSAwLjAwLDUxLjAwIDI0LjUwLDExMy4wMHQgNjEuNTAsOTQuMDBsIDc0OC4wMCw2NzIuMDBxIDM5LjAwLDMzLjAwIDg4LjAwLDM0LjAwdCA4NC4wMC0zNC4wMGwgNTI2LjAwLTUyNi4wMHEgMzUuMDAtMzUuMDAgMzYuMDAtODYuMDB0IC0zNi4wMC04Ni4wMGwgLTc1MC4wMC02NzAuMDBxIC0zNy4wMC0zNS4wMCAtOTYuMDAtNjAuNTB0IC0xMTEuMDAtMjUuNTB6TSAyNzMuMDAsMjA0LjMzNHEgNDkuMDAsMC4wMCA4My4wMCwzMy41MHQgMzQuMDAsODIuNTB0IC0zNC4wMCw4My4wMHQgLTgzLjAwLDM0LjAwdCAtODIuNTAtMzQuMDB0IC0zMy41MC04My4wMHQgMzMuNTAtODIuNTB0IDgyLjUwLTMzLjUweiI+PC9wYXRoPjwvc3ZnPg==");
+}
+html.noIcons button:before,
+html.noIcons #time:before,
+html.noIcons #goto_description:before,
+html.noIcons #opt_name_desc:before,
+html.noIcons #bg_description:before,
+html.noIcons #settingsWrapper a:before,
+html.noIcons #install:after
+{
+  background-image: none!important;
+  padding-left: 0!important;
+}
+html.noIcons #settingsWrapper{
+  background-size: 80%!important;
+}
+button{ text-transform: uppercase; }
+*
+{
+	-webkit-user-select: none;
+	   -moz-user-select: -moz-none;
+	     -o-user-select: none;
+	        user-select: none;
+	cursor: default;
+}
+#settingsWrapper input[type='text']
+{
+  width: 100%;
+  font-size: 80%;
+          box-sizing: border-box;
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  padding: 1px 3px;
+  margin-left: 2px;
+}
+input
+{
+	cursor: text;
+	-webkit-user-select: text;
+	   -moz-user-select: text;
+	     -o-user-select: text;
+	        user-select: text;
+
+}
+button,
+button *,
+#counter,
+#counter *,
+a,
+a *,
+#hNoti,
+#hNoti *,
+#install
+{
+  cursor: pointer;
+}
+#pause{
+ /*make sure pause button is above counter*/
+ position: relative;
+ z-index:9;
+}
+#settingsWrapper ::-webkit-input-placeholder
+{
+  color: #666;
+}
+#settingsWrapper :-moz-placeholder
+{
+  color: #666;
+}
+#hShare > *{
+  display: inline-block;
+}
+#hShare,
+#hShare > *{
+  white-space: nowrap;
+}
+/*
+#hShare > *{
+  e-webkit-transition: -webkit-filter 0.5s;
+}
+*/
+/*
+#hShare > *:not(:hover){
+*/
+#install:before{
+  content: "\a0 +";
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #bbb;
+  position: absolute;
+  top: -5px;
+}
+#hShare > *{
+  height: 23px;
+  min-width: 10px;
+}
+#hShare > *:not(:hover){
+  -webkit-filter: grayscale(1);
+     -moz-filter: grayscale(1);
+    opacity: 0.5;
+}
+#hShare > *{
+   display: inline-block;
+   -webkit-transition: all .5s ease-in-out;
+      -moz-transition: all .5s ease-in-out;
+        -o-transition: all .5s ease-in-out;
+           transition: all .5s ease-in-out;
+}
+#hNotiBox{
+  opacity: .8;
+  position: relative;
+  top: 2px;
+}
+#time{
+  padding-right: 2px;
+}
+html:not(.stopw):not(.alarm):not(.timer) #vertical
+{
+  visibility: hidden;
+}
+/* }}} */
+
+/* fullscreen options */
+/* {{{ */
+html.fullscreenOptions #head > *:not(#verticalBottom),
+html.fullscreenOptions #verticalBottom > *:not(#settingsWrapper)
+{ visibility: hidden; }
+html.fullscreenOptions #verticalBottom #plusone_wrapper
+{ display: none;}
+html.fullscreenOptions #stripV{
+  height: 300%;
+  bottom:-100%;
+}
+/* }}} */
+
+/* common theme */
+/* {{{ */
+#inputs ::-webkit-input-placeholder
+{
+  opacity: 0.4;
+}
+#inputs :-moz-placeholder
+{
+  opacity: 0.4;
+}
+#inputs :-ms-input-placeholder
+{
+  color: rgba(0,0,0,0.2);
+}
+.inputSep{
+  opacity: 0.5;
+}
+hr
+{
+  margin: 2px;
+}
+/* gray font */
+#verticalBottom,
+#vertical,
+#inputs
+{
+  color: #444;
+}
+/*
+#vertical,
+#inputs
+{
+  text-shadow: rgba(255,255,255,0.1) 0px 1px 0px;
+}
+*/
+body.paused #counter
+{
+  opacity:0.3;
+}
+/* }}} */

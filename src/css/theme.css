@@ -1,0 +1,139 @@
+/* font */
+/* {{{ */
+/*
+body,html,input,a
+{
+  font-family: Helvetica, Arial;
+}
+button
+{
+  font-family: arial,sans-serif;
+}
+*/
+/* <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300">
+   CORS font serving in app engine: http://blog.yjl.im/2010/05/font-face-and-cross-domain-cross-origin.html
+   Infos about FF and fonts: http://tech.davemx.com/2010/firefox-font-face-not-working-on-different-domain/
+*/
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'),
+  /* font on google servers as second position because:
+      -avoid latency of font tried to be loaded when offline + font gets app cached anyways
+      -firefox only loads font on google server (because google server sets Access-Control-Allow-Origin:*)
+  */
+  url('lato.woff') format('woff'),
+  url('http://themes.googleusercontent.com/static/fonts/lato/v4/KT3KS9Aol4WfR6Vas8kNcg.woff') format('woff');
+}
+*
+{
+  font-family: 'Lato', sans-serif;
+}
+/* }}} */
+
+/* colors */
+/* {{{ */
+hr
+{
+  opacity: 0.3;
+}
+input,
+button
+{
+  background: rgba(255,255,255,0.7);
+}
+input.s,
+.inputSep.s
+{
+  color: #999;
+}
+/* button & input colors */
+button,
+input
+{
+  color: #666;
+}
+button:hover,
+button:focus,
+input:hover,
+input:focus
+{
+  background: rgba(255,255,255,0.95);
+}
+/*split in two to get rid of following bug: scroll broken in the youtube url input when cursor moves out of visible area*/
+button:hover,
+button:focus,
+#inputs input:hover,
+#inputs input:focus
+{
+  color: #333;
+}
+#settingsWrapper input[type='text']{
+  border: 1px solid rgba(160,160,160,.7);
+}
+/*
+button:after,
+a,
+#notiPermission,
+#install
+{
+  color: #33b;
+}
+*/
+a{color: inherit}
+
+/* selection styling only works in firefox for now */
+input::selection {
+  background-color: rgba(48,48,178,0.25);/* #33b ~= rgb(48,48,178) */
+}
+input::-webkit-selection {
+  background-color: rgba(48,48,178,0.25);
+}
+input::-moz-selection /*firefox wants this selector to be alone*/
+{
+  background-color: rgba(48,48,178,0.25);
+}
+/* }}} */
+
+/* details (cursor+selectable+button+..) */
+/* {{{ */
+a
+{
+  text-decoration: none;
+}
+a:focus{ outline:0 }
+button,
+input
+{
+  outline: 0;
+  border: 0;
+  border-radius: 4px;
+}
+button{
+  /* font-size: 12px; */
+  /* font-size: 4vw; */
+  font-weight: bold;
+  font-size: 13px;
+  max-width: 95%;
+  letter-spacing:1px;
+  white-space: pre;
+}
+
+#inputs input
+{
+  font-size: 100%;
+  padding:0;
+  border:0;
+}
+.inputSep.s,
+#inputs input.s
+{
+  font-size: 70%;
+  position: relative;
+  bottom:-2px;
+}
+#counter{
+  line-height: .8em;
+}
+/* }}} */

@@ -1,0 +1,12 @@
+# Installed modules
+/node_modules/
+
+# Parcel build
+/dist/
+# Parcel cache
+/.cache/
+
+# Yarn/Npm debug info
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
