@@ -1,5 +1,6 @@
 //console todo; get seo stats before uploading this version containing mod desc
-(function(){
+import ctObj from './countdown';
+
 var hasWindow;
 try{hasWindow=window['chrome']['app']['window']['current']()}catch(e){}
 if(window['chrome']&&window['chrome']['app']&&window['chrome']['app']['runtime'] && !hasWindow){ 
@@ -741,7 +742,7 @@ var postInitListeners=[];
   function initTimer(timer_){ 
     timer_.dom = {};
     timer_.dom.counter   = document.getElementById('counter');
-    timer_.dom.inputs = [[TIMER_FORM,ml.ct.TYPES.TIMER],[ALARM_FORM,ml.ct.TYPES.ALARM],[STOPW_FORM,ml.ct.TYPES.STOPW]].map(function(d){return ml.ct.input(d[0],d[1],timer_)});
+    timer_.dom.inputs = [[TIMER_FORM,ctObj.TYPES.TIMER],[ALARM_FORM,ctObj.TYPES.ALARM],[STOPW_FORM,ctObj.TYPES.STOPW]].map(function(d){return ctObj.input(d[0],d[1],timer_)});
     timer_.dom.youtubeDiv = YT_EL;
     timer_.dom.pauseBtn   = PAUSE_ELEM;
     timer_.dom.alarmTime  = ALARM_TIME;
@@ -753,9 +754,9 @@ var postInitListeners=[];
       document.body['classList'][newState===STATE_CODES.PAUSED ?'add':'remove']('paused');
       document.body['classList'][newState===STATE_CODES.PLAYING?'add':'remove']('running');
       document.body['classList'][newState===STATE_CODES.RINGING?'add':'remove']('ringing');
-      document.documentElement['classList'][__type===ml.ct.TYPES.TIMER?'add':'remove']('timer');
-      document.documentElement['classList'][__type===ml.ct.TYPES.ALARM?'add':'remove']('alarm');
-      document.documentElement['classList'][__type===ml.ct.TYPES.STOPW?'add':'remove']('stopw');
+      document.documentElement['classList'][__type===ctObj.TYPES.TIMER?'add':'remove']('timer');
+      document.documentElement['classList'][__type===ctObj.TYPES.ALARM?'add':'remove']('alarm');
+      document.documentElement['classList'][__type===ctObj.TYPES.STOPW?'add':'remove']('stopw');
     };
 
     if(!ml.isExtension() || ml.isExtensionBackground()) timer_.makeTabTimer();
@@ -774,23 +775,23 @@ var postInitListeners=[];
       wontwork();
     }
 
-    ml.ct.timers.init(function(){
+    ctObj.timers.init(function(){
 
       var currentTimer;
       (function(){
         function getPersistedTimer(callback){ 
           //clean expired tab-to-search timers
           var TTS_TAG = 'tab-to-search';
-          ml.ct.timers.all.forEach(function(t){if(t.data.getTags()===TTS_TAG&&t.data.expired) t.data.removeData()});
+          ctObj.timers.all.forEach(function(t){if(t.data.getTags()===TTS_TAG&&t.data.expired) t.data.removeData()});
 
-          //onsole.log(ml.ct.timers.all.length);
+          //onsole.log(ctObj.timers.all.length);
           //onsole.log(Object.keys(JSON.parse(localStorage['showed']||"{}")).length);
 
           //maintain timer
           var retTimer;
           if(currentTimer){
             currentTimer.kill();
-            retTimer = ml.ct.timers.all.filter(function(t){return t.data.id===currentTimer.data.id})[0];
+            retTimer = ctObj.timers.all.filter(function(t){return t.data.id===currentTimer.data.id})[0];
             //at this point retTimer is still undefined if currentTimer expired
             if(retTimer) callback(retTimer);
           }
@@ -810,17 +811,17 @@ var postInitListeners=[];
             })(ml.getUrlVars()['timer']||window['decodeURIComponent'](location.hash.replace('#',''))); 
             if(!hashInput) return false;
 
-            var _type    = hashInput[0]===undefined?ml.ct.TYPES.TIMER:ml.ct.TYPES.ALARM;
+            var _type    = hashInput[0]===undefined?ctObj.TYPES.TIMER:ctObj.TYPES.ALARM;
             var _preset  = {hours:hashInput[0],minutes:hashInput[1]};
 
-            //var ret = ml.ct.timers.all.filter(function(t){return t.data.getTags()===TTS_TAG})[0];
+            //var ret = ctObj.timers.all.filter(function(t){return t.data.getTags()===TTS_TAG})[0];
             //if(ret){
             //  ret.data.setType(_type);
             //  ret.data.setPreset(_preset);
             //  callback(ret);
             //}
-            ml.ct.timers.create(_type,function(){
-              ret = ml.ct.timers.all[ml.ct.timers.all.length-1];
+            ctObj.timers.create(_type,function(){
+              ret = ctObj.timers.all[ctObj.timers.all.length-1];
               ml.assert(ret);
               ret.data.setPreset(_preset);
               ret.data.setTags(TTS_TAG);
@@ -832,15 +833,15 @@ var postInitListeners=[];
           if(retTimer) return;
 
           if(!retTimer) ml.asyncStore.get('showed',function(val){
-            for(var i=0;i<ml.ct.timers.all.length;i++) 
-              if(!(JSON.parse(val||"{}")[ml.ct.timers.all[i].data.id]>+new Date-2000)){
-                retTimer=ml.ct.timers.all[i];
+            for(var i=0;i<ctObj.timers.all.length;i++) 
+              if(!(JSON.parse(val||"{}")[ctObj.timers.all[i].data.id]>+new Date-2000)){
+                retTimer=ctObj.timers.all[i];
                 break;
               }
             if(retTimer) callback(retTimer);
             else {
-              ml.ct.timers.create(ml.ct.TYPES.STOPW,function(){
-                retTimer = ml.ct.timers.all[ml.ct.timers.all.length-1];
+              ctObj.timers.create(ctObj.TYPES.STOPW,function(){
+                retTimer = ctObj.timers.all[ctObj.timers.all.length-1];
                 ml.assert(retTimer);
                 callback(retTimer);
               });
@@ -855,7 +856,7 @@ var postInitListeners=[];
             },0);
           });
         }
-        ml.ct.timers.setChangeListener(retrieveNinitTimer);
+        ctObj.timers.setChangeListener(retrieveNinitTimer);
         retrieveNinitTimer();
       })();
 
@@ -874,11 +875,11 @@ var postInitListeners=[];
 
         (function(){if(currentTimer)setShowed(currentTimer.data.id,+new Date);setTimeout(arguments.callee,1000)})();
 
-        ml.ct.timers.all.forEach(function(t){if(t.data.expired) setShowed(t.data.id)});
+        ctObj.timers.all.forEach(function(t){if(t.data.expired) setShowed(t.data.id)});
 
         (function(){
           //normaly not needed, but just to be sure
-          var idS = ml.ct.timers.all.map(function(t){return t.data.id});
+          var idS = ctObj.timers.all.map(function(t){return t.data.id});
           ml.asyncStore.get('showed',function(val){
             var showed = JSON.parse(val||"{}");
             var changes = false;
@@ -894,7 +895,7 @@ var postInitListeners=[];
     });//end init
   })();} 
   catch(e){ 
-    var _timer = new ml.ct.Timer_dom({start:+new Date},ml.ct.TYPES.STOPW);
+    var _timer = new ctObj.Timer_dom({start:+new Date},ctObj.TYPES.STOPW);
     initTimer(_timer);
     _timer.dom.inputs[0].getElementsByTagName('input')[1].value='10';
     _timer.dom.inputs[1].getElementsByTagName('input')[0].value=ml.date.readablize(ml.date.add(new Date(),0,10,0).getHours()  );
@@ -903,4 +904,3 @@ var postInitListeners=[];
 })();
 
 };
-})();

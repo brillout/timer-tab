@@ -1,6 +1,8 @@
-ml.ct={};
+const ctObj = {};
 
-ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
+export default ctObj;
+
+ctObj.TYPES={STOPW:1,TIMER:2,ALARM:3};
 
 (function(){
   function loadDom(inputForm,_type,_callback){ 
@@ -21,8 +23,8 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
     //get dpi
     //-window.devicePixelRatio
     //-matchMedia("(-webkit-device-pixel-ratio: 1)")
-    if(_type!==ml.ct.TYPES.STOPW && ml.isTouchDevice() && Math.max(window.screen.width,window.screen.height)<=1100)
-  //if(_type!==ml.ct.TYPES.STOPW && true)
+    if(_type!==ctObj.TYPES.STOPW && ml.isTouchDevice() && Math.max(window.screen.width,window.screen.height)<=1100)
+  //if(_type!==ctObj.TYPES.STOPW && true)
     //wheel picker
     (function(){ 
       function loadCallback(){ 
@@ -36,7 +38,7 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
         var container = document.createElement('div');
         inputForm.insertBefore(container,inputForm.firstChild);
         var wheel = $('#'+inputForm.id+' div');
-        var format=ml.ct.TYPES.ALARM?'HH:ii':'ii:ss';
+        var format=ctObj.TYPES.ALARM?'HH:ii':'ii:ss';
         wheel.mobiscroll().time({
             //theme: 'ios',
             theme: 'android-ics light',
@@ -90,21 +92,21 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
 
         if(!inputForm) {
           inputForm=document.createElement('form');
-          _generateInput('h',_type===ml.ct.TYPES.ALARM?'23':undefined);
-          _generateInput('m',_type===ml.ct.TYPES.ALARM?'59':undefined);
-          _generateInput('s',_type===ml.ct.TYPES.ALARM?'59':undefined);
+          _generateInput('h',_type===ctObj.TYPES.ALARM?'23':undefined);
+          _generateInput('m',_type===ctObj.TYPES.ALARM?'59':undefined);
+          _generateInput('s',_type===ctObj.TYPES.ALARM?'59':undefined);
         }
 
-        if(window['WinJS'] && window['WinJS']['UI'] && window['WinJS']['UI']['TimePicker'] && _type!==ml.ct.TYPES.STOPW) { 
+        if(window['WinJS'] && window['WinJS']['UI'] && window['WinJS']['UI']['TimePicker'] && _type!==ctObj.TYPES.STOPW) { 
         //metro
         //if(winInput) return [function(){ var ret=winInput.current; if(ret<=new Date()) ret.setUTCDate(ret.getUTCDate()+1);return ret}, function(h,m,s){winInput.current=h+":"+m+":"+s}];
           [].slice.call(inputForm.querySelectorAll('input')).forEach(function(i){i.parentElement.removeChild(i)});
-          if(_type===ml.ct.TYPES.ALARM) {
+          if(_type===ctObj.TYPES.ALARM) {
             var tp=document.createElement('div');
             inputForm.insertBefore(tp,inputForm.firstChild);
             new window['WinJS']['UI']['TimePicker'](tp);
           }
-          if(_type===ml.ct.TYPES.TIMER) {
+          if(_type===ctObj.TYPES.TIMER) {
             for(var i=0;i<3;i++){
               var sel=document.createElement('select');
               sel.setAttribute('placeholder',i===0&&'h'||i===1&&'m'||i===2&&'s');
@@ -117,7 +119,7 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
             }
           }
           input_number = [].slice.call(inputForm.getElementsByTagName('select'));
-          if(_type===ml.ct.TYPES.ALARM) input_period = input_number.pop();
+          if(_type===ctObj.TYPES.ALARM) input_period = input_number.pop();
         } 
         else input_number = [].slice.call(inputForm.getElementsByTagName('input'));
 
@@ -157,7 +159,7 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
       fireCallback();
     })(); 
   } 
-  ml.ct.input=function(inputForm,_type,_timer){
+  ctObj.input=function(inputForm,_type,_timer){
   //{{{
     //spinning wheel inputs{ 
     //-test; http://jsfiddle.net/KGGdt/
@@ -172,21 +174,21 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
     // -http://stackoverflow.com/questions/4946919/invoke-native-date-picker-from-web-app-on-ios-android
     // -http://stackoverflow.com/questions/388814/date-picker-for-iphone-web-application
     //} 
-    ml.assert(_type===ml.ct.TYPES.TIMER || _type===ml.ct.TYPES.ALARM || _type===ml.ct.TYPES.STOPW);
+    ml.assert(_type===ctObj.TYPES.TIMER || _type===ctObj.TYPES.ALARM || _type===ctObj.TYPES.STOPW);
     ml.assert(!inputForm || inputForm.nodeName&&inputForm.nodeName.toLowerCase()==='form');
 
     var _onInputsChange;
     var _onLoaded=function(){ 
       //initial _setInputs + _onInputsChange
-      if(_type===ml.ct.TYPES.STOPW || !_timer.data) return;
+      if(_type===ctObj.TYPES.STOPW || !_timer.data) return;
       var d=_timer.data.getPreset(_type);
       if(d.hours===undefined && d.minutes===undefined && d.seconds===undefined){
-        if(_type===ml.ct.TYPES.ALARM){
+        if(_type===ctObj.TYPES.ALARM){
           var t=ml.date.add(new Date(),0,10,0);
           d.hours=t.getHours();
           d.minutes=t.getMinutes();
         }
-        if(_type===ml.ct.TYPES.TIMER){
+        if(_type===ctObj.TYPES.TIMER){
           d.minutes=10;
         }
       }
@@ -198,7 +200,7 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
     var _setInputs;
     var _getCountdownEnd;
     loadDom(inputForm,_type,function(__getInputs,__setInputs,__isAMPM,__setInputChangeListener){ 
-      if(_type===ml.ct.TYPES.STOPW){
+      if(_type===ctObj.TYPES.STOPW){
         _getCountdownEnd=function(){return undefined};
         return;
       }
@@ -228,17 +230,17 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
           h-=12;
           isPm=true;
         }
-        if(!h && _type===ml.ct.TYPES.ALARM) h='0';
-      //if(!m && _type===ml.ct.TYPES.ALARM) m='0';
+        if(!h && _type===ctObj.TYPES.ALARM) h='0';
+      //if(!m && _type===ctObj.TYPES.ALARM) m='0';
         if(__isAMPM && parseInt(h,10)===0) h='12';
-        if(_type===ml.ct.TYPES.ALARM){
+        if(_type===ctObj.TYPES.ALARM){
           h=ml.date.readablize(h);
           m=ml.date.readablize(m);
           s=ml.date.readablize(s);
           if(!h) h='00';
           if(!m) m='00';
         }
-        if(_type===ml.ct.TYPES.TIMER){
+        if(_type===ctObj.TYPES.TIMER){
           if(h) h=parseInt(h,10);
           if(m) m=parseInt(m,10);
           if(s) s=parseInt(s,10);
@@ -254,14 +256,14 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
           if(inputs.period==='AM' && inputs.h===12) inputs.h=inputs.h-12;
           return inputs;
         }
-        if(_type===ml.ct.TYPES.TIMER) return function(){
+        if(_type===ctObj.TYPES.TIMER) return function(){
           var inputs = ___getInputs();
           var ret =+(ml.date.add(new Date(),inputs.h,inputs.m,inputs.s));
           var MAX_COUNTDOWN = (+new Date())+999999999999;
           if(isNaN(ret) || ret>MAX_COUNTDOWN) return MAX_COUNTDOWN;
           return ret;
         };
-        if(_type===ml.ct.TYPES.ALARM) return function(){
+        if(_type===ctObj.TYPES.ALARM) return function(){
           var inputs = ___getInputs();
           var ret=new Date();
           ret.setHours(inputs.h||0,inputs.m||0,inputs.s||0,0);
@@ -297,7 +299,7 @@ ml.ct.TYPES={STOPW:1,TIMER:2,ALARM:3};
 
 })();
 
-ml.ct.Timer_dom=(function(){ 
+ctObj.Timer_dom=(function(){ 
   function Timer_js(initialState){ 
     var that=this;
     that.listen={};
@@ -571,9 +573,9 @@ ml.ct.Timer_dom=(function(){
       }
       ctInputs.forEach(function(ctInput){
         var actionName = {};
-        actionName[ml.ct.TYPES.TIMER]="Countdown";
-        actionName[ml.ct.TYPES.ALARM]="Alarm Clock";
-        actionName[ml.ct.TYPES.STOPW]="Stopwatch";
+        actionName[ctObj.TYPES.TIMER]="Countdown";
+        actionName[ctObj.TYPES.ALARM]="Alarm Clock";
+        actionName[ctObj.TYPES.STOPW]="Stopwatch";
         u['addAction']("/"+actionName[ctInput.type],function(){ctInput.onsubmit()});
         u['Launcher']['addAction']("Start "+actionName[ctInput.type],function(){ctInput.onsubmit()});
       });
@@ -1775,7 +1777,7 @@ ml.ct.Timer_dom=(function(){
     }; 
 
     function setAlarmTime(_end){ 
-      if(__type===ml.ct.TYPES.ALARM && _end && thisTimer.dom.alarmTime)
+      if(__type===ctObj.TYPES.ALARM && _end && thisTimer.dom.alarmTime)
         ml.i18n.isAMPMTime(function(isAMPM){
           thisTimer.dom.alarmTime.innerHTML=ml.date.readable.getTime(_end,isAMPM);
         });
@@ -1804,7 +1806,7 @@ ml.ct.Timer_dom=(function(){
         thisTimer.dom.inputs.forEach(function(ctInput){ctInput.onStart=function(timerEnd){__type=ctInput.type;interface_.start_(timerEnd);}});
       } 
       if(thisTimer.dom.pauseBtn){
-        thisTimer.dom.pauseBtn.onclick=function(){if(__type!==ml.ct.TYPES.ALARM||__isRinging) interface_.togglePause()};
+        thisTimer.dom.pauseBtn.onclick=function(){if(__type!==ctObj.TYPES.ALARM||__isRinging) interface_.togglePause()};
       }
       if(thisTimer.dom.name_input && thisTimer.dom.name_el) { 
         var nameInput = thisTimer.dom.name_input;
@@ -1863,7 +1865,7 @@ ml.ct.Timer_dom=(function(){
 //data.Countdown
 //data.onChange
 //data.onExtChange
-    var TYPES=ml.ct.TYPES;
+    var TYPES=ctObj.TYPES;
     function isTime(t) { return t && (t.constructor===Number||t.constructor===String) && t.toString().length===13 && !/[^\d]/.test(t) && (t.constructor===Number || parseInt(t,10).toString()===t)}
     var _ret   = {};
     var __data;
@@ -2142,7 +2144,7 @@ ml.ct.Timer_dom=(function(){
   (function(){
     function data2timerObj(timerData){ 
       var initState = timerData.getState();
-      var timerDom  = new ml.ct.Timer_dom(initState,timerData.getType()); 
+      var timerDom  = new ctObj.Timer_dom(initState,timerData.getType()); 
       timerDom.data = {};
       (function(){
         var cumulatedData={};
@@ -2189,21 +2191,21 @@ ml.ct.Timer_dom=(function(){
 
       return timerDom;
     } 
-    ml.ct.timers={};
+    ctObj.timers={};
     ml.load(['data'],function(data){ 
       data.onChange=function(ret){
-        ml.ct.timers.all=ret.map(data2timerObj);
+        ctObj.timers.all=ret.map(data2timerObj);
       };
-      ml.ct.timers.create=function(_type,callback){
+      ctObj.timers.create=function(_type,callback){
         var newTimer = new data.Countdown();
         newTimer.setType(_type);
         data2timerObj(newTimer).start();
         callback();
       };
-      ml.ct.timers.setChangeListener=function(listener){
+      ctObj.timers.setChangeListener=function(listener){
         data.onExtChange = listener;
       };
-      ml.ct.timers.init=function(callback){data.init(callback)};
+      ctObj.timers.init=function(callback){data.init(callback)};
     }); 
   })();
 })();

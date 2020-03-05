@@ -4,6 +4,10 @@
 //-window.neverCalled=function..;// --> neverCalled isn't removed
 //}}}
 
+const ml = {};
+
+export default ml;
+
 //shim
 (function(){ 
   if(typeof document === "undefined") return;//=> called as metro background task
@@ -430,7 +434,6 @@ if(!String.prototype.splice)
 */
 })(); 
 
-var ml={};
 (function(){
 
 //no tap delay
