@@ -516,10 +516,10 @@ ctObj.Timer_dom=(function(){
       {
         ml.assert(sparking===undefined);
         sparking=true;
-        (function(){
+        (function fn(){
           if(!sparking)return;
           heartbeat();
-          window.setTimeout(arguments.callee,300)
+          window.setTimeout(fn,300);
         })();
         state.init__();
       };
@@ -534,7 +534,7 @@ ctObj.Timer_dom=(function(){
   } 
 
   var unity={};
-  /*
+  //*
   ml.safe_call(function(){ 
     var u = window['external'] && window['external']['getUnityObject'] && window['external']['getUnityObject'](1.0);
     (function(){
@@ -582,7 +582,7 @@ ctObj.Timer_dom=(function(){
       });
     };
   }); 
-  */
+  //*/
 
   var notify={};
   (function(){ 
@@ -1022,7 +1022,7 @@ ctObj.Timer_dom=(function(){
               ctYt.yt_vid_id=urlToId(url);
 
               //retrieve start & repeat
-              matches=/(?:\?|&)(?:start|t)=([^&#]*)/.exec(url);
+              const matches=/(?:\?|&)(?:start|t)=([^&#]*)/.exec(url);
               ctYt.vid_start=matches?matches[1]:null;
             //ctYt.repeat_=/(?:\?|&)(repeat|loop)/.test(url);
               ctYt.repeat_=/repeat|replay|loop/.test(url);

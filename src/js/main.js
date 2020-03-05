@@ -667,7 +667,7 @@ var postInitListeners=[];
   }); 
 
   //auto zoom
-  feature_fcts.push(function(){ 
+  feature_fcts.push(function autoZoom(){ 
      //ressources
      //-zoom stuff
      // -text-size-adjust
@@ -699,7 +699,7 @@ var postInitListeners=[];
                                     window.innerHeight / (ALL_CONTENT_EL.scrollHeight));
      document.documentElement.style.zoom=zoomCoeffizient;
 
-     ml.addResizeTimeoutEvent(arguments.callee,100,function(){document.documentElement.style.zoom=""});
+     ml.addResizeTimeoutEvent(autoZoom,100,function(){document.documentElement.style.zoom=""});
   }); 
 
   //IE/Presto (manual 100% height + no icons)
@@ -874,7 +874,7 @@ var postInitListeners=[];
           });
         }
 
-        (function(){if(currentTimer)setShowed(currentTimer.data.id,+new Date);setTimeout(arguments.callee,1000)})();
+        (function loop(){if(currentTimer)setShowed(currentTimer.data.id,+new Date);setTimeout(loop,1000)})();
 
         ctObj.timers.all.forEach(function(t){if(t.data.expired) setShowed(t.data.id)});
 

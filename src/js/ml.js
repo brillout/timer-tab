@@ -590,7 +590,7 @@ ml.date={};
       'alarmclock':'%0h:%0m',
       'periodclock':'%h%:0m?'
     };
-    format=PRESETS[preset];
+    const format=PRESETS[preset];
     ml.assert(format);
 
     var digits=format.match(/%:?0?(h|s|m)v?\s?:?\??/g);
@@ -1211,7 +1211,6 @@ ml.assert=function(bool,msg,skipCallFcts,api_error){
     {
       if(!skipCallFcts) skipCallFcts=0;
       skipCallFcts++;
-    //var fct=arguments.callee;
       if(ml.browser().usesGecko && window['co'+'nsole'] && window['co'+'nsole'].log) window['co'+'nsole'].log(errorStack);
       if(errorStack)
       {
@@ -1535,14 +1534,13 @@ ml.doneIcon = function(d,color1,color2)
   return canvas.toDataURL();
 };
 //}}}
+const cache__colorImageUrls = {};
 ml.getColorImageURL=function(color,scale)
 //{{{
 {
   if(!scale) scale=1;
-  if(!arguments.callee.urls) arguments.callee.urls={};
-  var urls = arguments.callee.urls;
 
-  if(!urls[color])
+  if(!cache__colorImageUrls[color])
   {
     var canvas=document.createElement('canvas');
     canvas.height=32/scale;
@@ -1554,9 +1552,9 @@ ml.getColorImageURL=function(color,scale)
     ctx.fillStyle = color;
     ctx.fillRect(0,0,300,150);
 
-    urls[color] = canvas.toDataURL();
+    cache__colorImageUrls[color] = canvas.toDataURL();
   }
-  return urls[color];
+  return cache__colorImageUrls[color];
 };
 //}}}
 ml.timerIcon = function(diff,percent,scale,color)
@@ -1849,49 +1847,6 @@ ml.dooityRandColor = function(gray,n)
     return ret;
   }
 }
-//}}}
-
-//changes to ml.xhr:
-//-reqsCallback doesn't get deleted when executed
-ml.webReq=function(url,data,callback,bulkReqsCallback)
-//{{{
-{
-  var req=new XMLHttpRequest();
-  var callee = arguments.callee;
-  req.onreadystatechange=function()
-  {
-    if(req.readyState==4)
-    {
-      //first local
-      if(callback) callback(req.responseText);
-
-      //then bulk
-      if(bulkReqsCallback)
-      {
-        bulkReqsCallback.pendingReqs--;
-        if(bulkReqsCallback.pendingReqs===0) bulkReqsCallback();
-      }
-
-      //then global
-      callee.pendingReqs--;
-      if(callee.pendingReqs===0) if(callee.reqsCallback) callee.reqsCallback();
-    }
-  };
-  var method='GET';
-  if(data=='GET') data=null;
-  else if(data) method='POST';
-  req.open(method,url,true);
-  if(method==='POST') req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-  req.send(data);
-
-  if(bulkReqsCallback)
-  {
-    if(!bulkReqsCallback.pendingReqs) bulkReqsCallback.pendingReqs=0;
-    bulkReqsCallback.pendingReqs++;
-  }
-  if(!callee.pendingReqs) callee.pendingReqs=0;
-  callee.pendingReqs++;
-};
 //}}}
 
 ml.getUrlVars=function(){ 
@@ -2366,7 +2321,8 @@ ml.reqFrame=(function(){
     lastReq[fct]=req(fct);
   };
 })(); 
-ml.safe_call=function(fct){ 
+ml.safe_call=safe_call;
+function safe_call(fct){ 
   if(!fct) return;
   if(fct.constructor===Array)
   {
@@ -2375,7 +2331,7 @@ ml.safe_call=function(fct){
     {
       var args = Array().slice.call(arguments);
       Array().splice.call(args,0,1,fct[i]);
-      arguments.callee.apply(null,args);
+      safe_call.apply(null,args);
     }
     return;
   }
@@ -2538,7 +2494,6 @@ ml.htmlBackgroundListener=function(default_){
 //http://vistawallpapers.files.wordpress.com/2007/03/vista-wallpapers-69.jpg
   //TODO: replace with http://i.imgur.com/cvyOo.gif
   var LOAD_IMG_URL = 'http://i.imgur.com/zqG5F.gif';
-  ml.assert(!arguments.callee.neverCalled);arguments.callee.neverCalled=true;
 
   var BG_EL=document.documentElement;
   var LOAD_IMG = 'url('+LOAD_IMG_URL+')';
@@ -2651,7 +2606,6 @@ ml.htmlBackground=function(inputName,default_)
 {
   //TODO: replace with http://i.imgur.com/cvyOo.gif
   var LOAD_IMG_URL = 'http://i.imgur.com/zqG5F.gif';
-  ml.assert(!arguments.callee.neverCalled);arguments.callee.neverCalled=true;
 
   var BG_EL=document.documentElement;
   var LOAD_IMG = 'url('+LOAD_IMG_URL+')';
@@ -3345,9 +3299,9 @@ ml.i18n={};
       if(ml.element.getStyle(popupEl,'display')==='none')
       {
         popup.close();
-        setTimeout(function()
+        setTimeout(function fn()
         {
-          arguments.callee(arguments[0],arguments[1],arguments[2],arguments[3]); //passing arguments does pass whole arguments object as first parameter
+          fn(arguments[0],arguments[1],arguments[2],arguments[3]); //passing arguments does pass whole arguments object as first parameter
         },100);
         
         return false;
