@@ -926,3 +926,8 @@ body.paused #counter
   opacity:0.3;
 }
 /* }}} */
+
+
+#hNotiWrapper, #feedbackWrapper {
+  display: none!important;
+}
