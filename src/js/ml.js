@@ -1230,7 +1230,13 @@ ml.assert=function(bool,msg,skipCallFcts,api_error){
       throw errorStr;
     //return;//returns anyways since throw
     }
+
+    //*
+    var HARD=false;
+    /*/
     var HARD=window.location.hostname==='localhost';
+    //*/
+
     if(window.navigator.userAgent.indexOf('MSIE')!==-1) return; //fix for stupid IE9 bug: window['co'+'nsole'].log is defined but shoudn't be called
     if(window['co'+'nsole'] && window['co'+'nsole'].log && !HARD)
     {
