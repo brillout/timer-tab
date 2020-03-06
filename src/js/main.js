@@ -49,7 +49,7 @@ if(!/passtest/.test(location.href) && !(
 // no way to check svg as background image; https://github.com/Modernizr/Modernizr/issues/687
 // no svg background images for IE<=8 -- http://caniuse.com/svg-css
 
-   if(ml.replaceWebApp('http://4b.timerintab.appspot.com/')) return;
+   if(ml.replaceWebApp('https://4b.timerintab.appspot.com/')) return;
 }
 //}}}
 
@@ -282,7 +282,7 @@ var postInitListeners=[];
     }
     var notFirstTime;
   //document.getElementById('goto_container').appendChild(ml.optionInput('goto_url','http://youtu.be/PS5KAEgrtMA',function(newUrl){
-    ml.optionInput('goto_url','http://youtu.be/PS5KAEgrtMA',function(newUrl){
+    ml.optionInput('goto_url','https://youtu.be/PS5KAEgrtMA',function(newUrl){
       YT_EL.parseUrl(newUrl);
       if(notFirstTime) YT_EL.prefetch();
       else {
@@ -359,7 +359,7 @@ var postInitListeners=[];
       (function()
       {
         var sound_iframe = document.createElement('iframe');
-        sound_iframe.src = 'http://brillcdn.appspot.com/sf/tt.html';
+        sound_iframe.src = 'https://brillcdn.appspot.com/sf/tt.html';
         sound_iframe.id  = 'files_iframe';
         sound_iframe.style.display='none';
         document.body.appendChild(sound_iframe);
@@ -401,7 +401,7 @@ var postInitListeners=[];
     var el=document.createElement('audio');
       el.id='notify_sound';
       el.style.display='none'
-      formats.forEach(function(d){var s=el.appendChild(document.createElement('source'));s.type="audio/"+d[1];s.src='http://brillcdn.appspot.com/sf/ring.'+d[0];});
+      formats.forEach(function(d){var s=el.appendChild(document.createElement('source'));s.type="audio/"+d[1];s.src='https://brillcdn.appspot.com/sf/ring.'+d[0];});
       document.body.appendChild(el);
   // <audio style='display: none' id="notify_sound">
   //   <source src="http://brillcdn.appspot.com/sf/ring.mp3" type="audio/mpeg"/>
@@ -656,9 +656,9 @@ var postInitListeners=[];
 
       //alternatively: http://www.google.com/moderator/#16/e=ae425
       //http://www.google.com/moderator/#15/e=1fde25&t=1fde25.41
-      document.getElementById('feedback').href = 'http://www.google.com/moderator/#15/e=1fde25&t=1fde25.41&v=24';
+      document.getElementById('feedback').href = 'https://www.google.com/moderator/#15/e=1fde25&t=1fde25.41&v=24';
     //document.getElementById('promo')   .href = 'https://chrome.google.com/webstore/detail/cbdmdlopbnjidgppekfmfmojkblefoal';
-    //document.getElementById('promo')   .href = 'http://www.brillout.com/dev';
+    //document.getElementById('promo')   .href = 'https://www.brillout.com/dev';
       document.getElementById('promo')   .href = 'https://chrome.google.com/webstore/detail/facebook-unseen/dmdhkalcecemojegheiohcghkamlipof';
       [ ['goto_url',languageText.address+languageText.youtube],
         ['bg_url'  ,languageText.address+languageText.image]

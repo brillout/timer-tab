@@ -75,10 +75,10 @@ ctObj.TYPES={STOPW:1,TIMER:2,ALARM:3};
 
         fireCallback();
       } 
-      ml.loadASAP("http://brillcdn.appspot.com/sf/mobiscroll.datetime.ics.css");
+      ml.loadASAP("https://brillcdn.appspot.com/sf/mobiscroll.datetime.ics.css");
       //http://zeptojs.com/zepto.min.js
-      ml.loadASAP("http://brillcdn.appspot.com/sf/zepto.min.js",function(){
-        ml.loadASAP("http://brillcdn.appspot.com/sf/mobiscroll.datetime.ics.js",loadCallback);
+      ml.loadASAP("https://brillcdn.appspot.com/sf/zepto.min.js",function(){
+        ml.loadASAP("https://brillcdn.appspot.com/sf/mobiscroll.datetime.ics.js",loadCallback);
       });
     })(); 
     else
@@ -1038,7 +1038,7 @@ ctObj.Timer_dom=(function(){
               //options: https://developers.google.com/youtube/player_parameters
             //var options="&rel=0&theme=dark&modestbranding=0&controls=0&showinfo=0&showsearch=0&hd=0&iv_load_policy=0&disablekb=0&autohide=1&html5=1";
               var options="&rel=0&controls=0&hd=0&showinfo=0&html5=1";
-              ctYt.yt_vid_url=!ctYt.yt_vid_id?null:"http://www.youtube.com/embed/"+ctYt.yt_vid_id+"?enablejsapi=1"+(ctYt.vid_start?'&start='+ctYt.vid_start:'')+"&origin=http://"+location.host+options;
+              ctYt.yt_vid_url=!ctYt.yt_vid_id?null:"https://www.youtube.com/embed/"+ctYt.yt_vid_id+"?enablejsapi=1"+(ctYt.vid_start?'&start='+ctYt.vid_start:'')+"&origin=https://"+location.host+options;
             }; 
             ctYt.prefetch=function(){
               if(ctYt.onPrefetch) ctYt.onPrefetch();
@@ -1107,7 +1107,7 @@ ctObj.Timer_dom=(function(){
                   //  //onsole.log(ev['origin']);
                   //  //onsole.log(ev['data']);
                   //}
-                  if(ev && ev['origin'] && ev['origin']==='http://www.youtube.com' && ev.source===__iframeEl.contentWindow && ev['data'])
+                  if(ev && ev['origin'] && ev['origin']==='https://www.youtube.com' && ev.source===__iframeEl.contentWindow && ev['data'])
                   {
                     //onsole.log(ev.source===__iframeEl || ev.currentTarget===__iframeEl || ev.currentTarget===frames[0] || ev.srcElement===__iframeEl || ev.srcElement===frames[0] || ev.target===__iframeEl || ev.target===frames[0]);//this lines prints false
 
@@ -1590,11 +1590,11 @@ ctObj.Timer_dom=(function(){
               }
               var ring_url;
               if(ctYt.yt_vid_id)
-                ring_url = 'http://www.youtube.com/embed/'+ctYt.yt_vid_id+'?autoplay=1&autohide=1'+(ctYt.vid_start?'&start='+ctYt.vid_start:'');
+                ring_url = 'https://www.youtube.com/embed/'+ctYt.yt_vid_id+'?autoplay=1&autohide=1'+(ctYt.vid_start?'&start='+ctYt.vid_start:'');
               else
               {
                 ring_url = ctYt.inputUrl;
-                if(!/^(http|ftp)s?:\/\//.test(ring_url)) ring_url = 'http://'+ring_url;
+                if(!/^(http|ftp)s?:\/\//.test(ring_url)) ring_url = 'https://'+ring_url;
               }
               //won't work if following has been called before
               //YTplayer['mute']();

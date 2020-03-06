@@ -1111,20 +1111,20 @@ ml.showBrowserHint=function(name,additionalText)
     if(browser==='Chrome')
     {
       browser='Google Chrome';
-      instruction+="'http://www.google.com/chrome/'>www.google.com/chrome</a>";
+      instruction+="'https://www.google.com/chrome/'>www.google.com/chrome</a>";
     }
     else if(browser==='Firefox')
     {
-      instruction+="'http://www.mozilla.com/firefox/'>www.mozilla.com/firefox</a>";
+      instruction+="'https://www.mozilla.com/firefox/'>www.mozilla.com/firefox</a>";
     }
     else if(browser==='Safari')
     {
-      instruction+="'http://www.apple.com/safari/download/'>www.apple.com/safari/download</a>";
+      instruction+="'https://www.apple.com/safari/download/'>www.apple.com/safari/download</a>";
     }
     else if(browser==='Explorer')
     {
       browser='Internet Explorer';
-      instruction="in order to use "+name+" install the Google Chrome Frame plug-in at <a target='_blank' href='http://code.google.com/chrome/chromeframe/'>http://code.google.com/chrome/chromeframe</a>";
+      instruction="in order to use "+name+" install the Google Chrome Frame plug-in at <a target='_blank' href='https://code.google.com/chrome/chromeframe/'>https://code.google.com/chrome/chromeframe</a>";
     }
     else
       instruction=null;
@@ -2498,8 +2498,8 @@ ml.htmlBackgroundListener=function(default_){
 //http://www.a-better-tomorrow.com/blog/wp-content/wallpaper_abt1.jpg
 //http://www.gowallpaper.net/wp-content/uploads/2011/04/Windows-7-3d-wide-wallpaper-1280x800.jpg
 //http://vistawallpapers.files.wordpress.com/2007/03/vista-wallpapers-69.jpg
-  //TODO: replace with http://i.imgur.com/cvyOo.gif
-  var LOAD_IMG_URL = 'http://i.imgur.com/zqG5F.gif';
+  //TODO: replace with https://i.imgur.com/cvyOo.gif
+  var LOAD_IMG_URL = 'https://i.imgur.com/zqG5F.gif';
 
   var BG_EL=document.documentElement;
   var LOAD_IMG = 'url('+LOAD_IMG_URL+')';
