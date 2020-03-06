@@ -931,3 +931,19 @@ body.paused #counter
 #hNotiWrapper, #feedbackWrapper {
   display: none!important;
 }
+
+
+
+
+/* TODO -remove */
+#ad-test { display: none }
+/*
+#ad-test {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 160px;
+  height: 600px;
+  border: 1px solid red;
+}
+*/

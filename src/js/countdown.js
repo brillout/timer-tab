@@ -2,6 +2,12 @@ import ml from './ml';
 
 const ctObj = {};
 
+/*
+const DEBUG_AUDIO = true;
+/*/
+const DEBUG_AUDIO = false;
+//*/
+
 export default ctObj;
 
 ctObj.TYPES={STOPW:1,TIMER:2,ALARM:3};
@@ -946,6 +952,7 @@ ctObj.Timer_dom=(function(){
           var node,ctx,timeout;
           ring.playWebAudio=function()
           {
+            DEBUG_AUDIO && console.log('DEBUG_AUDIO', 'playing web audio');
             if(!node)
             {
               function fadeOut(i,length) { return 1-i/length }
@@ -961,7 +968,7 @@ ctObj.Timer_dom=(function(){
 
               var buffer = ctx['createBuffer'](1, buf_size, SAMPLE_RATE);
                 var buf = buffer['getChannelData'](0);
-                for (i = 0; i < buf_size; ++i) buf[i] = fade(i,buf_size)*Math.sin(freq * PI_2 * i / SAMPLE_RATE);
+                for (let i = 0; i < buf_size; ++i) buf[i] = fade(i,buf_size)*Math.sin(freq * PI_2 * i / SAMPLE_RATE);
               node = ctx['createBufferSource'](0);
                 node['buffer']  = buffer;
                 node['loop']    = true;
