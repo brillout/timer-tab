@@ -936,14 +936,18 @@ body.paused #counter
 
 
 /* TODO -remove */
-#ad-test { display: none }
+.ad-test { display: none }
 /*
-#ad-test {
+.ad-test {
   position: absolute;
   top: 0;
   right: 0;
   width: 160px;
   height: 600px;
   border: 1px solid red;
+}
+.ad-test-2 {
+  width: 720px;
+  height: 90px;
 }
 */
