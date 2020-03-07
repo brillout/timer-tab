@@ -936,8 +936,9 @@ body.paused #counter
 
 
 /* TODO -remove */
-.ad-test { display: none }
 /*
+.ad-test { display: none }
+*/
 .ad-test {
   position: absolute;
   top: 0;
@@ -950,4 +951,3 @@ body.paused #counter
   width: 720px;
   height: 90px;
 }
-*/
