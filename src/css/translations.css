@@ -1,6 +1,6 @@
 .inputSep:before{content:" : "}
 
-#me > a:before {content: ""}
+#made_by > a:before {content: "made by "}
 .timerInput button:before{content:"start\A0\A0"}
 #timerButton:after{content:"Countdown"}
 #alarmButton:after{content:"Alarm Clock"}
@@ -15,7 +15,7 @@ body.paused  #pause:before {content:"resume"}
 #opt_name_desc:before {content:"Name:"}
 
 
-html.de #me > a:before {content: "hergestellt von "}
+html.de #made_by > a:before {content: "hergestellt von "}
 html.de .timerInput button:before{content:"starte\A0\A0"}
 html.de #alarmButton:after{content:"Wecker"}
 html.de #stopwButton:after{content:"Stoppuhr"}
@@ -24,7 +24,7 @@ html.de #alarmTime:before{content:"bis "}
 html.de #hNoti > span:before {content:"Popup-Notifizierung"}
 html.de #bg_description:before {content:"Hintergrund:"}
 
-html.fr #me > a:before {content: "crée par "}
+html.fr #made_by > a:before {content: "crée par "}
 html.fr .timerInput button:before{content:"lancer\A0\A0"}
 html.fr #timerButton:after{content:"Décompte"}
 html.fr #alarmButton:after{content:"Réveil"}
