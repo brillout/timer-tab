@@ -16,6 +16,7 @@
     "lodash.debounce": "^4.0.8",
     "parcel": "^1.12.4",
     "push-dir": "^0.4.1",
-    "serve": "^11.3.0"
+    "serve": "^11.3.0",
+    "tab-utils": "^0.0.4"
   }
 }

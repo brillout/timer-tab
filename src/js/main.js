@@ -5,6 +5,9 @@ import ctObj from './countdown';
 import demoScroll from './demoScroll';
 import './auto_hide_scrollarea';
 import {getScroll, setScroll} from './auto_hide_scrollarea';
+import loadAd from './loadAd';
+
+loadAd();
 
 window.addEventListener('load', () => {
   demoScroll();
