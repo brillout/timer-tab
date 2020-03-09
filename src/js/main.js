@@ -2,7 +2,6 @@
 import 'regenerator-runtime/runtime';
 import ml from './ml';
 import ctObj from './countdown';
-import demoScroll from './demoScroll';
 import './auto_hide_scrollarea';
 import {getScroll, setScroll} from './auto_hide_scrollarea';
 import loadAd from './loadAd';
@@ -10,10 +9,6 @@ import loadAd from './loadAd';
 loadAd();
 
 ml.loadAnalytics('UA-5263303-6',true);
-
-window.addEventListener('load', () => {
-  demoScroll();
-});
 
 var hasWindow;
 try{hasWindow=window['chrome']['app']['window']['current']()}catch(e){}
