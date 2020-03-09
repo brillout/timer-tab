@@ -13,11 +13,6 @@
 #morePanel > #ad_section {
   position: absolute;
 }
-#ad_section {
-  top: calc(-90px - 21px);
-  left: calc((100vw - 728px) / 2);
-  width: 728px;
-}
 
 #ad_remover_row {
   height: 21px;
@@ -48,44 +43,46 @@
 /* ad stuff are NOT 100% size of table */
 
 @media (max-width:727px) {
-  .ad_stuff_content {
+  #ad_section {
+    top: calc(-50px - 21px);
+    left: calc((100vw - 320px) / 2);
     width: 320px;
   }
-  #ad_content_row,
-  #ad_div_wrapper {
+  #ad_content_row {
     height: 50px;
   }
 }
 @media (min-width:728px){
-  .ad_stuff_content {
+  #ad_section {
+    top: calc(-90px - 21px);
+    left: calc((100vw - 728px) / 2);
     width: 728px;
   }
-  #ad_content_row,
-  #ad_div_wrapper {
+  #ad_content_row {
     height: 90px;
   }
 }
 
-.ad_stuff_content {
+#ad_section {
   max-width: 100vw;
-  margin: auto;
 }
 
+
+
+
+
+
 /* ensure that ad doesn't creep out */
-#ad_div_wrapper {
+#ad_content_row {
   position: relative;
   overflow: hidden;
 }
-#ad_div_wrapper .ad_content {
+#ad_content_row .ad_content {
   position: absolute;
   width: 100%;
   height: 100%;
   bottom: 0;
   left: 0;
-}
-
-#ad_remover_row > td {
-  text-align: right;
 }
 
 
