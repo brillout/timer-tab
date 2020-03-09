@@ -241,6 +241,8 @@ var postInitListeners=[];
       }
     });
   }); 
+
+  /* TODO
   //webkit notification setting
   feature_fcts.push(function(){ 
     if(!ml.noti.isAvailable()){
@@ -271,6 +273,8 @@ var postInitListeners=[];
       refreshOpt();
     })};
   }); 
+  */
+
   //set up background setting
   feature_fcts.push(function(){ 
     document.getElementById('bg_url_container').appendChild(ml.optionInput('bg_url','',ml.htmlBackgroundListener()));
