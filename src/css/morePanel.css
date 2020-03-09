@@ -1,6 +1,7 @@
 #morePanel {
   background-color: #373a4a;
-  color: #ddd
+  color: #ddd;
+  width: 100vw;
 }
 
 #morePanelHeader {

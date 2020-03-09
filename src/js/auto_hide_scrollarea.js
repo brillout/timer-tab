@@ -10,12 +10,9 @@ const DEBUG = true;
 const DEBUG = false;
 //*/
 
-window.setTimeout(() => {
-  const scroll_bar_width = get_scroll_bar_width();
-  DEBUG && console.log({scroll_bar_width});
-//scroll_el.style.width = (get_computed_width(scroll_el) + get_scroll_bar_width()) + 'px'
-}, 1000);
-
+const scroll_bar_width = get_scroll_bar_width();
+document.documentElement.style.setProperty('--scroll-bar-width', scroll_bar_width+'px');
+document.documentElement.classList.add('scroll-bar-width_is_available');
 
 /*
 function get_scroll_bar_width() {
@@ -66,8 +63,6 @@ function get_scroll_bar_width() {
   // Removing temporary elements from the DOM
   outer.parentNode.removeChild(outer);
 
-  document.documentElement.style.setProperty('--scroll-bar-width', scrollbarWidth+'px');
-
   return scrollbarWidth;
 
 }
@@ -95,6 +90,10 @@ function getComputedStyle(el, prop) {
 */
 
 
+setTimeout(() => {
+  document.documentElement.classList.add('inactive_state');
+}, 2000)
+/*
 const INACTIVITY_TIME = 2*1000;
 let lastActivity;
 let checker;
@@ -141,6 +140,7 @@ function onActivity(activityListener) {
     );
   });
 }
+*/
 
 function isOlderThan(date, timespan1) {
   const now = new Date();

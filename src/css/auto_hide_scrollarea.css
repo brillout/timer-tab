@@ -4,7 +4,8 @@ body {
 #auto_hide_scrollarea {
   width: 100vw;
   height: 100vh;
-  overflow: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
   transition: width .3s linear;
 }
 #auto_hide_scrollarea {
@@ -13,8 +14,7 @@ body {
 #body_table {
   transition: height .3s linear;
 }
-html.inactive_state.is_on_top #auto_hide_scrollarea {
-  overflow-y: scroll;
+html.inactive_state.is_on_top.scroll-bar-width_is_available #auto_hide_scrollarea {
   width: calc(100vw + var(--scroll-bar-width));
 }
 html.inactive_state.is_on_top #body_table {
