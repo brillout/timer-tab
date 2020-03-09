@@ -4,14 +4,7 @@ const scroll_el = document.getElementById('auto_hide_scrollarea');
 
 export {getScroll, setScroll};
 
-//*
-const DEBUG = true;
-/*/
-const DEBUG = false;
-//*/
-
 const scroll_bar_width = get_scroll_bar_width();
-console.log({scroll_bar_width});
 document.documentElement.style.setProperty('--scroll-bar-width', scroll_bar_width+'px');
 document.documentElement.classList.add('scroll-bar-width_is_available');
 
@@ -157,7 +150,6 @@ onScroll();
 
 function onScroll() {
   const scrollPos = getScroll();
-  console.log({scrollPos});
   if( scrollPos === 0 ) {
     document.documentElement.classList.add('is_on_top');
   } else {
