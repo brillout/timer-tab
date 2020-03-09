@@ -11,16 +11,16 @@ body {
 #auto_hide_scrollarea {
   transition: width .3s linear;
 }
-#body_table {
+#timer_table {
   transition: height .3s linear;
 }
 html.inactive_state.is_on_top.scroll-bar-width_is_available #auto_hide_scrollarea {
   width: calc(100vw + var(--scroll-bar-width));
 }
-html.inactive_state.is_on_top #body_table {
+html.inactive_state.is_on_top #timer_table {
   height: 100vh;
 }
-#body_table {
+#timer_table {
   height: calc(100vh - 110px);
 }
 
