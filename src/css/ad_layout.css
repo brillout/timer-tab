@@ -103,7 +103,7 @@
   }
 }
 
-.ad_stuff {
+html:not(.show_ad) .ad_stuff {
   display: none;
 }
 
