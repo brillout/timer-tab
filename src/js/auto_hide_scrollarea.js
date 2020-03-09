@@ -1,11 +1,14 @@
 import {sleep} from './utils';
+
+const scroll_el = document.getElementById('auto_hide_scrollarea');
+
+export {getScroll, setScroll};
+
 //*
 const DEBUG = true;
 /*/
 const DEBUG = false;
 //*/
-
-const scroll_el = document.getElementById('auto_hide_scrollarea');
 
 window.setTimeout(() => {
   const scroll_bar_width = get_scroll_bar_width();
@@ -149,9 +152,16 @@ onScroll();
 scroll_el.addEventListener('scroll', onScroll, {passive: true});
 
 function onScroll() {
-  if( scroll_el.scrollTop === 0 ) {
+  if( getScroll() === 0 ) {
     document.documentElement.classList.add('is_on_top');
   } else {
     document.documentElement.classList.remove('is_on_top');
   }
+}
+
+function getScroll() {
+  return scroll_el.scrollTop;
+}
+function setScroll(newTop) {
+  scroll_el.scrollTop = newTop;
 }

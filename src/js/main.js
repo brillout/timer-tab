@@ -4,6 +4,7 @@ import ml from './ml';
 import ctObj from './countdown';
 import demoScroll from './demoScroll';
 import './auto_hide_scrollarea';
+import {getScroll, setScroll} from './auto_hide_scrollarea';
 
 window.addEventListener('load', () => {
   demoScroll();
@@ -574,11 +575,10 @@ var postInitListeners=[];
         lastFocus=this;
       };
       function regainFocus() {
-        if(document.activeElement && document.activeElement.tagName!=="INPUT" && document.activeElement.tagName!=="SELECT" && document.activeElement!==STOPW_BUTTON)
-        {
-          var scrollPre=[window.scrollX,window.scrollY];
-          lastFocus.focus()
-          if(window.scrollX!==scrollPre[0] || window.scrollY!==scrollPre[1]) window.scrollTo.apply(null,scrollPre);
+        if(document.activeElement && document.activeElement.tagName!=="INPUT" && document.activeElement.tagName!=="SELECT" && document.activeElement!==STOPW_BUTTON) {
+          var scrollPos= getScroll();
+          lastFocus.focus();
+          setScroll(scrollPos);
         }
       };
       window.onclick=function(){setTimeout(regainFocus,1)};//no timeout -> [unfullscreen -> loss of focus]
