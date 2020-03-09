@@ -1,6 +1,13 @@
 //console todo; get seo stats before uploading this version containing mod desc
+import 'regenerator-runtime/runtime';
 import ml from './ml';
 import ctObj from './countdown';
+import demoScroll from './demoScroll';
+import './auto_hide_scrollarea';
+
+window.addEventListener('load', () => {
+  demoScroll();
+});
 
 var hasWindow;
 try{hasWindow=window['chrome']['app']['window']['current']()}catch(e){}
@@ -103,23 +110,6 @@ var postInitListeners=[];
   }; 
 
   var feature_fcts = [];
-
-  //fullscreen options toggle
-  postInitListeners.push(function(){ 
-    var isZoomed;
-    function listener(){
-      var shouldZoom = location.hash==='#options';
-      if((!!isZoomed)!==(!!shouldZoom)){//false!=undefined === true
-        document.documentElement['classList'][shouldZoom?'add':'remove']('fullscreenOptions')
-        var opts={maxScale:2,noTransition:isZoomed===undefined};
-        if(headMovementListeners) opts.posChangeListeners=headMovementListeners;
-        ml.zoomToElement(document.getElementById('settingsWrapper'),!shouldZoom,opts);
-      }
-      isZoomed=shouldZoom;
-    }
-    ml.addHashListener(listener);
-    listener();
-  }); 
 
   postInitListeners.push(function(){
    if(!ml.isExtensionBackground()) return;
@@ -240,13 +230,6 @@ var postInitListeners=[];
   //settings+promo stuff
   //{{{
   //hide name setting [for packaged/extension]
-  feature_fcts.push(function(){ 
-    if(ml.isPackagedApp()||ml.isExtension()) document.getElementById('opt_name').style.display='none';
-  }); 
-  //hide background setting  [for packaged/extension]
-  feature_fcts.push(function(){ 
-    if(ml.isPackagedApp()||ml.isExtension()) document.getElementById('bg_option').style.display='none';
-  }); 
   //unorganized
   feature_fcts.push(function(){ 
     ml.asyncStore.get('visits',function(nth_visit){
@@ -260,11 +243,6 @@ var postInitListeners=[];
          document.getElementById('promo').style.display='';
     });
 
-    var hSW = document.getElementById('settingsWrapper');
-    hSW.addEventListener('touchstart',function(){document.documentElement['classList']['add']('showOptions')},false);
-    //hSW.onmousedown=function(){if(parseFloat(ml.element.getStyle(hSW,'opacity'))<1)document.documentElement['classList']['add']('showOptions')};
-    //if(ml.isTouchDevice()) document.getElementById('moreButton').onclick=function(){document.documentElement['classList']['toggle']('showOptions')};
-   
     if(window['chrome'] && window['chrome']['webstore'] && window['chrome']['webstore']['install'] && (!window['chrome'] || !window['chrome']['app'] || !window['chrome']['app']['isInstalled']) && !ml.isPackagedApp())
     {
       var instButt = document.getElementById('install');
@@ -275,11 +253,6 @@ var postInitListeners=[];
   }); 
   //persistant goto
   postInitListeners.push(function(){ 
-    //afer initTimer because of YT_EL.notAvailable
-    if(YT_EL.notAvailable) {
-      document.getElementById('goto').style.display='none';
-      return;
-    }
     var notFirstTime;
   //document.getElementById('goto_container').appendChild(ml.optionInput('goto_url','http://youtu.be/PS5KAEgrtMA',function(newUrl){
     ml.optionInput('goto_url','https://youtu.be/PS5KAEgrtMA',function(newUrl){
@@ -324,13 +297,6 @@ var postInitListeners=[];
   //set up background setting
   feature_fcts.push(function(){ 
     document.getElementById('bg_url_container').appendChild(ml.optionInput('bg_url','',ml.htmlBackgroundListener()));
-  }); 
-  //metro => hide settings
-  feature_fcts.push(function(){ 
-    if(IS_METRO_UI) {
-      ['settingsWrapper','hShare'].map(function(id){return document.getElementById(id)})
-          .forEach(function(el){el.style.display='none'});
-    }
   }); 
   //}}}
 

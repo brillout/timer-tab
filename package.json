@@ -13,6 +13,7 @@
     "parcel:prod": "parcel build src/*.html --public-url '.'"
   },
   "dependencies": {
+    "lodash.debounce": "^4.0.8",
     "parcel": "^1.12.4",
     "push-dir": "^0.4.1",
     "serve": "^11.3.0"

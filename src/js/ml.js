@@ -813,7 +813,6 @@ ml.element.create=function(type,props){
     var dummy = document.createElement(tagName||'div');
     dummy.style.display='inline-block';
     dummy.style.position='absolute';
-    dummy.style.top='0';
     dummy.style.top='-9999px';
     dummy.style.zIndex='-9999';
     dummy.style.visibility='hidden';

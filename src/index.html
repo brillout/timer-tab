@@ -82,8 +82,10 @@
 </head>
 
 <body>
-    <!-- {{{ -->
-    <div id='bodytable' style='height:100%;width:100%'>
+
+  <div id='auto_hide_scrollarea'>
+
+    <div id='body_table'>
       <div id='bodypadding'></div>
       <div id='stripH'></div>
       <div id='middletable' style='width:100%'><div style='width:100%;position:relative'>
@@ -145,26 +147,39 @@
            <!-- <div id='yt_td'><div id='yt'></div></div> -->
                 <div id='yt'></div>
                 <div id='filler' style='height:100%;width:100%'></div>
-                <div id="verticalBottom" style='font-size: 14px;vertical-align: bottom;overflow:hidden'>
+                <div id="verticalBottom" style='vertical-align: bottom; text-align: center;'>
                 <!-- {{{ -->
-                  <div id='settingsWrapper' style='text-align: left;margin-bottom: 2px'>
-                  <!-- {{{ -->
-                    <div style='background: #f5f5f5'>
-                    <!-- <hr style="margin:2px"> -->
-                    <!--<div id='self'><a tabindex='-1' target='_blank' href='http://www.timer-tab.com'>timer-tab.com</a></div>-->
-                    <!--<div id='me'><a tabindex='-1' target='_blank' rel='author' href='http://www.brillout.com'>brillout.com</a></div>-->
+                  <a id='time' href='http://www.clocktab.com' tabindex='-1' target='_blank' >Online Clock</a>
+                <!-- }}} -->
+                </div>
+              </div>
+              <!-- }}} -->
+            </div>
+          </div>
+        </div><!--end allcontent-->
+      </div></div><!--end middletable -->
+    </div>
+
+
+    <div id='morePanel'>
+      <div id='morePanelHeader'></div>
+
+                    <div id='self'><a tabindex='-1' target='_blank' href='http://www.timer-tab.com'>timer-tab.com</a></div>
+                    <div id='me'><a tabindex='-1' target='_blank' rel='author' href='http://www.brillout.com'>brillout.com</a></div>
+
                     <div id='me'><a tabindex='-1' target='_blank' rel='author' href='http://www.brillout.com'>made by Romuald Brillout</a></div>
+
                     <div id='feedbackWrapper'><a id='feedback' rel='nofollow' tabindex='-1' target='_blank'></a></div>
                     <div><span id='install' style='display: none'></span></div>
                     <div id='hNotiWrapper'><label id='hNoti'><input id='hNotiBox' type='checkbox' tabindex='-1'/><span id='notiPermission'></span></label></div>
-                    <table id='goto' style='width:100%;white-space:nowrap'><tr>
-                      <td id='goto_description'></td>
-                      <td id='goto_container' style='width:100%'>
+                    <label>
+                      <span id='goto_description'></span>
+                      <div id='goto_container' style='width:100%'>
                         <!-- <input id='goto_url' type='url' tabindex='-1' placeholder='address of youtube video' style='width: 100% !important;font-size: 80%'/> -->
                         <input id='goto_url' type='url' tabindex='-1'/>
 
-                      </td>
-                    </tr></table>
+                      </div>
+                    </label>
                     <table id='bg_option' style='width:100%;white-space:nowrap'><tr>
                       <td id='bg_description'></td>
                       <td id='bg_url_container' style='width:100%'>
@@ -178,9 +193,10 @@
 
                       </td>
                     </tr></table>
-                    </div>
-                  <!-- }}} -->
-                  </div>
+
+
+
+
                   <table style='width:100%;padding: 3px'>
                   <tr>
                     <td style='width: 100%;text-align:center'>
@@ -191,26 +207,17 @@
                         </span>
                       </div>
                     </td>
-                    <td style='white-space: pre'><a id='time' href='http://www.clocktab.com' tabindex='-1' target='_blank' >Online Clock</a></td>
                   </tr>
                   </table>
                   <a id='promo' rel='nofollow' tabindex='-1' target='_blank' style='display:none;color:inherit;text-align:center'><div style='background: #ccc;opacity:.7;padding:7px;padding-bottom: 10px;'>
                     <div></div>
                     <div></div>
                   </div></a>
-                <!-- }}} -->
-                </div>
-              </div>
-              <!-- }}} -->
-            </div>
-          </div>
-        </div><!--end allcontent-->
-      </div></div><!--end middletable -->
     </div>
-    <div class="ad-test"></div>
-    <div class="ad-test ad-test-2"></div>
-    <!-- }}} -->
 
-    <script src="js/main.js"></script>
+  </div>
+
+  <script src="js/main.js"></script>
+
 </body>
 </html>
