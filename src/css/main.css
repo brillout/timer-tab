@@ -587,10 +587,18 @@ button:before {
   padding-left: 20px;
 }
 #time:before {
+  position: relative;
+  top: -1px;
   background-repeat: no-repeat;
   background-position: 0px;
   content: "";
-  padding-left: 20px;
+  padding-left: 25px;
+}
+#time{
+  font-size: 1.2em;
+}
+#verticalBottom {
+  padding-bottom: 5px;
 }
 
 .timerInput button:before,
@@ -641,10 +649,6 @@ a * {
  /*make sure pause button is above counter*/
  position: relative;
  z-index:9;
-}
-#time{
-  font-size: 1.2em;
-  padding-bottom: 5px;
 }
 html:not(.stopw):not(.alarm):not(.timer) #vertical
 {

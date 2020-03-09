@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html itemscope itemtype="http://schema.org/WebApplication">
+<html>
 <head>
 <!-- {{{ -->
 
@@ -148,7 +148,7 @@
                 <a id='time' href='http://www.clocktab.com' tabindex='-1' target='_blank' >Online Clock</a>
               <!-- }}} -->
               </div>
-              <div id='padder' class="ad_stuff" style='height: 120px;width:100%'></div>
+              <div class="ad_stuff" style='height: 110px;width:100%'></div>
             </div>
             <!-- }}} -->
           </div>
@@ -164,42 +164,40 @@
 
 
 
-    <a tabindex='-1' target='_blank' href='https://www.clocktab.com'>Clock Tab</a>
-    <a id="made_by" tabindex='-1' target='_blank' rel='author' href='http://www.brillout.com'>made by Romuald Brillout</a>
+    <div class="center_content">
+      <label>
+        <span id='goto_description'></span>
+        <input id='goto_url' class="setting_text_input" type='url' tabindex='-1'/>
+      </label>
+
+      <label>
+        <span id='bg_description'></span>
+        <input id='bg_url' class="setting_text_input" type='text' tabindex='-1'/>
+      </label>
+    </div>
+
+    <div class="center_content">
+      <a tabindex='-1' target='_blank' href='https://www.clocktab.com'>Clock Tab</a>
+      <a id="made_by" tabindex='-1' target='_blank' rel='author' href='http://www.brillout.com'>Romuald Brillout</a>
+      <div id='tweet_wrapper' class='share_button'>
+        <iframe id='tweet_iframe' allowtransparency="true" tabindex='-1' frameborder="0" scrolling="no"></iframe>
+      </div>
+    </div>
 
     <!-- TODO
     <label id='hNoti'><input id='hNotiBox' type='checkbox' tabindex='-1'/><span id='notiPermission'></span></label>
     -->
 
-    <label>
-      <span id='goto_description'></span>
-      <div id='goto_container' style='width:100%'>
-        <!-- <input id='goto_url' type='url' tabindex='-1' placeholder='address of youtube video' style='width: 100% !important;font-size: 80%'/> -->
-        <input id='goto_url' type='url' tabindex='-1'/>
 
-      </div>
-    </label>
-
-    <label>
-      <span id='bg_description'></span>
-      <div id='bg_url_container' style='width:100%'>
-      <!-- <input type='text' tabindex='-1' placeholder='address of image' style='width: 100% !important;font-size: 80%;padding: 0;' id='bg_url'/></td> -->
-      </div>
-    </label>
-
+    <!--
     <label>
       <span id='opt_name_desc'></span>
       <input id='opt_name_input' type='text' tabindex='-1'/>
     </label>
+    -->
 
 
 
-
-    <div style='width: 100%; text-align:center'>
-      <div id='hShare' style='width:100%'>
-        <iframe id='hTweet' allowtransparency="true" tabindex='-1' frameborder="0" scrolling="no" style="width:90px;position: relative;top: 3px;opacity:0"></iframe>
-      </div>
-    </div>
 
 
 

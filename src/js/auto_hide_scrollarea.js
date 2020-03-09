@@ -11,6 +11,7 @@ const DEBUG = false;
 //*/
 
 const scroll_bar_width = get_scroll_bar_width();
+console.log({scroll_bar_width});
 document.documentElement.style.setProperty('--scroll-bar-width', scroll_bar_width+'px');
 document.documentElement.classList.add('scroll-bar-width_is_available');
 
@@ -149,10 +150,15 @@ function isOlderThan(date, timespan1) {
 }
 
 onScroll();
-scroll_el.addEventListener('scroll', onScroll, {passive: true});
+( scroll_el === document.documentElement ?
+    window :
+    scroll_el )
+.addEventListener('scroll', onScroll, {passive: true});
 
 function onScroll() {
-  if( getScroll() === 0 ) {
+  const scrollPos = getScroll();
+  console.log({scrollPos});
+  if( scrollPos === 0 ) {
     document.documentElement.classList.add('is_on_top');
   } else {
     document.documentElement.classList.remove('is_on_top');

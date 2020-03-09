@@ -1817,6 +1817,7 @@ ctObj.Timer_dom=(function(){
       if(thisTimer.dom.pauseBtn){
         thisTimer.dom.pauseBtn.onclick=function(){if(__type!==ctObj.TYPES.ALARM||__isRinging) interface_.togglePause()};
       }
+      /*
       if(thisTimer.dom.name_input && thisTimer.dom.name_el) { 
         var nameInput = thisTimer.dom.name_input;
         function setNameAttr(){
@@ -1835,6 +1836,7 @@ ctObj.Timer_dom=(function(){
           }
         };
       } 
+      */
       setAlarmTime(initialState.end);
       interface_.spark();
     }; 
@@ -1969,7 +1971,7 @@ ctObj.Timer_dom=(function(){
         _save(true);
       }
       return {
-        getName: function() { var ct=getCt();return ct[__KEY_NAME] },
+        getName: function() { return undefined;/*var ct=getCt();return ct[__KEY_NAME]*/ },
         getTags: function() { var ct=getCt();return ct[__KEY_TAGS] },
         getType: function() { var ct=getCt();return ct[__KEY_TYPE] },
         setType: function(newVal){var ct=getCt();corEx(newVal&&(newVal===TYPES.STOPW||newVal===TYPES.ALARM||newVal===TYPES.TIMER));ct[__KEY_TYPE]=newVal;_save()},

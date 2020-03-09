@@ -1,68 +1,34 @@
-#goto_description:before,
-#bg_description:before,
-#opt_name_desc:before {
-  padding-left: 20px;
-}
-
 #goto_description:before {
+  padding-left: 20px;
   background-repeat: no-repeat;
   background-position: 0px;
   background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYmJiIiB2aWV3Qm94PSItMzAwIC0xODAgMjA5MiAyMDkyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0gOTEyLjAwLDE2OTYuMDBxMC4wMC0xNi4wMCAtMTYuMDAtMTYuMDBxIC01OS4wMCwwLjAwIC0xMDEuNTAtNDIuNTB0IC00Mi41MC0xMDEuNTBxMC4wMC0xNi4wMCAtMTYuMDAtMTYuMDB0IC0xNi4wMCwxNi4wMHEwLjAwLDczLjAwIDUxLjUwLDEyNC41MHQgMTI0LjUwLDUxLjUwcSAxNi4wMCwwLjAwIDE2LjAwLTE2LjAwek0gMTcyOC4wMCwxNDA4LjAwcTAuMDAsNTIuMDAgLTM4LjAwLDkwLjAwdCAtOTAuMDAsMzguMDBsIC00NDguMDAsMC4wMCBxMC4wMCwxMDYuMDAgLTc1LjAwLDE4MS4wMHQgLTE4MS4wMCw3NS4wMHQgLTE4MS4wMC03NS4wMHQgLTc1LjAwLTE4MS4wMGwgLTQ0OC4wMCwwLjAwIHEgLTUyLjAwLDAuMDAgLTkwLjAwLTM4LjAwdCAtMzguMDAtOTAuMDBxIDE5MC4wMC0xNjEuMDAgMjg3LjAwLTM5Ny41MHQgOTcuMDAtNDk4LjUwIHEwLjAwLTE2NS4wMCA5Ni4wMC0yNjIuMDB0IDI2NC4wMC0xMTcuMDBxIC04LjAwLTE4LjAwIC04LjAwLTM3LjAwcTAuMDAtNDAuMDAgMjguMDAtNjguMDB0IDY4LjAwLTI4LjAwdCA2OC4wMCwyOC4wMHQgMjguMDAsNjguMDBxMC4wMCwxOS4wMCAtOC4wMCwzNy4wMHEgMTY4LjAwLDIwLjAwIDI2NC4wMCwxMTcuMDB0IDk2LjAwLDI2Mi4wMHEwLjAwLDI2Mi4wMCA5Ny4wMCw0OTguNTB0IDI4Ny4wMCwzOTcuNTB6Ij48L3BhdGg+PC9zdmc+');
 }
 
 #bg_description:before {
+  padding-left: 20px;
   background-repeat: no-repeat;
   background-position: 0px;
   background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYWFhIiB2aWV3Qm94PSItMjAwIC0xODAgMjEyMCAyMTIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0gMTI4MC4wMCw2NDAuMDBxIDAuMDAsODAuMDAgNTYuMDAsMTM2LjAwdCAxMzYuMDAsNTYuMDB0IDEzNi4wMC01Ni4wMHQgNTYuMDAtMTM2LjAwdCAtNTYuMDAtMTM2LjAwdCAtMTM2LjAwLTU2LjAwdCAtMTM2LjAwLDU2LjAwdCAtNTYuMDAsMTM2LjAwek0gMjU2LjAwLDEwMjQuMDBsIDAuMDAsNDQ4LjAwIGwgMTQwOC4wMCwwLjAwIGwwLjAwLTE5Mi4wMCBsIC0zMjAuMDAtMzIwLjAwbCAtMTYwLjAwLDE2MC4wMGwgLTUxMi4wMC01MTIuMDB6TSAxNjAuMDAsMzIwLjAwbCAxNjAwLjAwLDAuMDAgcSAxMy4wMCwwLjAwIDIyLjUwLDkuNTB0IDkuNTAsMjIuNTBsIDAuMDAsMTIxNi4wMCBxIDAuMDAsMTMuMDAgLTkuNTAsMjIuNTB0IC0yMi41MCw5LjUwbCAtMTYwMC4wMCwwLjAwIHEgLTEzLjAwLDAuMDAgLTIyLjUwLTkuNTB0IC05LjUwLTIyLjUwbDAuMDAtMTIxNi4wMCBxMC4wMC0xMy4wMCA5LjUwLTIyLjUwdCAyMi41MC05LjUwek0gMC4wMCwzNTIuMDBsIDAuMDAsMTIxNi4wMCBxIDAuMDAsNjYuMDAgNDcuMDAsMTEzLjAwdCAxMTMuMDAsNDcuMDBsIDE2MDAuMDAsMC4wMCBxIDY2LjAwLDAuMDAgMTEzLjAwLTQ3LjAwdCA0Ny4wMC0xMTMuMDBsMC4wMC0xMjE2LjAwIHEwLjAwLTY2LjAwIC00Ny4wMC0xMTMuMDB0IC0xMTMuMDAtNDcuMDBsIC0xNjAwLjAwLDAuMDAgcSAtNjYuMDAsMC4wMCAtMTEzLjAwLDQ3LjAwdCAtNDcuMDAsMTEzLjAweiI+PC9wYXRoPjwvc3ZnPg==');
 }
 
+/*
 #opt_name_desc:before {
+  padding-left: 20px;
   background-repeat: no-repeat;
   background-position: 0px;
   background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYmJiIiB2aWV3Qm94PSItMjM1IC0yMzUgMTc4MCAxNzgwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0gNTM1LjAwLDcuMzM0bCAtNDU0LjAwLDAuMDAgcSAtNDkuMDAsMC4wMCAtODUuMDAsMzUuMDB0IC0zNi4wMCw4Ni4wMGwgMC4wMCw0NTQuMDAgcSAwLjAwLDUxLjAwIDI0LjUwLDExMy4wMHQgNjEuNTAsOTQuMDBsIDc0OC4wMCw2NzIuMDBxIDM5LjAwLDMzLjAwIDg4LjAwLDM0LjAwdCA4NC4wMC0zNC4wMGwgNTI2LjAwLTUyNi4wMHEgMzUuMDAtMzUuMDAgMzYuMDAtODYuMDB0IC0zNi4wMC04Ni4wMGwgLTc1MC4wMC02NzAuMDBxIC0zNy4wMC0zNS4wMCAtOTYuMDAtNjAuNTB0IC0xMTEuMDAtMjUuNTB6TSAyNzMuMDAsMjA0LjMzNHEgNDkuMDAsMC4wMCA4My4wMCwzMy41MHQgMzQuMDAsODIuNTB0IC0zNC4wMCw4My4wMHQgLTgzLjAwLDM0LjAwdCAtODIuNTAtMzQuMDB0IC0zMy41MC04My4wMHQgMzMuNTAtODIuNTB0IDgyLjUwLTMzLjUweiI+PC9wYXRoPjwvc3ZnPg==");
 }
+*/
 
 #hNoti,
 #hNoti * {
   cursor: pointer;
 }
-
-#hShare > *{
-  display: inline-block;
-}
-#hShare,
-#hShare > *{
-  white-space: nowrap;
-}
-/*
-#hShare > *{
-  e-webkit-transition: -webkit-filter 0.5s;
-}
-*/
-/*
-#hShare > *:not(:hover){
-*/
-#hShare > *{
-  height: 23px;
-  min-width: 10px;
-}
-#hShare > *:not(:hover){
-  -webkit-filter: grayscale(1);
-     -moz-filter: grayscale(1);
-    opacity: 0.5;
-}
-#hShare > *{
-   display: inline-block;
-   -webkit-transition: all .5s ease-in-out;
-      -moz-transition: all .5s ease-in-out;
-        -o-transition: all .5s ease-in-out;
-           transition: all .5s ease-in-out;
-}
+/*bug fix for chrome: no onclick on :before*/
+#hNoti{position: relative}
 #hNotiBox {
   opacity: .8;
   position: relative;
   top: 2px;
 }
-
-/*bug fix for chrome: no onclick on :before*/
-#hNoti{position: relative}

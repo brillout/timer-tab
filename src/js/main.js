@@ -231,7 +231,6 @@ var postInitListeners=[];
   //persistant goto
   postInitListeners.push(function(){ 
     var notFirstTime;
-  //document.getElementById('goto_container').appendChild(ml.optionInput('goto_url','http://youtu.be/PS5KAEgrtMA',function(newUrl){
     ml.optionInput('goto_url','https://youtu.be/PS5KAEgrtMA',function(newUrl){
       YT_EL.parseUrl(newUrl);
       if(notFirstTime) YT_EL.prefetch();
@@ -277,7 +276,7 @@ var postInitListeners=[];
 
   //set up background setting
   feature_fcts.push(function(){ 
-    document.getElementById('bg_url_container').appendChild(ml.optionInput('bg_url','',ml.htmlBackgroundListener()));
+    ml.optionInput('bg_url', '', ml.htmlBackgroundListener());
   }); 
   //}}}
 
@@ -316,9 +315,10 @@ var postInitListeners=[];
       //tweet
       //{{{
       (function(){
-        var hT = document.getElementById('hTweet');
-        hT.src='https://platform.twitter.com/widgets/tweet_button.html?url=http%3A%2F%2Fwww.timer-tab.com&text=Well%20Designed%20Timer%20Web%20App,%20made%20by%20@brillout&count=horizontal';
-        hT.onload=function(){hT.style.opacity=''};
+        const tweetIframe = document.getElementById('tweet_iframe');
+        const tweetWrapper = document.getElementById('tweet_wrapper');
+        tweetIframe.src='https://platform.twitter.com/widgets/tweet_button.html?url=http%3A%2F%2Fwww.timer-tab.com&text=Well%20Designed%20Timer%20Web%20App,%20made%20by%20@brillout&count=horizontal';
+        tweetIframe.onload=function(){tweetWrapper.style.opacity='100'};
       })();
       //}}}
     },THIRD_PARTY_LOADING_DELAY);
@@ -545,11 +545,9 @@ var postInitListeners=[];
       };
       window.onclick=function(){setTimeout(regainFocus,1)};//no timeout -> [unfullscreen -> loss of focus]
     }); 
-    /* Focus preserving doesn't work
     postInitListeners.push(function(){
       scroll_perserving_focus(DEFAULT_FOCUS);
     });
-    */
   })(); 
 
 
@@ -674,9 +672,9 @@ var postInitListeners=[];
     timer_.dom.youtubeDiv = YT_EL;
     timer_.dom.pauseBtn   = PAUSE_ELEM;
     timer_.dom.alarmTime  = ALARM_TIME;
-    timer_.dom.name_input = document.getElementById('opt_name_input');
+ // timer_.dom.name_input = document.getElementById('opt_name_input');
     timer_.dom.name_el    = document.getElementById('vertical');
-    timer_.getName = function(__type){return timer_.dom.name_input&&timer_.dom.name_input.value||window.getComputedStyle(timer_.dom.inputs.filter(function(formEl){return formEl.type===__type})[0].getElementsByTagName('button')[0],":after")['content'].replace(/'/g,'')};
+ // timer_.getName = function(__type){return timer_.dom.name_input&&timer_.dom.name_input.value||window.getComputedStyle(timer_.dom.inputs.filter(function(formEl){return formEl.type===__type})[0].getElementsByTagName('button')[0],":after")['content'].replace(/'/g,'')};
     timer_.onStateChange=function(action,newState,STATE_CODES,__type){
       document.body['classList'][newState===STATE_CODES.STOPED ?'add':'remove']('stoped');
       document.body['classList'][newState===STATE_CODES.PAUSED ?'add':'remove']('paused');
@@ -834,7 +832,7 @@ var postInitListeners=[];
 };
 
 function scroll_perserving_focus(el) {
-  var scrollPos= getScroll();
+  const scrollPos = getScroll();
   el.focus();
   setScroll(scrollPos);
 }
