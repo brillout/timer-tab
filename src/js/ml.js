@@ -841,6 +841,33 @@ var scriptSource =
 */
 }; 
 
+//}}}
+ml.addHashListener=function(fct,runOnInit)
+//{{{
+{
+  if(window.onhashchange!==undefined)
+  {
+    //window.onhashchange=function(){
+    //  fct();
+    //};
+    //window.addEventListener('hashchange',fct,false);
+    window.addEventListener('hashchange',function(){fct()},false);
+  }
+  else
+  {
+    var actualHash=location.hash;
+    ml.addTactFct(function()
+    {
+      if(location.hash!=actualHash)
+      {
+        actualHash=location.hash;
+        fct();
+      }
+    });
+  }
+  if(runOnInit) fct();
+};
+//}}}
 ml.controlKeyPressed=function(ev)
 //{{{
 {
