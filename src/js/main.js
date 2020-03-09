@@ -9,6 +9,8 @@ import loadAd from './loadAd';
 
 loadAd();
 
+ml.loadAnalytics('UA-5263303-6',true);
+
 window.addEventListener('load', () => {
   demoScroll();
 });
@@ -231,30 +233,6 @@ var postInitListeners=[];
   //  STOPW_FORM.submitListeners=[shift];
   //}); 
 
-  //settings+promo stuff
-  //{{{
-  //hide name setting [for packaged/extension]
-  //unorganized
-  feature_fcts.push(function(){ 
-    ml.asyncStore.get('visits',function(nth_visit){
-       nth_visit = parseInt(nth_visit||"0",10)+1;
-       ml.asyncStore.set('visits',nth_visit.toString());
-       //__promo images:
-       //return;
-     //if(window['chrome'] && nth_visit>3 && !ml.isPackagedApp())
-       if(false)//no promo for now
-       if(nth_visit>2 && !ml.isPackagedApp())
-         document.getElementById('promo').style.display='';
-    });
-
-    if(window['chrome'] && window['chrome']['webstore'] && window['chrome']['webstore']['install'] && (!window['chrome'] || !window['chrome']['app'] || !window['chrome']['app']['isInstalled']) && !ml.isPackagedApp())
-    {
-      var instButt = document.getElementById('install');
-      instButt.style.display='';
-      //document.getElementById('install').href     ='https://chrome.google.com/webstore/detail/edebbhkhcaafmolanelponjjanocpacd?hl=en-US';
-      instButt.onclick=function(){window['chrome']['webstore']['install']()};
-    }
-  }); 
   //persistant goto
   postInitListeners.push(function(){ 
     var notFirstTime;
@@ -333,22 +311,6 @@ var postInitListeners=[];
         sound_iframe.id  = 'files_iframe';
         sound_iframe.style.display='none';
         document.body.appendChild(sound_iframe);
-      })();
-      //}}}
-
-      //analytics
-      (function(){ 
-
-        ml.loadAnalytics('UA-5263303-6',true);
-      })(); 
-
-      //plusone
-      //{{{
-      (function(){
-        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-        po.src = 'https://apis.google.com/js/plusone.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-        po.onload=function(){setTimeout(function(){document.getElementById('plusone_wrapper').style.opacity=''},500)};
       })();
       //}}}
 
@@ -623,12 +585,6 @@ var postInitListeners=[];
       else if(lang==='fr') languageText={address:'adresse d\'une ',youtube:'video YouTube',image:'image'};
       else                 languageText={address:'address of '    ,youtube:'YouTube video',image:'image'};
 
-      //alternatively: http://www.google.com/moderator/#16/e=ae425
-      //http://www.google.com/moderator/#15/e=1fde25&t=1fde25.41
-      document.getElementById('feedback').href = 'https://www.google.com/moderator/#15/e=1fde25&t=1fde25.41&v=24';
-    //document.getElementById('promo')   .href = 'https://chrome.google.com/webstore/detail/cbdmdlopbnjidgppekfmfmojkblefoal';
-    //document.getElementById('promo')   .href = 'https://www.brillout.com/dev';
-      document.getElementById('promo')   .href = 'https://chrome.google.com/webstore/detail/facebook-unseen/dmdhkalcecemojegheiohcghkamlipof';
       [ ['goto_url',languageText.address+languageText.youtube],
         ['bg_url'  ,languageText.address+languageText.image]
       ].forEach(function(d){var el=document.getElementById(d[0]);if(el)el.setAttribute("placeholder",d[1])});

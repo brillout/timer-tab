@@ -656,8 +656,6 @@ html:not(.stopw):not(.alarm):not(.timer) #vertical
 /* {{{ */
 html.fullscreenOptions #head > *:not(#verticalBottom),
 { visibility: hidden; }
-html.fullscreenOptions #verticalBottom #plusone_wrapper
-{ display: none;}
 html.fullscreenOptions #stripV{
   height: 300%;
   bottom:-100%;

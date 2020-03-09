@@ -1,3 +1,5 @@
+.inputSep:before{content:" : "}
+
 #me > a:before {content: ""}
 .timerInput button:before{content:"start\A0\A0"}
 #timerButton:after{content:"Countdown"}
@@ -7,14 +9,10 @@
 body.ringing #pause:before, body.stoped  #pause:before {content:"stop"}
 body.paused  #pause:before {content:"resume"}
 #alarmTime:before{content:"until "}
-#install:after {content:"add to Chrome"}
 #hNoti > span:before {content:"Popup-Notification"}
 #goto_description:before {content:"YouTube Alarm:"}
 #bg_description:before {content:"Background:"}
 #opt_name_desc:before {content:"Name:"}
-.inputSep:before{content:" : "}
-#feedback:after{content: "suggest a Feature"}
-/*#feedback:before{padding-right: 1px;}*//*padding-right: 1px => fix for a:before chrome bug; http://jsfiddle.net/K7KNG/ */
 
 
 html.de #me > a:before {content: "hergestellt von "}
@@ -23,10 +21,8 @@ html.de #alarmButton:after{content:"Wecker"}
 html.de #stopwButton:after{content:"Stoppuhr"}
 html.de body.paused  #pause:before {content:"fortsetzen"}
 html.de #alarmTime:before{content:"bis "}
-html.de #install:after {content:"zu Chrome hinfügen"}
 html.de #hNoti > span:before {content:"Popup-Notifizierung"}
 html.de #bg_description:before {content:"Hintergrund:"}
-html.de #feedback:after{content: "Feature Vorschlagen"}
 
 html.fr #me > a:before {content: "crée par "}
 html.fr .timerInput button:before{content:"lancer\A0\A0"}
@@ -35,29 +31,7 @@ html.fr #alarmButton:after{content:"Réveil"}
 html.fr #stopwButton:after{content:"Chronomètre"}
 html.fr body.paused  #pause:before {content:"continuer"}
 html.fr #alarmTime:before{content:"jusqu'à "}
-html.fr #install:after {content:"ajouter à Chrome"}
 html.fr #hNoti > span:before {content:"Notification Popup"}
 html.fr #goto_description:before {content:"Alarme YouTube:"}
 html.fr #bg_description:before {content:"Arrière-Plan:"}
 html.fr #opt_name_desc:before {content:"Nom:"}
-html.fr #feedback:after{content: "proposer un Feature"}
-
-
-/*
-#promo > div > div:nth-of-type(1){ font-size: 166%}
-#promo > div > div:nth-of-type(2){ font-size: 14px}
-#promo > div > div:nth-of-type(1):before{ content: "Stopwatch for Chrome"; }
-#promo > div > div:nth-of-type(2):before{ content: "Featuring multiple Stopwatches and History"; }
-*/
-/*
-#promo > div > div:nth-of-type(1){ font-size: 18px}
-#promo > div > div:nth-of-type(2){ font-size: 14px}
-#promo > div > div:nth-of-type(1):before{ content: "Want your own Website/Webapp?"; }
-#promo > div > div:nth-of-type(2):before{ content: "Let the developer of Timer Tab make your Website/Webapp. Click here."; }
-*/
-#promo > div {text-align: justify;padding: 8px 12px!important;padding-bottom:13px!important;}
-#promo > div > div:nth-of-type(1){ font-size: 23px;white-space: nowrap}
-#promo > div > div:nth-of-type(2){ font-size: 15px}
-#promo > div > div:nth-of-type(1):before{ content: "Facebook Unseen"; }
-#promo > div > div:nth-of-type(1):after{ font-size: 15px;content: "\a0 \a0 \a0 by brillout.com"; }
-#promo > div > div:nth-of-type(2):before{ text-align: justify;content: "Allows you to control if your friends can see that you have read their messages"; }
