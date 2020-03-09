@@ -536,15 +536,18 @@ var postInitListeners=[];
       };
       function regainFocus() {
         if(document.activeElement && document.activeElement.tagName!=="INPUT" && document.activeElement.tagName!=="SELECT" && document.activeElement!==STOPW_BUTTON) {
-          var scrollPos= getScroll();
-          lastFocus.focus();
-          setScroll(scrollPos);
+          scroll_perserving_focus(lastFocus);
         }
       };
       window.onclick=function(){setTimeout(regainFocus,1)};//no timeout -> [unfullscreen -> loss of focus]
     }); 
-    postInitListeners.push(function(){DEFAULT_FOCUS.focus();});
+    /* Focus preserving doesn't work
+    postInitListeners.push(function(){
+      scroll_perserving_focus(DEFAULT_FOCUS);
+    });
+    */
   })(); 
+
 
   //replace down/up click/touch => action with down click/touch => action
   (function(){ 
@@ -825,3 +828,9 @@ var postInitListeners=[];
 })();
 
 };
+
+function scroll_perserving_focus(el) {
+  var scrollPos= getScroll();
+  el.focus();
+  setScroll(scrollPos);
+}
