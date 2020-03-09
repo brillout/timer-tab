@@ -10,10 +10,9 @@
     "prod:deploy": "push-dir --dir=dist/ --branch=gh-pages --cleanup",
     "prod:serve": "serve dist/ --listen 3000",
     "parcel:dev": "parcel serve src/index.html --port 3000",
-    "parcel:prod": "parcel build src/*.html --public-url '.'"
+    "parcel:prod": "parcel build src/index.html src/donate.html"
   },
   "dependencies": {
-    "lodash.debounce": "^4.0.8",
     "parcel": "^1.12.4",
     "push-dir": "^0.4.1",
     "serve": "^11.3.0",
