@@ -1,7 +1,7 @@
 //console todo; get seo stats before uploading this version containing mod desc
 import 'regenerator-runtime/runtime';
 import ml from './ml';
-import auto_hide_scrollarea from './auto_hide_scrollarea';
+import auto_hide_scrollarea, {scrollToElement} from './auto_hide_scrollarea';
 import loadAd from './loadAd';
 import load_mobile_message from './load_mobile_message';
 import load_timer from './load_timer';
@@ -23,14 +23,10 @@ window.onload = () => {
 }
 
 function smoothen_settings_link() {
-  return;
   const link_source = document.querySelector('#settings_link');
-  const link_target = document.querySelector(link_target.href);
-  console.log('tt', link_target);
   link_source.onclick = ev => {
+    scrollToElement('#settings');
     ev.preventDefault();
-    console.log('aa');
-    //link_target.scrollTo({behavior: 'smooth'});
     return false;
   };
 }

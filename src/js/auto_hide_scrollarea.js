@@ -2,7 +2,7 @@ import {sleep} from './utils';
 
 export default auto_hide_scrollarea;
 
-export {getScroll, setScroll};
+export {getScroll, setScroll, scrollToElement};
 
 
 let scroll_el;
@@ -173,4 +173,10 @@ function getScroll() {
 }
 function setScroll(newTop) {
   scroll_el.scrollTop = newTop;
+}
+
+function scrollToElement(selector) {
+  const el = document.querySelector(selector);
+  const {top} = el.getBoundingClientRect();
+  scroll_el.scrollTo({top, behavior: 'smooth'});
 }
