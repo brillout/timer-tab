@@ -8,7 +8,10 @@ import loadAd from './loadAd';
 import load_mobile_message from './load_mobile_message';
 
 load_mobile_message();
-loadAd();
+
+setTimeout(() => {
+  loadAd();
+}, 1000);
 
 ml.loadAnalytics('UA-5263303-6',true);
 

@@ -50,9 +50,8 @@ body::-webkit-scrollbar {
 
 .center_content {
   width: 100%;
-  text-align: center;
-}
-.center_content {
+  display: flex;
+  justify-content: center;
   padding: 15px;
 }
 .center_content > * {
@@ -92,4 +91,15 @@ body::-webkit-scrollbar {
 
 #morePanel {
   padding-bottom: 40px;
+}
+
+
+
+#morePanel ul {
+  display: inline-block;
+  text-align: left;
+  margin-top: 0;
+}
+#morePanel h3 {
+ margin-top: 0;
 }
