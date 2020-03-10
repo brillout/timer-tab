@@ -2,18 +2,45 @@
 import 'regenerator-runtime/runtime';
 import ml from './ml';
 import ctObj from './countdown';
-import './auto_hide_scrollarea';
+import auto_hide_scrollarea from './auto_hide_scrollarea';
 import {getScroll, setScroll} from './auto_hide_scrollarea';
 import loadAd from './loadAd';
 import load_mobile_message from './load_mobile_message';
 
-load_mobile_message();
+window.onload = () => {
+  auto_hide_scrollarea();
 
-setTimeout(() => {
-  loadAd();
-}, 1000);
+  loadTimer();
 
-ml.loadAnalytics('UA-5263303-6',true);
+  smoothen_settings_link();
+
+  load_mobile_message();
+
+  ml.loadAnalytics('UA-5263303-6',true);
+
+  setTimeout(() => {
+    loadAd();
+  }, 1000);
+}
+
+function smoothen_settings_link() {
+  return;
+  const link_source = document.querySelector('#settings_link');
+  const link_target = document.querySelector(link_target.href);
+  console.log('tt', link_target);
+  link_source.onclick = ev => {
+    ev.preventDefault();
+    console.log('aa');
+    //link_target.scrollTo({behavior: 'smooth'});
+    return false;
+  };
+}
+
+
+
+function loadTimer() {
+
+console.log(1);
 
 var hasWindow;
 try{hasWindow=window['chrome']['app']['window']['current']()}catch(e){}
@@ -840,4 +867,8 @@ function scroll_perserving_focus(el) {
   const scrollPos = getScroll();
   el.focus();
   setScroll(scrollPos);
+}
+
+console.log(2);
+
 }

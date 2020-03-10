@@ -1,8 +1,17 @@
 import {sleep} from './utils';
 
-const scroll_el = document.getElementById('auto_hide_scrollarea');
+export default auto_hide_scrollarea;
 
 export {getScroll, setScroll};
+
+
+let scroll_el;
+
+function auto_hide_scrollarea() {
+
+
+scroll_el = document.getElementById('auto_hide_scrollarea');
+
 
 const scroll_bar_width = get_scroll_bar_width();
 document.documentElement.style.setProperty('--scroll-bar-width', scroll_bar_width+'px');
@@ -155,6 +164,8 @@ function onScroll() {
   } else {
     document.documentElement.classList.remove('is_on_top');
   }
+}
+
 }
 
 function getScroll() {
