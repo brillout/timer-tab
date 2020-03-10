@@ -5,33 +5,7 @@ import {getScroll, setScroll} from './auto_hide_scrollarea';
 export default load_timer;
 
 function load_timer() {
-  var hasWindow;
-  try{hasWindow=window['chrome']['app']['window']['current']()}catch(e){}
-  if(window['chrome']&&window['chrome']['app']&&window['chrome']['app']['runtime'] && !hasWindow){ 
-    function create_window(hidden){
-      //http://developer.chrome.com/apps/app.window.html
-      window['chrome']['app']['window']['create']('index.html', {
-        'width': 800,
-        'height': 500,
-        'minWidth': 300,
-        'minHeight': 300,
-        'left': 100,
-        'top': 100,
-     /* 'frame': 'none', */
-        'id': 'main',
-        'singleton': true,
-      /*'hidden': true,*/ //app actually not visible at all
-        'type': 'shell'
-      });
-    }
-    window['chrome']['alarms']['onAlarm']['addListener'](function(){
-      var alreadyOpened;
-      try{alreadyOpened=window['chrome']['app']['window']['current']()}catch(e){}
-      if(!alreadyOpened) create_window(true);
-    });
-    window['chrome']['app']['runtime']['onLaunched']['addListener'](create_window);
-  } 
-  else window.onload=function(){
+
   //HTML5 check
   //{{{
   if(!/passtest/.test(location.href) && !(
@@ -823,13 +797,10 @@ function load_timer() {
       _timer.dom.inputs[1].getElementsByTagName('input')[1].value=ml.date.readablize(ml.date.add(new Date(),0,10,0).getMinutes());
     } 
   })();
+}
 
-  };
-
-  function scroll_perserving_focus(el) {
-    const scrollPos = getScroll();
-    el.focus();
-    setScroll(scrollPos);
-  }
-
+function scroll_perserving_focus(el) {
+  const scrollPos = getScroll();
+  el.focus();
+  setScroll(scrollPos);
 }
