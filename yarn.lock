@@ -3158,11 +3158,6 @@ lodash.clone@^4.5.0:
   resolved "https://registry.npmjs.org/lodash.clone/-/lodash.clone-4.5.0.tgz#195870450f5a13192478df4bc3d23d2dea1907b6"
   integrity sha1-GVhwRQ9aExkkeN9Lw9I9LeoZB7Y=
 
-lodash.debounce@^4.0.8:
-  version "4.0.8"
-  resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
-  integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
-
 lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.npmjs.org/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
@@ -5050,10 +5045,10 @@ symbol-tree@^3.2.2:
   resolved "https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
 
-tab-utils@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.npmjs.org/tab-utils/-/tab-utils-0.0.4.tgz#99f8bdab6cc23bf5daf614bba1fecba947f95b7e"
-  integrity sha512-1abQ2c+pucRQ8RJn2ysXM52tHaEyhtjeA+7DIvAjJNEundrykrIv8E8X5bMV3VoVNVlERzs5WThbOL+1SkOWWg==
+tab-utils@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.npmjs.org/tab-utils/-/tab-utils-0.0.5.tgz#7b2fdf259191bbb39c54017e481808887c9b6e49"
+  integrity sha512-h65qbHK7kXtvc2NaxtCH2dq7H5C2U5XvKzMXNIT2TxRVXnTmiXMF5g7BZg0+Pfd5lGo3x8vn5GTd/c3stvgMog==
 
 term-size@^1.2.0:
   version "1.2.0"

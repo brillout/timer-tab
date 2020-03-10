@@ -25,6 +25,7 @@ body > #ad_section {
 
 /* make space for the ad */
 #ad_padder.ad_stuff {
+  transition: height 0.7s linear;
   height: 130px;
 }
 
@@ -58,7 +59,7 @@ body > #ad_section {
 /* function */
 
 html:not(.show_ad) .ad_stuff {
-  display: none;
+  height: 0px !important;
 }
 
 
