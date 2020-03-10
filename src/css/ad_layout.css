@@ -25,46 +25,15 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
 /* layout */
 
-/* ad sizes */
-
-/* tr is 100% size of table */
-/* ad stuff are NOT 100% size of table */
-
-@media (max-width:727px) {
-  #ad_section {
-    top: calc(-50px - 21px);
-    left: calc((100vw - 320px) / 2);
-    width: 320px;
-  }
-  #ad_content_row {
-    height: 50px;
-  }
-}
-@media (min-width:728px){
-  #ad_section {
-    top: calc(-90px - 21px);
-    left: calc((100vw - 728px) / 2);
-    width: 728px;
-  }
-  #ad_content_row {
-    height: 90px;
-  }
-}
-
 #ad_section {
-  max-width: 100vw;
+  top: calc(-90px - 21px);
+  left: calc((100vw - 728px) / 2);
+  width: 728px;
+}
+#ad_content_row {
+  height: 90px;
 }
 
 
@@ -88,17 +57,6 @@
 
 
 /* function */
-
-@media (min-width:728px){
-  .ad_mobile {
-    display: none !important;
-  }
-}
-@media (max-width:727px) {
-  .ad_desktop {
-    display: none !important;
-  }
-}
 
 html:not(.show_ad) .ad_stuff {
   display: none;
