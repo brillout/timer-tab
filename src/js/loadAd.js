@@ -7,11 +7,6 @@ export default () => {
       slotName: '/21735472908/TIMER-TAB_leaderboard_ATF_desktop',
       slotSize: [728, 90],
     },
-    {
-      slotID: 'div-gpt-ad-1583509734584-0',
-      slotName: '/21735472908/TIMER-TAB_leaderboard_ATF_mobile',
-      slotSize: [320, 50],
-    },
   ];
 
   loadAd(AD_SLOTS);
