@@ -93,9 +93,3 @@ body::-webkit-scrollbar {
 #morePanel {
   padding-bottom: 40px;
 }
-
-
-
-* {
-  box-sizing: border-box;
-}
