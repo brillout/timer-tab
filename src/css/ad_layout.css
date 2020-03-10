@@ -15,9 +15,13 @@ body > #ad_section {
   position: absolute;
 }
 #ad_section {
-  top: 0;
+  transition: top 0.7s linear;
+  top: calc(-90px - 23px);
   left: calc((100vw - 728px) / 2);
   width: 728px;
+}
+html.show_ad #ad_section {
+  top: 0;
 }
 #ad_content_wrapper {
   height: 90px;
@@ -37,6 +41,12 @@ body > #ad_section {
   position: relative;
   width: 100px;
   left: calc((100% - 100px) / 2);
+}
+/* ensure that ad remover always has 21px height */
+#ad_remover {
+  height: 21px;
+  display: flex;
+  align-item: center;
 }
 
 
