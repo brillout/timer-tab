@@ -1,52 +1,51 @@
-#ad_section_wrapper {
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  pointer-events: none;
+:root {
+  --ad-border-color: rgba(200,200,200,0.7);
+  /*
+  --ad-border-color: #ccc;
+  --ad-border-color: rgba(0,0,0,0.07);
+  --ad-border-color: #ededed;
+  */
 }
-
-#morePanel {
-  position: relative;
-}
-#morePanel > #ad_section {
-  position: absolute;
-}
-
-#ad_remover_row {
-  height: 21px;
-  display: flex;
-  align-item: center;
-}
-
-
-
-
-
 
 /* layout */
-
+body {
+  position: relative;
+}
+body > #ad_section {
+  position: absolute;
+}
 #ad_section {
-  top: calc(-90px - 21px);
+  top: 0;
   left: calc((100vw - 728px) / 2);
   width: 728px;
 }
-#ad_content_row {
+#ad_content_wrapper {
   height: 90px;
 }
 
+/* make space for the ad */
+#ad_padder.ad_stuff {
+  height: 130px;
+}
 
-
+/* ad remover layout */
+#ad_section {
+  position: relative;
+}
+#ad_section > #ad_remover {
+  position: relative;
+  width: 100px;
+  left: calc((100% - 100px) / 2);
+}
 
 
 
 /* ensure that ad doesn't creep out */
-#ad_content_row {
+#ad_content_wrapper {
   position: relative;
   overflow: hidden;
 }
-#ad_content_row .ad_content {
+#ad_content_wrapper .ad_content {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -66,22 +65,32 @@ html:not(.show_ad) .ad_stuff {
 
 /* style */
 
-#ad_remover {
-  border-radius: 10px 10px 0 0;
-  background-color: rgba(200,200,200,0.7);
-  padding: 2px 10px;
-  display: inline-block;
-}
-a#ad_remover {
-  text-decoration: none;
-  color: #333;
-  text-shadow: none;
-}
-#ad_content_row {
-  border: 1px solid rgba(200,200,200,0.7);
-  border-bottom-width: 0;
+/* ad gray border */
+#ad_content_wrapper {
+  border: 1px solid var(--ad-border-color);
+  border-top-width: 0;
   box-sizing: content-box !important;
   /* align with ad remover button */
   left: -1px;
 }
+
+/* remove button */
+#ad_remover {
+  border-radius: 0 0 10px 10px;
+  background-color: var(--ad-border-color);
+  padding: 2px 10px;
+  display: inline-block;
+}
+#ad_remover {
+  text-decoration: none;
+  color: #333;
+  text-shadow: none;
+}
+/*
+#ad_remover {
+  display: inline-flex;
+  align-item: center;
+  justify-content: center;
+}
+*/
 

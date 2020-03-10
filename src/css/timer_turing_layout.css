@@ -53,8 +53,7 @@
 #timer_table > div {
   display:table-row;
 }
-#bodypadding
-{
+#bodypadding {
   height:7%;
 }
 #allcontent
@@ -153,7 +152,7 @@ html.timer #vertical
 #stripV
 {
   position: absolute;
-  height: 200%;
+  height: 300%;
   width: 300px;
   bottom:0;
 }
@@ -421,7 +420,7 @@ button:before {
   font-size: 1.2em;
 }
 #verticalBottom {
-  padding-bottom: 5px;
+  padding: 5px 0;
 }
 
 .timerInput button:before,
