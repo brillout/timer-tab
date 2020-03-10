@@ -1,3 +1,4 @@
+
 #morePanel {
   background-color: #373a4a;
   color: #ddd;
@@ -24,11 +25,8 @@ body::-webkit-scrollbar {
 #morePanel input[type='text']
 {
   font-size: 80%;
-          box-sizing: border-box;
-     -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
   padding: 1px 3px;
-  margin-left: 2px;
+  margin-left: 3px;
 }
 #morePanel input[type='text']{
   border: 1px solid rgba(160,160,160,.7);
@@ -53,10 +51,12 @@ body::-webkit-scrollbar {
 .center_content {
   width: 100%;
   text-align: center;
-  margin: 30px;
+}
+.center_content {
+  padding: 15px;
 }
 .center_content > * {
-  margin: 0 30px;
+  margin: 0 15px;
 }
 .setting_text_input {
    width: 200px;
@@ -91,6 +91,11 @@ body::-webkit-scrollbar {
 }
 
 #morePanel {
-  padding: 0 20px;
   padding-bottom: 40px;
+}
+
+
+
+* {
+  box-sizing: border-box;
 }
