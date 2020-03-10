@@ -5,7 +5,9 @@ import ctObj from './countdown';
 import './auto_hide_scrollarea';
 import {getScroll, setScroll} from './auto_hide_scrollarea';
 import loadAd from './loadAd';
+import load_mobile_message from './load_mobile_message';
 
+load_mobile_message();
 loadAd();
 
 ml.loadAnalytics('UA-5263303-6',true);
