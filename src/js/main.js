@@ -69,7 +69,7 @@ var ALARM_FORM  = document.getElementById('alarmForm');
 var TIMER_FORM  = document.getElementById('timerForm');
 var STOPW_FORM  = document.getElementById('stopwForm');
 var PAUSE_ELEM  = document.getElementById('pause');
-var YT_EL       = document.getElementById('yt');
+var YT_EL       = document.getElementById('yt_vid_wrapper');
 var ALARM_TIME  = document.getElementById('alarmTime');
 //}}}
 

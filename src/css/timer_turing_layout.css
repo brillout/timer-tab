@@ -61,7 +61,7 @@
   height: 100%;
   margin: auto;
 }
-body.ringing #yt,
+body.ringing #yt_vid_wrapper,
 #allcontent > div:first-child,
 #inputs,
 #stripH
@@ -194,7 +194,7 @@ html.alarm body:not(.ringing) #pause {
 {
   height: 150px;
 }
-#yt
+#yt_vid_wrapper
 {
   line-height: 0px;
   font-size: 0px;
@@ -326,19 +326,13 @@ button,
 input {
   transition-property: background,color;
 }
-#yt
+#yt_vid_wrapper
 {
-   -webkit-transition: height 1.7s linear;
-      -moz-transition: height 1.7s linear;
-        -o-transition: height 1.7s linear;
-           transition: height 1.7s linear;
+  transition: height 1.7s linear;
 }
-body.ringing #yt
+body.ringing #yt_vid_wrapper
 {
-   -webkit-transition: height 0.7s linear;
-      -moz-transition: height 0.7s linear;
-        -o-transition: height 0.7s linear;
-           transition: height 0.7s linear;
+  transition: height 0.7s linear;
 }
 
 /* }}} */
