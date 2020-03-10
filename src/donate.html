@@ -61,27 +61,14 @@ Any amount you are capable of donating is welcome.
 </p>
 
 <p>
-To donate, email me at <a id="contact"></a>.
+You can donate <a id="ad_contact_1">here</a>.
 </p>
 <script>
-  var email = 'timertab';
-  email+='@';
-  email+='brillout';
-  email+='.';
-  email+='com';
-  const contactEl = document.getElementById('contact');
-  contactEl.innerHTML = email;
-  const href = (
-    'mailto:'+email+
-    '?subject='+encodeURIComponent("I'd like to donate")+
-    '&body='+encodeURIComponent("Hi Romuald, I would like to donate.")
-  );
-  contactEl.setAttribute('href', href);
 </script>
 
 <p>
 I'm looking forward for a bright Timer Tab future.
-You can have a glimpse into Timer Tab's future at <a href="https://timer-tab.com#roadmap">timer-tab.com#roadmap</a>.
+You can have a glimpse into Timer Tab's future at <a href="/#roadmap" target='_blank'>timer-tab.com#roadmap</a>.
 </p>
 
 <p>
@@ -89,8 +76,32 @@ Yours sincerely,
 </p>
 
 <p>
-Romuald
+Romuald<br/>
+<a id='ad_contact_2' target='_blank'></a>
 </p>
+
+<script>
+  var email = 'timertab';
+  email+='@';
+  email+='brillout';
+  email+='.';
+  email+='com';
+
+  const ad_contact_1 = document.getElementById('ad_contact_1');
+  const ad_contact_2 = document.getElementById('ad_contact_2');
+
+  ad_contact_2.innerHTML = email;
+  ad_contact_2.setAttribute(
+    'href',
+    'mailto:'+email
+  );
+  ad_contact_1.setAttribute(
+    'href',
+    'mailto:'+email+
+    '?subject='+encodeURIComponent("Donation")+
+    '&body='+encodeURIComponent("Hi Romuald, I would like to donate :-). ")
+  );
+</script>
 
 </body>
 </html>
