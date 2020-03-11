@@ -1,5 +1,10 @@
 export default add_yt_ctrl;
 
+//*/
+const DEBUG = true;
+/*/
+const DEBUG = false;
+//*/
 
 function add_yt_ctrl(__iframeEl){
 // @author brillout.com
@@ -35,6 +40,7 @@ function add_yt_ctrl(__iframeEl){
       //onsole.log(ev.source===__iframeEl || ev.currentTarget===__iframeEl || ev.currentTarget===frames[0] || ev.srcElement===__iframeEl || ev.srcElement===frames[0] || ev.target===__iframeEl || ev.target===frames[0]);//this lines prints false
 
       var data = JSON.parse(ev['data']);
+      DEBUG && console.log('[YT][message]', data);
       if(data['event']==='onReady') {
         isReady=true;
         callCallStack();

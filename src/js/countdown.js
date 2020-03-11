@@ -1101,18 +1101,22 @@ ctObj.Timer_dom=(function(){
               try{
                 var ctrl = frame.addCtrl();
                 ctrl.onstatechange_=function(newState){
+                  console.log({newState});
                   if(newState===0 && ctYt.repeat_) setTimeout(ctrl.play,100);
                 };
               }catch(e){ml.assert(false)}
               shouldBePlaying=setTimeout(function(){
+                console.log("shouldBePlaying");
                 if(!shouldBePlaying) return;
                 var isPlaying;
                 try{
-                  //postMessage doesn't seem to work on webview
-                  //-altough: https://groups.google.com/a/chromium.org/forum/?fromgroups=#!searchin/chromium-apps/webview$20postmessage
-                  if(ml.isPackagedApp()) isPlaying = frame.addCtrl().state===-2;
-                  else isPlaying = frame.addCtrl().state===1;
+                  const {state} = frame.addCtrl();
+                  console.log('state', state);
+                  isPlaying = state===1;
                 }catch(e){}
+                console.log('isPlaying', isPlaying);
+                // Hot fix
+                isPlaying = true;
                 if(!isPlaying){
                   ytNotWorking=true;
                   setTimeout(function(){ytNotWorking=false},15000);
@@ -1134,6 +1138,7 @@ ctObj.Timer_dom=(function(){
               setTimeout(forcePlay,2000);
             }; 
             ring.stopYT=function(){
+              console.log('stopYT');
               ctYt.hide();
               frame.setSrc('about:blank');
               if(shouldBePlaying) window.clearTimeout(shouldBePlaying);
@@ -1198,11 +1203,21 @@ ctObj.Timer_dom=(function(){
           var ringing_;
           notis.ring.play_=function()
           {
+            console.log('notis.ring.play_');
             if(ring.metroToast && !ring.metroToast()) return;
-            players.forEach(function(p){if(!ringing_ && p&&p[0] && !p[0]()) ringing_=true; else p[1]()});
+            players.forEach(function(p){
+              console.log('attempt');
+              if(!ringing_ && p&&p[0] && !p[0]()) {
+                console.log('success');
+                ringing_=true;
+              } else {
+                p[1]();
+              }
+            });
           };
           notis.ring.stop=function()
           {
+            console.log('notis.ring.stop');
             if(!ringing_) return;
             players.forEach(function(p){p&&p[1]&&p[1]()});
             ringing_=false;
