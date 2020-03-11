@@ -254,7 +254,9 @@ function load_timer() {
     feature_fcts.push(function(){
       var opts = {bottomElements:[PAUSE_ELEM,ALARM_TIME]};
       if(headMovementListeners) opts.posChangeListeners=headMovementListeners;
-      ml.fullscreenElement(COUNTER_EL,'f',opts)
+      const zoom_from_container = document.getElementById('timer_table_scroll_area');
+      const zoom_from = document.getElementById('timer_table');
+      ml.fullscreenElement(COUNTER_EL, 'f', opts, {zoom_from, zoom_from_container})
       //COUNTER_EL.unfullscreen();//avoid: fullscreen -> reload page -> wrong zooming
     });
     //}}}

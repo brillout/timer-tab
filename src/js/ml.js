@@ -2200,7 +2200,7 @@ ml.htmlBackground=function(inputName,default_)
 */
 }; 
 
-ml.fullscreenElement=function(el,keybinding,zoomOpts)
+ml.fullscreenElement=function(el,keybinding,zoomOpts, {zoom_from, zoom_from_container})
 //{{{
 {
   var fullscreen_toggle;
@@ -2248,7 +2248,9 @@ ml.fullscreenElement=function(el,keybinding,zoomOpts)
         //if(shouldBeFs!=isFs) dom_fullscreen_toggle();
           zoomOpts.noTransition=isFs===undefined;
           //false!=undefined === true
-          if((!!shouldBeFs)!==(!!isFs)) zoom_to_element(el,!shouldBeFs,zoomOpts);
+          if((!!shouldBeFs)!==(!!isFs)) {
+            zoom_to_element(el,!shouldBeFs,zoomOpts, {zoom_from, zoom_from_container});
+          }
           isFs=shouldBeFs;
         });
       }
