@@ -15,7 +15,7 @@ window.onload = () => {
 
   auto_hide_scrollarea();
 
-  auto_remove_hash({WHITELIST: ['#fullscreen']});
+  auto_remove_hash({INCLUDE_LIST: ['#settings', '#roadmap']});
 
   smoothen_settings_link();
 
