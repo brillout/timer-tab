@@ -3,7 +3,6 @@ import 'regenerator-runtime/runtime';
 import ml from './ml';
 import auto_hide_scrollarea, {scrollToElement} from './auto_hide_scrollarea';
 import load_ad from './load_ad';
-import load_mobile_message from './load_mobile_message';
 import load_timer from './load_timer';
 import auto_remove_hash from 'tab-utils/auto_remove_hash';
 import deprecate_old_browsers from 'tab-utils/deprecate_old_browsers';
@@ -18,8 +17,6 @@ window.onload = () => {
   auto_remove_hash({INCLUDE_LIST: ['#settings', '#roadmap']});
 
   smoothen_settings_link();
-
-  load_mobile_message();
 
   ml.loadAnalytics('UA-5263303-6',true);
 
