@@ -19,12 +19,7 @@ button
   font-style: normal;
   font-weight: 300;
   src: local('Lato Light'), local('Lato-Light'),
-  /* font on google servers as second position because:
-      -avoid latency of font tried to be loaded when offline + font gets app cached anyways
-      -firefox only loads font on google server (because google server sets Access-Control-Allow-Origin:*)
-  */
-  url('./lato.woff') format('woff'),
-  url('http://themes.googleusercontent.com/static/fonts/lato/v4/KT3KS9Aol4WfR6Vas8kNcg.woff') format('woff');
+  url('./lato.woff') format('woff');
 }
 *
 {
