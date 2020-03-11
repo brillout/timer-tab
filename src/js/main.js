@@ -2,14 +2,20 @@
 import 'regenerator-runtime/runtime';
 import ml from './ml';
 import auto_hide_scrollarea, {scrollToElement} from './auto_hide_scrollarea';
-import loadAd from './loadAd';
+import load_ad from './load_ad';
 import load_mobile_message from './load_mobile_message';
 import load_timer from './load_timer';
+import auto_remove_hash from 'tab-utils/auto_remove_hash';
+import deprecate_old_browsers from 'tab-utils/deprecate_old_browsers';
 
 window.onload = () => {
-  auto_hide_scrollarea();
+  deprecate_old_browsers({projectName: 'Timer Tab', email: 'tim'+'ertab@br'+'illout.com'});
 
   load_timer();
+
+  auto_hide_scrollarea();
+
+  auto_remove_hash({WHITELIST: ['#fullscreen']});
 
   smoothen_settings_link();
 
@@ -18,7 +24,7 @@ window.onload = () => {
   ml.loadAnalytics('UA-5263303-6',true);
 
   setTimeout(() => {
-    loadAd();
+    load_ad();
   }, 1000);
 }
 
