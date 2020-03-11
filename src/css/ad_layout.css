@@ -8,16 +8,16 @@
 }
 
 /* layout */
-body {
+#timer_table {
   position: relative;
 }
-body > #ad_section {
+#timer_table > #ad_section {
   position: absolute;
 }
 #ad_section {
   transition: top 0.7s linear;
   top: calc(-90px - 23px);
-  left: calc((100vw - 728px) / 2);
+  left: calc((100% - 728px) / 2);
   width: 728px;
 }
 html.show_ad #ad_section {
