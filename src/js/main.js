@@ -1,7 +1,7 @@
 //console todo; get seo stats before uploading this version containing mod desc
 import 'regenerator-runtime/runtime';
 import ml from './ml';
-import auto_hide_scrollarea, {scrollToElement} from './auto_hide_scrollarea';
+import pretty_scroll_area, {scrollToElement} from './pretty_scroll_area';
 import load_ad from './load_ad';
 import load_timer from './load_timer';
 import auto_remove_hash from 'tab-utils/auto_remove_hash';
@@ -12,7 +12,7 @@ window.onload = () => {
 
   load_timer();
 
-  auto_hide_scrollarea();
+  pretty_scroll_area();
 
   auto_remove_hash({INCLUDE_LIST: ['#settings', '#roadmap']});
 

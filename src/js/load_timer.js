@@ -1,6 +1,6 @@
 import ml from './ml';
 import ctObj from './countdown';
-import {getScroll, setScroll} from './auto_hide_scrollarea';
+import {getScroll, setScroll} from './pretty_scroll_area';
 
 export default load_timer;
 

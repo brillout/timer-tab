@@ -1,16 +1,16 @@
-import {sleep} from './utils';
+import '../css/pretty_scroll_area.css';
 
-export default auto_hide_scrollarea;
+export default pretty_scroll_area;
 
 export {getScroll, setScroll, scrollToElement};
 
 
 let scroll_el;
 
-function auto_hide_scrollarea() {
+function pretty_scroll_area() {
 
 
-scroll_el = document.getElementById('auto_hide_scrollarea');
+scroll_el = document.querySelector('.pretty_scroll_area');
 
 
 const scroll_bar_width = get_scroll_bar_width();
