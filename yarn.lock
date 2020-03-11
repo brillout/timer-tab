@@ -1605,6 +1605,11 @@ core-js-compat@^3.6.2:
     browserslist "^4.8.3"
     semver "7.0.0"
 
+core-js@3:
+  version "3.6.4"
+  resolved "https://registry.npmjs.org/core-js/-/core-js-3.6.4.tgz#440a83536b458114b9cb2ac1580ba377dc470647"
+  integrity sha512-4paDGScNgZP2IXXilaffL9X7968RuvwlkK3xWtZRVqgd8SYNiVKRJvkFd1aqqEuPfN7E68ZHEp9hDj6lHj4Hyw==
+
 core-js@^2.4.0, core-js@^2.6.5:
   version "2.6.11"
   resolved "https://registry.npmjs.org/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
@@ -5045,10 +5050,12 @@ symbol-tree@^3.2.2:
   resolved "https://registry.npmjs.org/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
 
-tab-utils@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.npmjs.org/tab-utils/-/tab-utils-0.0.5.tgz#7b2fdf259191bbb39c54017e481808887c9b6e49"
-  integrity sha512-h65qbHK7kXtvc2NaxtCH2dq7H5C2U5XvKzMXNIT2TxRVXnTmiXMF5g7BZg0+Pfd5lGo3x8vn5GTd/c3stvgMog==
+tab-utils@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.npmjs.org/tab-utils/-/tab-utils-0.0.6.tgz#037ff07822ad3506c558c3999381fc2fb82e3d27"
+  integrity sha512-BC9W6CuA0ANC9qx0uNsbKScSfRINLgjp+xDcNPB7st6LxYN+wcZqeihK5aLlH3NGqP7VXry1GHOJpQXC26nbpw==
+  dependencies:
+    core-js "3"
 
 term-size@^1.2.0:
   version "1.2.0"
