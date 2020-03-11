@@ -1,4 +1,5 @@
 import '../css/pretty_scroll_area.css';
+import assert from '@brillout/assert';
 
 export default pretty_scroll_area;
 
@@ -7,170 +8,62 @@ export {getScroll, setScroll, scrollToElement};
 
 let scroll_el;
 
-function pretty_scroll_area() {
-
-
-scroll_el = document.querySelector('.pretty_scroll_area');
-
-
-const scroll_bar_width = get_scroll_bar_width();
-document.documentElement.style.setProperty('--scroll-bar-width', scroll_bar_width+'px');
-document.documentElement.classList.add('scroll-bar-width_is_available');
-
-/*
-function get_scroll_bar_width() {
-  const scroll_el = document.createElement('div');
-  hide_el(scroll_el);
-  scroll_el.style.overflow = 'scroll'
-  scroll_el.style.width = '100%';
-
-  const inner_el = document.createElement('div');
-  inner_el.style.width = '100%';
-  inner_el.style.height = '100px';
-  inner_el.style.backgroundColor = 'red';
-  scroll_el.appendChild(inner_el);
-
-  const anchor_el = document.body;
-
-  anchor_el.appendChild(scroll_el);
-
-  const width_1 = get_computed_width(inner_el);
-  DEBUG && console.log({width_1});
-  inner_el.style.width = '100vw';
-  const width_2 = get_computed_width(inner_el)
-  DEBUG && console.log({width_2});
-  const scroll_bar_width = width_2 - width_1;
-
-  anchor_el.removeChild(scroll_el);
-
-  return scroll_bar_width;
-}
-*/
-
-function get_scroll_bar_width() {
-
-  // Creating invisible container
-  const outer = document.createElement('div');
-  outer.style.visibility = 'hidden';
-  outer.style.overflow = 'scroll'; // forcing scrollbar to appear
-  outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
-  document.body.appendChild(outer);
-
-  // Creating inner element and placing it in the container
-  const inner = document.createElement('div');
-  outer.appendChild(inner);
-
-  // Calculating difference between container's full width and the child width
-  const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
-
-  // Removing temporary elements from the DOM
-  outer.parentNode.removeChild(outer);
-
-  return scrollbarWidth;
-
-}
-
-function hide_el(dummy_el) {
-  dummy_el.style.position='absolute';
-  dummy_el.style.top='9px';
-  dummy_el.style.left='9px';
-  /*
-  dummy_el.style.top='-9999px';
-  dummy_el.style.zIndex='-9999';
-  dummy_el.style.visibility='hidden';
-  dummy_el.style.opacity=0;
-  */
-}
-
-function get_computed_width(el) {
-  return el.offsetWidth;
-}
-
-/*
-function getComputedStyle(el, prop) {
-//return document.defaultView.getComputedStyle(that,null).getPropertyValue(styleProp);
-}
-*/
-
-
-setTimeout(() => {
-  document.documentElement.classList.add('inactive_state');
-}, 2000)
-/*
-const INACTIVITY_TIME = 2*1000;
-let lastActivity;
-let checker;
-function check() {
-  if( checker ) return;
-  checker = (
-    setInterval(
-      () => {
-        if( isOlderThan(lastActivity, INACTIVITY_TIME) ){
-          document.documentElement.classList.add('inactive_state');
-          clearInterval(checker);
-          checker = null;
-        }
-      },
-      500,
-    )
+const hide_scroll_state = {
+  is_on_top: null,
+  enable_scroll_auto_hide: null,
+  scrollbar_width_computed: null,
+};
+function onStateChange() {
+  const hide_scroll = (
+    hide_scroll_state.is_on_top &&
+    hide_scroll_state.enable_scroll_auto_hide &&
+    hide_scroll_state.scrollbar_width_computed
   );
+  scroll_el.classList[hide_scroll?'add':'remove']('hide_scroll');
 }
 
-function activityListener() {
-  document.documentElement.classList.remove('inactive_state');
-  lastActivity = new Date();
-  check();
-}
-onActivity(activityListener);
-function onActivity(activityListener) {
-  activityListener();
-  [
-    'keydown',
-    'wheel',
-    'mousewheel',
-    'touchstart',
-    'touchmove',
-    'mousedown',
-    'mousemove',
-  ].forEach(evName => {
-    document.addEventListener(
-      evName,
-      () => {
-     // DEBUG && console.log({evName});
-        activityListener();
-      },
-      {passive: true}
-    );
+function pretty_scroll_area() {
+  const s1 = document.querySelectorAll('.pretty_scroll_area');
+  const s2 = document.querySelectorAll('.pretty_scroll_area__parent');
+  assert.usage(s1.length===1 && s2.length===1);
+  scroll_el = s1[0];
+
+  compute_scrollbar_width();
+  hide_scroll_state.scrollbar_width_computed = true;
+  onStateChange();
+
+  add_on_scroll_listener(scroll_pos => {
+    hide_scroll_state.is_on_top = scroll_pos === 0;
+    onStateChange();
   });
-}
-*/
 
-function isOlderThan(date, timespan1) {
-  const now = new Date();
-  const timespan2 = now - date;
-  return timespan2 > timespan1;
+  setTimeout(() => {
+    hide_scroll_state.enable_scroll_auto_hide = true;
+    onStateChange();
+  }, 2000);
 }
 
-onScroll();
-( scroll_el === document.documentElement ?
-    window :
-    scroll_el )
-.addEventListener('scroll', onScroll, {passive: true});
+function add_on_scroll_listener(on_scroll) {
+  call();
 
-function onScroll() {
-  const scrollPos = getScroll();
-  if( scrollPos === 0 ) {
-    document.documentElement.classList.add('is_on_top');
-  } else {
-    document.documentElement.classList.remove('is_on_top');
+  const scroll_event_el = (
+    scroll_el === document.documentElement ?
+      window :
+      scroll_el
+  );
+
+  scroll_event_el.addEventListener('scroll', call, {passive: true});
+
+  function call() {
+    const scroll_pos = getScroll();
+    on_scroll(scroll_pos);
   }
-}
-
 }
 
 function getScroll() {
   return scroll_el.scrollTop;
 }
+
 function setScroll(newTop) {
   scroll_el.scrollTop = newTop;
 }
@@ -180,3 +73,32 @@ function scrollToElement(selector) {
   const {top} = el.getBoundingClientRect();
   scroll_el.scrollTo({top, behavior: 'smooth'});
 }
+
+function compute_scrollbar_width() {
+  const scroll_bar_width = get_scroll_bar_width();
+  document.documentElement.style.setProperty('--scroll-bar-width', scroll_bar_width+'px');
+}
+function get_scroll_bar_width() {
+  // Creating invisible container
+  const outer = document.createElement('div');
+  hide_el(outer);
+  outer.style.overflow = 'scroll'; // forcing scrollbar to appear
+  const container = document.body;
+
+  container.appendChild(outer);
+
+  const inner = document.createElement('div');
+  outer.appendChild(inner);
+  const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
+
+  container.removeChild(outer);
+
+  return scrollbarWidth;
+
+  function hide_el(el) {
+    el.style.position='absolute';
+    el.style.visibility='hidden';
+    el.style.zIndex='-9999';
+  }
+}
+

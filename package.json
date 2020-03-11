@@ -13,6 +13,7 @@
     "parcel:prod": "parcel build src/index.html src/donate.html"
   },
   "dependencies": {
+    "@brillout/assert": "^0.1.1",
     "parcel": "^1.12.4",
     "push-dir": "^0.4.1",
     "serve": "^11.3.0",
