@@ -796,7 +796,6 @@ ml.assert=function(bool,msg,skipCallFcts,api_error){
     var HARD=window.location.hostname==='localhost';
     //*/
 
-    if(window.navigator.userAgent.indexOf('MSIE')!==-1) return; //fix for stupid IE9 bug: window['co'+'nsole'].log is defined but shoudn't be called
     if(window['co'+'nsole'] && window['co'+'nsole'].log && !HARD)
     {
       window['co'+'nsole'].log(errorStr);
@@ -1998,10 +1997,6 @@ ml.htmlBackgroundListener=function(default_){
   //make sure size is at least size of window
   BG_EL.style['min-height']='100%';
   BG_EL.style['min-width']='100%';
-  if(ml.metro){
-    document.body.style['background']='transparent';
-    document.body.style['backgroundColor']='transparent';
-  }
 
   var setBg;
   (function(){
@@ -2110,10 +2105,6 @@ ml.htmlBackground=function(inputName,default_)
   //make sure size is at least size of window
   BG_EL.style['min-height']='100%';
   BG_EL.style['min-width']='100%';
-  if(ml.metro){
-    document.body.style['background']='transparent';
-    document.body.style['backgroundColor']='transparent';
-  }
 
   var setBg;
   (function(){
@@ -2413,91 +2404,6 @@ ml.i18n={};
   ml.i18n.isAMPMTime=function(callback){
     ml.i18n.get(function(lang){callback(lang!=='fr'&&lang!=='de')});
   };
-})(); 
-
-(function(){ 
-  var winObj = typeof Windows !== "undefined" && Windows;
-  if(!winObj) return;
-  ml.metro={};
-  var Noti = winObj['UI']['Notifications'];
-  ml.metro.IS_BG_TASK = typeof window === "undefined";
-  ml.metro.tile={};
-  ml.metro.tile.createText=function(type,line1,line2,line3){ 
-    ml.assert(type==='big' || type==='bigCenter');
-    var wideTile;
-    if(type==='big'){
-      wideTile = Noti['TileUpdateManager']['getTemplateContent'](Noti['TileTemplateType']['tileWideText03']); 
-    } else if(type==='bigCenter'){
-      wideTile = Noti['TileUpdateManager']['getTemplateContent'](Noti['TileTemplateType']['tileWideSmallImageAndText01']); 
-    }
-    var text = wideTile.getElementsByTagName("text");
-    text[0].appendChild(wideTile['createTextNode'](line1+"\n"+line2+"\n"+line3));
-
-    var squareTile = Noti['TileUpdateManager']['getTemplateContent'](Noti['TileTemplateType']['tileSquareText02']);
-    var text = squareTile.getElementsByTagName("text");
-    text[0].appendChild(squareTile['createTextNode'](line1));
-    text[1].appendChild(squareTile['createTextNode'](line2+"\n"+line3));
-    //var squareTile = Noti['TileUpdateManager']['getTemplateContent'](Noti['TileTemplateType']['tileSquareImage']);
-    //var tileAttributes = squareTile.getElementsByTagName("image");
-    //tileAttributes[0].src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMElEQVRYR+3QQREAAAgCQekfWm3BZ7kCzGb2Ky4OECBAgAABAgQIECBAgAABAm2BA4XeP+FCGziJAAAAAElFTkSuQmCC";
-
-    var node = wideTile.importNode(squareTile.getElementsByTagName("binding").item(0), true);
-    wideTile.getElementsByTagName("visual").item(0).appendChild(node);
-
-    return wideTile;
-  }; 
-  ml.metro.tile.createImg=function(imageFile){ 
-  //var template = Noti.TileTemplateType.tileSquareImage;
-    var template = Noti.TileTemplateType.tileWideImage;
-    var tileXml = Noti.TileUpdateManager.getTemplateContent(template);
-    var tileImageAttributes = tileXml.getElementsByTagName("image");
-    tileImageAttributes[0].setAttribute("src", imageFile);
-    return tileXml;
-  }; 
-  ml.metro.tile.update=function(newTile,expire_,scheduled){ 
-    ml.assert(newTile&&expire_&&expire_.constructor===Date&&(!scheduled||scheduled.constructor===Date));
-    var tileNotification = scheduled&&(new Noti['ScheduledTileNotification'](newTile,scheduled)) || (new Noti['TileNotification'](newTile));
-    tileNotification['expirationTime'] = expire_;
-    Noti['TileUpdateManager']['createTileUpdaterForApplication']()[scheduled?'addToSchedule':'update'](tileNotification);
-  }; 
-  ml.metro.maintenanceTrigger=function(jsFile,freshnes){ 
-    var builder = new winObj['ApplicationModel']['Background']['BackgroundTaskBuilder']();
-    builder['name'] = "Maintenance background task";
-    builder['taskEntryPoint'] = jsFile;
-    //Run every `freshnes` minutes if the device is on AC power
-    var trigger = new winObj['ApplicationModel']['Background']['MaintenanceTrigger'](freshnes, false);
-    builder['setTrigger'](trigger);
-    var task = builder['register']();
-  }; 
-  ml.metro.storage = winObj['Storage']['ApplicationData']['current']['localSettings']['values'];
-  ml.metro.canvas2file=function(canvas,fileName,callback){ 
-    //Save blob to image
-    var blob = canvas.msToBlob();
-    var out = null;
-    var blobStream = null;
-    var outputStream = null;
-
-    winObj.Storage.ApplicationData.current.localFolder.createFileAsync(fileName, winObj.Storage.CreationCollisionOption.replaceExisting)
-        .then(function (file) {
-            return file.openAsync(winObj.Storage.FileAccessMode.readWrite);
-        })
-        .then(function (stream) {
-            outputStream = stream;
-            out = stream.getOutputStreamAt(0);
-            blobStream = blob.msDetachStream();
-            return winObj.Storage.Streams.RandomAccessStream.copyAsync(blobStream, out);
-        })
-        .then(function () {
-            return out.flushAsync();
-        })
-        .done(function () {
-            blobStream.close();
-            out.close();
-            outputStream.close();
-
-            callback("ms-appdata:///local/"+fileName);
-        });
-  }; 
 })(); 
 
 ml.noti={};

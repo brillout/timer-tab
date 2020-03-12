@@ -106,31 +106,7 @@ ctObj.TYPES={STOPW:1,TIMER:2,ALARM:3};
           _generateInput('s',_type===ctObj.TYPES.ALARM?'59':undefined);
         }
 
-        if(window['WinJS'] && window['WinJS']['UI'] && window['WinJS']['UI']['TimePicker'] && _type!==ctObj.TYPES.STOPW) { 
-        //metro
-        //if(winInput) return [function(){ var ret=winInput.current; if(ret<=new Date()) ret.setUTCDate(ret.getUTCDate()+1);return ret}, function(h,m,s){winInput.current=h+":"+m+":"+s}];
-          [].slice.call(inputForm.querySelectorAll('input')).forEach(function(i){i.parentElement.removeChild(i)});
-          if(_type===ctObj.TYPES.ALARM) {
-            var tp=document.createElement('div');
-            inputForm.insertBefore(tp,inputForm.firstChild);
-            new window['WinJS']['UI']['TimePicker'](tp);
-          }
-          if(_type===ctObj.TYPES.TIMER) {
-            for(var i=0;i<3;i++){
-              var sel=document.createElement('select');
-              sel.setAttribute('placeholder',i===0&&'h'||i===1&&'m'||i===2&&'s');
-              for(var j=0;j<100;j++) {
-                var opt=sel.appendChild(document.createElement('option'));
-                opt.value=j.toString();
-                opt.innerHTML=opt.value;
-              }
-              inputForm.insertBefore(sel,inputForm.firstChild);
-            }
-          }
-          input_number = [].slice.call(inputForm.getElementsByTagName('select'));
-          if(_type===ctObj.TYPES.ALARM) input_period = input_number.pop();
-        } 
-        else input_number = [].slice.call(inputForm.getElementsByTagName('input'));
+        input_number = [].slice.call(inputForm.getElementsByTagName('input'));
 
         input_all = input_number;
         if(input_period) input_all.push(input_period);
@@ -203,7 +179,6 @@ ctObj.TYPES={STOPW:1,TIMER:2,ALARM:3};
       }
       function setInit(){_setInputs(d.hours,d.minutes,d.seconds,true)};
       setInit();
-      if(window.navigator.userAgent.indexOf('MSIE')!==-1) setTimeout(setInit,1);//IE9 bug fix
       _onInputsChange=function(__inputs){_timer.data.setPreset({hours:__inputs.h,minutes:__inputs.m,seconds:__inputs.s},_type)};
     }; 
     var _setInputs;
@@ -543,7 +518,6 @@ ctObj.Timer_dom=(function(){
   var notify={};
   (function(){ 
     var NO_DYNAMIC_FAVICONS = /Chrome/.test(navigator.userAgent) && /Chrome[^\s]*/.exec(navigator.userAgent)[0].replace('Chrome/','').split('.').map(function(v,i){return [parseInt(v,10),[22,0,1215,0][i]||0]}).map(function(v){if(v[0]>v[1]) return true;if(v[0]<v[1]) return false;return undefined}).reduce(function(v1,v2){return v1===undefined?v2:v1})===false;
-    var IS_METRO_APP = window['Windows'] && window['Windows'] && window['Windows']['UI'] && window['Windows']['UI']['Notifications'] && window['WinJS'] && window['WinJS']['Application'];
     var onPopupClick;
     var NOTI_TEXT   = '';
     var NOTI_TEXT_2 = '';
@@ -551,157 +525,6 @@ ctObj.Timer_dom=(function(){
     (function(){
     //{{{
       var feature_fcts=[];
-
-      //define metro notifications
-      //{{{
-      feature_fcts.push(function()
-      {
-        if(!IS_METRO_APP) return;
-        var oldBigText;
-        var oldSmallText;
-        var lastUpdate;
-        var REFRESH_TIME = 60;
-        notis.metro.tile=function(diff__)
-        //{{{
-        {
-          var bigText,smallText;
-          var newText=[];
-          if(diff__>=100*60)
-          {
-            newText[0]=(diff__/3600)|0;
-            newText[1]='Hour'+(newText[0]==1?'':'s')+' '+(((diff__%3600)/60)|0)+' Min';
-          }
-          else if(diff__>60)
-          {
-            newText[0]=diff__/60|0;
-            newText[1]='Minute'+(newText[0]==1?'':'s');
-            if(diff__<60*5)
-            {
-              var secs=(diff__%60/10)|0;
-              newText[1]+=' '+secs+(secs<1?'':'0')+' Sec';
-            }
-          }
-          else
-          {
-            if(diff__<0) diff__=0;
-            newText[0]=diff__;
-            newText[1]='Second'+(newText[0]==1?'':'s');
-          }
-          bigText=newText[0];
-          smallText=newText[1];
-          
-          var limit = new Date().getTime()-1000*(REFRESH_TIME-1);
-          if(oldBigText && oldBigText===bigText && oldSmallText && oldSmallText===smallText && lastUpdate && lastUpdate>limit) return;
-          oldBigText=bigText;
-          oldSmallText=smallText;
-          lastUpdate=new Date().getTime();
-
-          var Noti = window['Windows']['UI']['Notifications'];
-
-          var wideTile = Noti['TileUpdateManager']['getTemplateContent'](Noti['TileTemplateType']['tileWideText03']); 
-          var tileTextAttributes = wideTile.getElementsByTagName("text");
-          tileTextAttributes[0].appendChild(wideTile['createTextNode'](bigText+" "+smallText));
-
-          var squareTile = Noti['TileUpdateManager']['getTemplateContent'](Noti['TileTemplateType']['tileSquareBlock']);
-          var tileAttributes = squareTile.getElementsByTagName("text");
-          tileAttributes[0].appendChild(squareTile['createTextNode'](bigText));
-          tileAttributes[1].appendChild(squareTile['createTextNode'](smallText));
-
-          var node = wideTile.importNode(squareTile.getElementsByTagName("binding").item(0), true);
-          wideTile.getElementsByTagName("visual").item(0).appendChild(node);
-
-          var tileNotification = new Noti['TileNotification'](wideTile);
-          var expire_ = new Date(new Date().getTime()+1000*REFRESH_TIME);
-          tileNotification['expirationTime'] = expire_;
-          Noti['TileUpdateManager']['createTileUpdaterForApplication']()['update'](tileNotification);
-          //if(lastBadge) badgeNoti(lastBadge,tileNotification['expirationTime']);
-          if(lastBadge) badgeNoti(lastBadge,expire_);
-        };
-        //}}}
-        var lastBadge;
-        function badgeNoti(badge,expire)
-        //{{{
-        {
-          lastBadge=badge;
-          var Noti = window['Windows']['UI']['Notifications'];
-          var badgeXml = Noti['BadgeUpdateManager']['getTemplateContent'](Noti['BadgeTemplateType']['badgeNumber']);
-          var badgeAttributes = badgeXml.getElementsByTagName("badge");
-          badgeAttributes[0].setAttribute("value", badge);
-          var badgeXml = new Noti['BadgeNotification'](badgeXml);
-          expire = new Date(new Date().getTime()+1000*10);
-          if(expire) badgeXml['expirationTime'] = expire;
-          Noti['BadgeUpdateManager']['createBadgeUpdaterForApplication']()['update'](badgeXml);
-        }
-        //}}}
-        notis.metro.badge=function(status_,STATE_CODES)
-        //{{{
-        {
-          var map={};
-          map[STATE_CODES.PAUSED ]='paused';
-          map[STATE_CODES.STOPED ]='paused';
-          map[STATE_CODES.PLAYING]='playing';
-          map[STATE_CODES.RINGING]='alert';
-          badgeNoti(map[status_]);
-        };
-        //}}}
-        notis.metro.toast=function(text_)
-        //{{{
-        {
-          var template = window['Windows']['UI']['Notifications']['ToastTemplateType']['toastText02'];
-          var toastXml = window['Windows']['UI']['Notifications']['ToastNotificationManager']['getTemplateContent'](template);
-          var toastTextElements = toastXml.getElementsByTagName("text");
-          toastTextElements[0].appendChild(toastXml['createTextNode'](text_));
-          var toastNode = toastXml['selectSingleNode']("/toast");
-
-          /*
-          //var img="ms-appx:///images/redWide.png";
-          var img="images/logo.png";
-          var image = toastXml['createElement']("image");
-          image.setAttribute("src", img);
-          image.setAttribute("alt", "red graphic");
-          toastNode.appendChild(image);
-          */
-
-          var audio = toastXml['createElement']("audio");
-          //Notification.Looping.Alarm
-          //Notification.Looping.Alarm2
-          audio.setAttribute("src", "ms-winsoundevent:Notification.Looping.Alarm");
-          audio.setAttribute("loop", "true");
-          toastNode.appendChild(audio);
-
-          toastNode.setAttribute("duration", "long");
-          //toastNode.setAttribute("launch", '{"type":"toast","param1":"12345","param2":"67890"}');
-
-          var toast = new window['Windows']['UI']['Notifications']['ToastNotification'](toastXml);
-          var toastNotifier = window['Windows']['UI']['Notifications']['ToastNotificationManager']['createToastNotifier']();
-          toastNotifier['show'](toast);
-        };
-        //}}}
-        //metro_ lock screen
-        //{{{
-      //      <Extensions>
-      //        <Extension Category="windows.backgroundTasks" StartPage="index.html">
-      //          <BackgroundTasks>
-      //            <Task Type="timer" />
-      //          </BackgroundTasks>
-      //        </Extension>
-      //      </Extensions>
-      //
-      //http://msdn.microsoft.com/en-us/library/windows/apps/hh700416.aspx
-      //http://msdn.microsoft.com/en-us/library/windows/apps/hh779720.aspx
-
-      //var div = document.createElement('div');
-      //div.innerHTML='req me';
-      //div.onclick=function(){Windows.ApplicationModel.Background.BackgroundExecutionManager.requestAccessAsync().then(function(res){onsole.log(res)})};
-      //$('topBox').appendChild(div);
-      //}}}
-        window['WinJS']['Application']['oncheckpoint']=function()
-        {//This application is about to be suspended.
-          window['Windows']['UI']['Notifications']['TileUpdateManager']['createTileUpdaterForApplication']()['cle'+'ar']();
-          window['Windows']['UI']['Notifications']['BadgeUpdateManager']['createBadgeUpdaterForApplication']()['cle'+'ar']();
-        };
-      });
-      //}}}
 
       //define webkit notification
       feature_fcts.push(function(){ 
@@ -763,51 +586,6 @@ ctObj.Timer_dom=(function(){
       }); 
       */
 
-      notis.metro={};
-      //define IE9 notification
-      //{{{
-      if(window['external']) notis.IE9Noti=function()
-      {
-        //window['external']['msSiteModeActivate']===undefined on IE9
-        //if(window['external'] && window['external']['msSiteModeActivate'])
-        {
-          try
-          {
-            window['external']['msSiteModeActivate']();
-          } catch(e){}
-        }
-      };
-  //  function(diff,percent)
-  //  {
-  //    if(window['external'] && window['external']['msIsSiteMode'])
-  //    {
-  //        try {
-  //            if (window['external']['msIsSiteMode']()) 
-  //                //window['external']['msSiteModeSetIconOverlay'](iconURL, '6');
-  //                window['external']['msSiteModeSetIconOverlay']('green.ico', 'on');
-  //        }
-  //        catch (e) {
-  //            // Fail silently.
-  //        }
-  //    }
-  //  };
-  // if(window['external'])
-  // {
-  //   window.onload=function()
-  //   {
-  //      try {
-  //         // check if "msIsSiteMode" method exists, then call it
-  //         //if (window['external']['msIsSiteMode'] && window['external']['msIsSiteMode']()) {
-  //             g_ext = window['external'];
-  //             g_ext['msSiteModeCreateJumpList']("My Site");
-  //             g_ext['msSiteModeAddJumpListItem']( "Task2", "/users/44324847/task2", "img/icon.ico");
-  //             g_ext['msSiteModeAddJumpListItem']( "Task1", "/users/44324847/task1", "img/icon.ico");
-  //         //}
-  //     } catch(ex) {}
-  //   };
-  // }
-      //}}}
-
       ml.safe_call(feature_fcts);
     //}}}
     })();
@@ -817,18 +595,6 @@ ctObj.Timer_dom=(function(){
       notis.ring={};
       (function(){ 
         var ring={};
-        //metro_ notification
-        //{{{
-        var feature_fcts=[];
-        feature_fcts.push(function(){
-          //It suffices to have a single audio or video tag with msAudioCategory="media".
-          //Unless and until YouTube adds an msAudioCategory="media" tag on their content that you're <iframe>-ing in,
-          //you could have an additional audio tag in your app which had the tag
-          //(but didn't necessarily actually play any audible audio.)
-          //source: http://social.msdn.microsoft.com/Forums/en-US/winappswithhtml5/thread/b37a99cb-395c-473a-a43c-0d3a8764b3cd/
-          if(notis.metro.toast) ring.metroToast=function() { notis.metro.toast(NOTI_TEXT); };
-        });
-        //}}}
         //audio tag notification
         //{{{
         feature_fcts.push(function()
@@ -919,8 +685,6 @@ ctObj.Timer_dom=(function(){
         //}}}
         //youtube/iframe notification
         feature_fcts.push(function(){ 
-          if(IS_METRO_APP) return;
-        
           //init ctYt (common code to iframe+yt notification)
           var frame={};
           (function(){ 
@@ -1136,7 +900,6 @@ ctObj.Timer_dom=(function(){
           notis.ring.play_=function()
           {
             console.log('notis.ring.play_');
-            if(ring.metroToast && !ring.metroToast()) return;
             players.forEach(function(p){
               console.log('attempt');
               if(!ringing_ && p&&p[0] && !p[0]()) {
@@ -1161,7 +924,6 @@ ctObj.Timer_dom=(function(){
       })(); 
       var onTimesUp=[];
       onTimesUp.push(notis.ring.play_);
-      onTimesUp.push(notis.IE9Noti);
       onTimesUp.push(notis.popupNotification);
 
       var lastState;
@@ -1179,7 +941,6 @@ ctObj.Timer_dom=(function(){
             ml.safe_call(notis.popupNotificationCancel);
           }
           if(   state_===STATE_CODES.RINGING) ml.safe_call(onTimesUp,timerName);
-          ml.safe_call(notis.metro.badge,state_,STATE_CODES);
         }
         lastState=state_;
       }
@@ -1202,8 +963,6 @@ ctObj.Timer_dom=(function(){
         if(ml.isPackagedApp()) newTitle=newTitle+'\u00a0'+SEPERATOR+'Timer Tab';
         document.title=newTitle;
       });
-
-      _onCountdown.push(notis.metro.tile);
 
       //return function(diff,percent,postText){ml.safe_call(_onCountdown,diff,percent,postText)};
       return function(){ml.safe_call.apply(null,[_onCountdown].concat([].slice.call(arguments)))};
@@ -1234,10 +993,9 @@ ctObj.Timer_dom=(function(){
       var setText;
       (function(){ 
         var lastText;
-        var IS_METRO_UI = window['WinJS'] && window['WinJS']['UI'];
         function sizeIt(){
           if(!thisTimer.dom.counter) return;
-          ml.adjustFontSize(thisTimer.dom.counter,IS_METRO_UI&&['0','1','2','3','4','5','6','7','8','9','-'],true,'00:00',true);
+          ml.adjustFontSize(thisTimer.dom.counter,false&&['0','1','2','3','4','5','6','7','8','9','-'],true,'00:00',true);
           //avoid infinite resize events loop as extension -- because window's size get's resized as content size's changes
           if(!ml.isExtension()) ml.addResizeTimeoutEvent(sizeIt,100,function(){thisTimer.dom.counter.style.fontSize='0px'});
         }

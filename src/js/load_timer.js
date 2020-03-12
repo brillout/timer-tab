@@ -51,7 +51,6 @@ function load_timer() {
     var THIRD_PARTY_LOADING_DELAY=1600;
     var COUNTER_EL  = document.getElementById('counter');
     function unfullscreen(){COUNTER_EL.unfullscreen&&COUNTER_EL.unfullscreen()}
-    var IS_METRO_UI = window['WinJS'] && window['WinJS']['UI'] && window['WinJS']['UI']['processAll'];
     var headMovementListeners=ml.safe_call(function(){ 
       if(!window.MutationObserver) return undefined;
       var HEAD_MOVEMENT_DELAY = 600;
@@ -93,7 +92,7 @@ function load_timer() {
     //{{{
     //input[type="tel"] => input[type="number"] for webkit||metro
     feature_fcts.push(function(){ 
-      if((ml.browser().usesWebkit || IS_METRO_UI) && document.querySelectorAll) {
+      if(ml.browser().usesWebkit && document.querySelectorAll) {
         //pattern="[0-9]*" doesn't seem to be implemented in any browser
         //type=tel triggers numpad on mobile devices
         var nums = document.querySelectorAll('input[type="tel"]');
@@ -110,11 +109,6 @@ function load_timer() {
             num.value=num.value.replace(/^0*(?=.)/,'');
         }
       }
-    }); 
-    //metro => hide input seperators
-    feature_fcts.push(function(){ 
-      if(IS_METRO_UI) ml.addCss(".inputSep{display:none}");
-
     }); 
     //for inputs: click == double click
     feature_fcts.push(function(){ 
@@ -134,25 +128,6 @@ function load_timer() {
           }catch(e){}
         },0);
       },false);
-
-      //in Opera and IE: sometimes selection persist even when input not focused
-      if(ml.browser().isOpera || IS_METRO_UI)
-        for(var i=0;i<INPUTS__.length;i++)
-          INPUTS__[i].addEventListener('mousedown',function(){
-            if(document.activeElement.selectionStart!==undefined)
-            {
-              document.activeElement.selectionStart=0;
-              document.activeElement.selectionEnd  =0;
-            }
-          },false);
-          //not working attempt: disabled -> selectionEnd readonly
-          //if(ml.browser().isOpera || IS_METRO_UI) input.addEventListener('blur',function()
-          //{
-          //  input.setAttribute("disabled","disabled");
-          //  input.selectionEnd=0;
-          //  input.selectionStart=0;
-          //  input.removeAttribute("disabled");
-          //},false);
     }); 
     //}}}
 
@@ -267,7 +242,7 @@ function load_timer() {
     //google plus button
     //brillcdn app cache
     feature_fcts.push(function(){
-      if(ml.isPackagedApp() || ml.isExtension() || IS_METRO_UI) return;
+      if(ml.isPackagedApp() || ml.isExtension()) return;
       //__promo images:
       //return;
       setTimeout(function(){
@@ -368,8 +343,8 @@ function load_timer() {
           if(ml.controlKeyPressed(ev)) return;
           var char_ = ml.getChar(ev);
 
-          var   upChar = IS_METRO_UI?'down':'up'  ;
-          var downChar = IS_METRO_UI?'up'  :'down';
+          var   upChar = 'up'  ;
+          var downChar = 'down';
           var down  = char_===downChar || char_==='-';
           var up    = char_===  upChar || char_==='+';
           if(down || up)
@@ -456,14 +431,6 @@ function load_timer() {
               ev.preventDefault();
               if(!(left && index===0))
               {
-                //in Opera and IE: sometimes selection persist even when input not focused
-                if(ml.browser().isOpera || IS_METRO_UI)
-                  if(document.activeElement && document.activeElement.selectionStart!==undefined && document.activeElement===INPUTS_ALL[index])
-                  {
-                    document.activeElement.selectionStart=0;
-                    document.activeElement.selectionEnd  =0;
-                  }
-
                 if(right && index===INPUTS_ALL.length-1)
                   STOPW_BUTTON.focus();
                 else
