@@ -41,6 +41,7 @@ async function stop_youtube_alarm() {
 
 async function prefetch() {
   const player = await load_player();
+  player.loadVideoById(video_spec.video_id);
   if( state==='STARTED' ) return;
   player.mute();
   player.seekTo(video_spec.start_time);
@@ -57,6 +58,7 @@ let video_spec;
 let resolve__video_spec;
 let wait_for_video_spec = new Promise(r => resolve__video_spec = r);
 async function set_youtube_url(youtube_url) {
+  console.log(youtube_url);
   video_spec = parse_youtube_url(youtube_url);
   resolve__video_spec();
 
@@ -77,10 +79,9 @@ async function load_player() {
 
   window.onYouTubeIframeAPIReady = async () => {
     await wait_for_video_spec;
-    const videoId = video_spec.video_id;
 
     const player = new YT.Player(YOUTUBE_DIV_ID, {
-      videoId,
+      videoId: video_spec.video_id,
       events: {
         onReady: () => {
           player__loaded = player;
