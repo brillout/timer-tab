@@ -50,8 +50,15 @@
 }
 #timer_table {
   display:table;
-  height: 100vh;
+
   min-width: 100%;
+
+  /* min-height doesn't seem to have effect on a table
+  min-height: 100vh;
+  but height + hidden overflow seems to do the trick
+  */
+  height: 100vh;
+  overflow: hidden;
 }
 #timer_table > div {
   display:table-row;
