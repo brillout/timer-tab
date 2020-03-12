@@ -763,18 +763,6 @@ ctObj.Timer_dom=(function(){
       }); 
       */
 
-      //define chrome extension badge notification
-      feature_fcts.push(function(){ 
-        if(!window['chrome']||!window['chrome']['browserAction']||!window['chrome']['browserAction']['setBadgeText']) return;
-        notis.chromeExtensionBadge=function(diff,percent){
-          window['chrome']['browserAction']['setBadgeText']({'text':ml.date.readable.getCounter(diff<0?0:diff*1000,'text')});
-          var color = percent===undefined||percent===null?[0,0,255]:[parseInt(255*percent,10),parseInt(255*(1-percent),10),0];
-          //color.push(0);//array format doesn't seem to work
-          color = '#'+color.map(function(v){var ret=v.toString(16);return ret.length===1?'0'+ret:ret}).reduce(function(l,r){return l+r});
-          window['chrome']['browserAction']['setBadgeBackgroundColor']({'color':color});
-        };
-      }); 
-
       notis.metro={};
       //define IE9 notification
       //{{{
@@ -1216,8 +1204,6 @@ ctObj.Timer_dom=(function(){
       });
 
       _onCountdown.push(notis.metro.tile);
-
-      _onCountdown.push(notis.chromeExtensionBadge);
 
       //return function(diff,percent,postText){ml.safe_call(_onCountdown,diff,percent,postText)};
       return function(){ml.safe_call.apply(null,[_onCountdown].concat([].slice.call(arguments)))};
