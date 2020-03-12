@@ -59,7 +59,6 @@ let video_spec;
 let resolve__video_spec;
 let wait_for_video_spec = new Promise(r => resolve__video_spec = r);
 async function set_youtube_url(youtube_url) {
-  console.log(youtube_url);
   video_spec = parse_youtube_url(youtube_url);
   resolve__video_spec();
 
@@ -70,13 +69,17 @@ async function set_youtube_url(youtube_url) {
 
 
 let player__loaded;
+let player__promise;
 async function load_player() {
   if( player__loaded ){
     return player__loaded;
   }
+  if( player__promise ){
+    return player__promise;
+  }
 
   let resolve;
-  const promise = new Promise(r => resolve = r);
+  player__promise = new Promise(r => resolve = r);
 
   window.onYouTubeIframeAPIReady = async () => {
     await wait_for_video_spec;
@@ -102,7 +105,7 @@ async function load_player() {
   };
   load_script('https://www.youtube.com/iframe_api');
 
-  return promise;
+  return player__promise;
 
   function onStateChange(event) {
     if( !DEBUG ) return;
