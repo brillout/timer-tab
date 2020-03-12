@@ -103,7 +103,9 @@ async function load_player() {
   return promise;
 
   function onStateChange(event) {
-    DEBUG && console.log('[YOUTUBE] event.data', event.data);
+    if( !DEBUG ) return;
+    const time = (new Date()).toTimeString().split(' ')[0];
+    console.log('[YOUTUBE]['+time+'] event.data', event.data);
   }
 }
 
