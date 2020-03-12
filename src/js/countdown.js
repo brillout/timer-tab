@@ -540,57 +540,6 @@ ctObj.Timer_dom=(function(){
     })();
   } 
 
-  var unity={};
-  //*
-  ml.safe_call(function(){ 
-    var u = window['external'] && window['external']['getUnityObject'] && window['external']['getUnityObject'](1.0);
-    (function(){
-      if(!u)return;
-      var initObj={};
-      initObj['name']    = document.querySelector('meta[itemprop=name]').content;
-      initObj['iconUrl'] = document.querySelector('link[rel=apple-touch-icon]').href;
-      ml.assert(initObj['name']&&initObj['iconUrl']);
-      initObj['onInit']  = function(){};
-      u['init'](initObj);
-    })();
-    unity.unityNotification=function(text){
-      if(!u) return;
-      u['Notification']['showNotification'](text,'',null);
-    };
-    unity.setProgressBar=function(percent,count,isUrgent){
-      if(!u) return;
-    //u['Launcher']['clearCount']();
-      u['Launcher']['setCount'](count);
-      if(percent!==undefined && percent!==null)
-        u['Launcher']['setProgress'](percent);
-      else
-        u['Launcher']['clearProgress']();
-      u['Launcher']['setUrgent'](isUrgent);
-    };
-    unity.setActions=function(ctInputs,pauseBtn){
-      if(!u) return;
-    //u['removeActions']();
-      u['Launcher']['removeActions']();
-      if(pauseBtn){
-        u['addAction']("/Toggle Pause"                ,function(){pauseBtn.click()});
-        u['Launcher']['addAction']("Pause/Resume/Stop",function(){pauseBtn.click()});
-//      newState!==STATE_CODES.STOPED && u['Launcher']['addAction'](
-//        newState===STATE_CODES.RINGING&&"Stop Ringing"||newState===PLAYING&&"Pause"||newState===PAUSED&&"Resume",
-//        function(){PAUSE_ELEM.click()}
-//      );
-      }
-      ctInputs.forEach(function(ctInput){
-        var actionName = {};
-        actionName[ctObj.TYPES.TIMER]="Countdown";
-        actionName[ctObj.TYPES.ALARM]="Alarm Clock";
-        actionName[ctObj.TYPES.STOPW]="Stopwatch";
-        u['addAction']("/"+actionName[ctInput.type],function(){ctInput.onsubmit()});
-        u['Launcher']['addAction']("Start "+actionName[ctInput.type],function(){ctInput.onsubmit()});
-      });
-    };
-  }); 
-  //*/
-
   var notify={};
   (function(){ 
     var NO_DYNAMIC_FAVICONS = /Chrome/.test(navigator.userAgent) && /Chrome[^\s]*/.exec(navigator.userAgent)[0].replace('Chrome/','').split('.').map(function(v,i){return [parseInt(v,10),[22,0,1215,0][i]||0]}).map(function(v){if(v[0]>v[1]) return true;if(v[0]<v[1]) return false;return undefined}).reduce(function(v1,v2){return v1===undefined?v2:v1})===false;
@@ -813,13 +762,6 @@ ctObj.Timer_dom=(function(){
         };
       }); 
       */
-
-      //define unity notifications
-      feature_fcts.push(function(){ 
-        notis.unityNoti=function(){
-          unity.unityNotification(NOTI_TEXT)
-        };
-      }); 
 
       //define chrome extension badge notification
       feature_fcts.push(function(){ 
@@ -1233,7 +1175,6 @@ ctObj.Timer_dom=(function(){
       onTimesUp.push(notis.ring.play_);
       onTimesUp.push(notis.IE9Noti);
       onTimesUp.push(notis.popupNotification);
-      onTimesUp.push(notis.unityNoti);
 
       var lastState;
       return function(state_,STATE_CODES,timerName)
@@ -1257,10 +1198,6 @@ ctObj.Timer_dom=(function(){
     }; 
     notify.tab=(function(){ 
       var _onCountdown=[];
-
-      _onCountdown.push(function(diff,percent){
-        unity.setProgressBar(percent,diff<0?0:diff,percent&&diff<=0);
-      });
 
       if(!NO_DYNAMIC_FAVICONS){
         var lastIconURL;
@@ -1385,7 +1322,6 @@ ctObj.Timer_dom=(function(){
 
     thisTimer.makeTabTimer=function(disconnect){ 
       interface_.onCountdown = disconnect?undefined:function(diff,perc){notify.tab(diff,perc,thisTimer.data&&thisTimer.data.getName())};
-      ml.safe_call(function(){ unity.setActions(thisTimer.dom.inputs,thisTimer.dom.pauseBtn) });
     }; 
 
     var __isRinging;
