@@ -1131,7 +1131,9 @@ ctObj.Timer_dom=(function(){
                   ctrl.play();
                   ctrl.unMute();
                   ctrl.setVolume(100);
-                }catch(e){ml.assert(false)}
+                }catch(err){
+                  console.error(err);
+                }
               }
               setTimeout(forcePlay,0);
               setTimeout(forcePlay,1000);

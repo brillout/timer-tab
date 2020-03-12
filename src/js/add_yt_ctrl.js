@@ -27,10 +27,13 @@ function add_yt_ctrl(__iframeEl){
 
   var onNextStateChange;
 
+  const callStack=[];
+
   //in
   var vidId;
   var bLoaded;
   window.addEventListener("message",function(ev){ 
+    console.log('[message received]');
     //if(JSON.parse(ev['data']).event!=='infoDelivery') {
     //  //onsole.log(ev['origin']);
     //  //onsole.log(ev['data']);
@@ -51,6 +54,7 @@ function add_yt_ctrl(__iframeEl){
         var newState = data['info']['playerState'];
         if(newState!==undefined && newState!==null && newState!==_frameCtrl.state)
         {
+          console.log('newState', newState, data.info);
           _frameCtrl.state=newState;
           if(_frameCtrl.onstatechange_) _frameCtrl.onstatechange_(newState);
           if(onNextStateChange)
@@ -91,10 +95,18 @@ function add_yt_ctrl(__iframeEl){
     if(isReady) return;
     //onsole.log(__iframeEl);
     //onsole.log(__iframeEl.contentWindow);
-    try{
-      //sometimes returns "Uncaught Error: SyntaxError: DOM Exception 12"
-      __iframeEl.contentWindow&&__iframeEl.contentWindow.postMessage(JSON.stringify({'event':'listening','id':1}),__iframeEl.src);
-    }catch(e){}
+    if( __iframeEl.contentWindow && __iframeEl.src!=='about:blank' ){
+      try{
+        //sometimes returns "Uncaught Error: SyntaxError: DOM Exception 12"
+        __iframeEl.contentWindow && __iframeEl.contentWindow.postMessage(
+          JSON.stringify({'event':'listening','id':1}),
+          __iframeEl.src
+       // '*'
+        );
+      }catch(err){
+        console.error(err);
+      }
+    }
     setTimeout(checkIfReady,300);
   }
 
@@ -112,7 +124,6 @@ function add_yt_ctrl(__iframeEl){
   //if(!__iframeEl.src) setTimeout(__iframeEl.onload,1);
 
   //out
-  callStack=[];
   function callCallStack(){
     ml.assert(isReady);
     ml.assert(__iframeEl.src);
@@ -120,14 +131,18 @@ function add_yt_ctrl(__iframeEl){
     callStack.forEach(function(c){
       var func = c[0];
       var args = c[1];
-      __iframeEl.contentWindow.postMessage(JSON.stringify({
-        "event": "command",
-        "func": func,
-        "args": args?[args]:[],
-        "id": 1
-      }), __iframeEl.src);
+      __iframeEl.contentWindow.postMessage(
+        JSON.stringify({
+          "event": "command",
+          "func": func,
+          "args": args?[args]:[],
+          "id": 1
+        }),
+        __iframeEl.src
+     // '*'
+      );
     });
-    callStack=[];
+    callStack.length = 0;
   }
   function callPlayer(func, args) { callStack.push([func,args]);if(isReady) callCallStack(); }
   _frameCtrl.mute      =function( ){callPlayer('mute')};
