@@ -589,332 +589,25 @@ ctObj.Timer_dom=(function(){
       ml.safe_call(feature_fcts);
     //}}}
     })();
-    notify.state=function(ctYt,_onPopupClick){ 
+    notify.state=function(_onPopupClick){ 
       onPopupClick=_onPopupClick;
       //define ring notifications
       notis.ring={};
       (function(){ 
         var ring={};
-        //audio tag notification
-        //{{{
-        feature_fcts.push(function()
-        //sample sounds:
-        //- http://media.w3.org/2010/07/bunny/04-Death_Becomes_Fur.mp4
-        //- http://media.w3.org/2010/05/sound/sound_5.mp4
-        //- http://upload.wikimedia.org/wikipedia/commons/a/a9/Tromboon-sample.ogg
-        {
-          var RING_REPEATS = 5;
-          var ns;
-          function pre() { if(!ns) ns=document.getElementById('notify_sound'); if(!ns) return true}
-
-          ring.playFallback=function()
-          //{{{
-          {
-            if(pre()) return true;
-            try{
-              function playRing()
-              {
-                ns['currentTime']=0;
-                //loads() makes load next sound in src list
-                //ns['load']();
-                ns['pl'+'ay']();
-              }
-              playRing();
-              var repeatsLeft=RING_REPEATS;
-              if(!ns.endedListenerAdded)
-              {
-                ns.addEventListener('ended',function() {if(ctYt.repeat_ || repeatsLeft--) playRing() },false);
-                ns.endedListenerAdded=true;
-              }
-            }
-            catch(e){return true;}
-          };
-          //}}}
-
-          ring.stopFallback=function()
-          {
-            pre();
-            try{
-              ns['pause']();
-            }catch(e){}
-          };
-        });
-        //}}}
-        //web audio API notification
-        //{{{
-        //*
-        feature_fcts.push(function(){
-          var AudioContext = window['AudioContext'] || window['webkitAudioContext'];
-          if(!AudioContext) return;
-          var node,ctx,timeout;
-          ring.playWebAudio=function()
-          {
-            DEBUG_AUDIO && console.log('DEBUG_AUDIO', 'playing web audio');
-            if(!node)
-            {
-              function fadeOut(i,length) { return 1-i/length }
-              function fadeIn (i,length) { return i/length }
-              function fade   (i,length) { var limit = length/100;return i>limit?fadeOut(i-limit,length):fadeIn(i,limit)}
-
-              ctx = new AudioContext();
-
-              var SAMPLE_RATE = ctx['sampleRate'];
-              var buf_size=1.35*512*128;
-              var freq = 440;
-              var PI_2 = Math.PI * 2;
-
-              var buffer = ctx['createBuffer'](1, buf_size, SAMPLE_RATE);
-                var buf = buffer['getChannelData'](0);
-                for (let i = 0; i < buf_size; ++i) buf[i] = fade(i,buf_size)*Math.sin(freq * PI_2 * i / SAMPLE_RATE);
-              node = ctx['createBufferSource'](0);
-                node['buffer']  = buffer;
-                node['loop']    = true;
-                node['looping'] = true;
-              node['noteOn'](ctx['currentTime']);
-            }
-            node['con'+'nect'](ctx['destination']);
-            if(timeout) clearTimeout(timeout);
-            if(!ctYt.repeat_) timeout=setTimeout(function(){node['disconnect']()},120*1000);
-          };
-          ring.stopWebAudio=function()
-          {
-            if(node) node['disconnect']();
-          };
-        });
-        //*/
-        //}}}
-        //youtube/iframe notification
-        feature_fcts.push(function(){ 
-          //init ctYt (common code to iframe+yt notification)
-          var frame={};
-          (function(){ 
-            ctYt.style.position='relative';
-            var isHidden_;
-            ctYt.hide=function(){ 
-              isHidden_ = true;
-              ctYt.style.height   = '1px';
-            //ctYt.style.height   = '0px';
-              ctYt.style.width    = '1px';//1px width required for vertical mobile layout
-              ctYt.style.top      = '-10000px';
-            }; 
-            ctYt.hide();
-            ctYt.show=function(){ 
-              isHidden_ = false;
-              ctYt.style.height   = '';
-              ctYt.style.width    = '';
-              ctYt.style.top      = '';
-            }; 
-            ctYt.isHidden=function(){
-              return isHidden_;
-            };
-            ctYt.parseUrl=function(url){ 
-              ml.assert(url.constructor===String);
-              function urlToId(url){
-                //ID chars: /[a-zA-Z0-9-_]+/ --http://stackoverflow.com/questions/830596/what-type-of-id-does-youtube-use-for-their-videos
-                //var matches=/youtube\.com.*(?:\?|&)v=([^&#]+)/.exec(url);
-                var matches=/youtube\.com.*(?:\?|&)v=([a-zA-Z0-9\-_]+)/.exec(url) || /youtu.be\/([a-zA-Z0-9\-_]+)/.exec(url);
-                return matches?matches[1]:null;
-              }
-
-              //sanetize URL
-              url=url.replace(' ','');
-
-              //retrieve ID
-              ctYt.inputUrl=url;
-              ctYt.yt_vid_id=urlToId(url);
-
-              //retrieve start & repeat
-              const matches=/(?:\?|&)(?:start|t)=([^&#]*)/.exec(url);
-              ctYt.vid_start=matches?matches[1]:null;
-            //ctYt.repeat_=/(?:\?|&)(repeat|loop)/.test(url);
-              ctYt.repeat_=/repeat|replay|loop/.test(url);
-
-              //set final url
-              //options: https://developers.google.com/youtube/player_parameters
-            //var options="&rel=0&theme=dark&modestbranding=0&controls=0&showinfo=0&showsearch=0&hd=0&iv_load_policy=0&disablekb=0&autohide=1&html5=1";
-              var options="&rel=0&controls=0&hd=0&showinfo=0&html5=1";
-              ctYt.yt_vid_url=!ctYt.yt_vid_id?null:"https://www.youtube.com/embed/"+ctYt.yt_vid_id+"?enablejsapi=1"+(ctYt.vid_start?'&start='+ctYt.vid_start:'')+"&origin=https://"+location.host+options;
-            }; 
-            ctYt.prefetch=function(){
-              if(ctYt.onPrefetch) ctYt.onPrefetch();
-            };
-            (function(){
-              var ytframe;
-              function generateDom(){ 
-                ytframe = document.createElement(ml.isPackagedApp()?'webview':'iframe')
-                  ytframe.style.border='0';
-                  ytframe.style.position='absolute';
-                  ytframe.style.left='0';
-                  ytframe.style.top='0';
-                  ytframe.style.width ='100%';
-                  ytframe.style.height='100%';
-
-                var cover =document.createElement('div');
-                  cover.style.position='absolute';
-                  cover.style.left='0';
-                  cover.style.top='0';
-                  cover.style.width ='100%';
-                  cover.style.height='100%';
-                  cover.style.cursor='pointer';
-              //cover.onclick=function(){if(ctYt.onclick) ctYt.onclick()};
-                ctYt.appendChild(ytframe);
-                ctYt.appendChild(cover);
-              } 
-              var lastSrc;
-              frame.setSrc=function(newSrc){
-                if(!ytframe) generateDom();
-                if(newSrc!=ytframe.src) ytframe.src=newSrc;
-                if(ytframe.nodeName==="WEBVIEW"){
-                  //somehow src gets discarded
-                  lastSrc=newSrc;
-                  setTimeout(function(){
-                    if(ytframe.src!=lastSrc) ytframe.src=lastSrc;
-                  },0);
-                }
-                return;
-              };
-              var ctrl;
-              frame.addCtrl=function(){
-                if(!ctrl) ctrl=add_yt_ctrl(ytframe);
-                return ctrl;
-              }
-            })();
-          })(); 
-          //youtube notification
-          (function(){ 
-            ctYt.onPrefetch=function(){};
-            var ytNotWorking;
-            var shouldBePlaying;
-            ring.playYT=function(){ 
-              if(ytNotWorking) return true;
-              if(!ctYt.yt_vid_url) return true;
-              frame.setSrc('about:blank');
-              ctYt.show();
-              frame.setSrc(ctYt.yt_vid_url+"&autoplay=1");
-              try{frame.addCtrl()}catch(e){ml.assert(false)};
-              try{
-                var ctrl = frame.addCtrl();
-                ctrl.onstatechange_=function(newState){
-                  console.log({newState});
-                  if(newState===0 && ctYt.repeat_) setTimeout(ctrl.play,100);
-                };
-              }catch(e){ml.assert(false)}
-              shouldBePlaying=setTimeout(function(){
-                console.log("shouldBePlaying");
-                if(!shouldBePlaying) return;
-                var isPlaying;
-                try{
-                  const {state} = frame.addCtrl();
-                  console.log('state', state);
-                  isPlaying = state===1;
-                }catch(e){}
-                console.log('isPlaying', isPlaying);
-                // Hot fix
-                isPlaying = true;
-                if(!isPlaying){
-                  ytNotWorking=true;
-                  setTimeout(function(){ytNotWorking=false},15000);
-                  notis.ring.stop();
-                  notis.ring.play_();
-                }
-              },15000);
-              function forcePlay(){
-                if(!shouldBePlaying) return;
-                try{
-                  var ctrl = frame.addCtrl();
-                  ctrl.play();
-                  ctrl.unMute();
-                  ctrl.setVolume(100);
-                }catch(err){
-                  console.error(err);
-                }
-              }
-              setTimeout(forcePlay,0);
-              setTimeout(forcePlay,1000);
-              setTimeout(forcePlay,2000);
-            }; 
-            ring.stopYT=function(){
-              console.log('stopYT');
-              ctYt.hide();
-              frame.setSrc('about:blank');
-              if(shouldBePlaying) window.clearTimeout(shouldBePlaying);
-              shouldBePlaying=false;
-            };
-          })(); 
-          //iframe notification
-          (function(){ 
-            var iframe;
-            var playing;
-            ring.playIframe=function()
-            {
-              if(!iframe) {
-                iframe=document.createElement('iframe');
-                iframe.style.display='none';
-                iframe.style.position='absolute';
-                iframe.style.border='0';
-                iframe.style.width ='100%';
-                iframe.style.height='100%';
-                iframe.style.left  ='0';
-                ctYt.appendChild(iframe);
-              }
-              var ring_url;
-              if(ctYt.yt_vid_id)
-                ring_url = 'https://www.youtube.com/embed/'+ctYt.yt_vid_id+'?autoplay=1&autohide=1'+(ctYt.vid_start?'&start='+ctYt.vid_start:'');
-              else
-              {
-                ring_url = ctYt.inputUrl;
-                if(!/^(http|ftp)s?:\/\//.test(ring_url)) ring_url = 'https://'+ring_url;
-              }
-              //won't work if following has been called before
-              //YTplayer['mute']();
-              //YTplayer['playVideo']();
-              //YTplayer['pauseVideo']();
-              iframe.src = 'about:blank';//just to make sure that if same url it will reload -- don't know if this is required
-              iframe.src = ring_url;
-              iframe.style.display='';
-              playing=true;
-              ctYt.show();
-            };
-            ring.stopIframe=function()
-            {
-              if(playing){
-                iframe.style.display='none';
-                iframe.src='about:blank';
-                ctYt.hide();
-                playing=false;
-              }
-            };
-          })(); 
-        }); 
+        var feature_fcts = [];
         //orchestrate notifications
         //{{{
         feature_fcts.push(function()
         {
-          var players=[
-                       [ring.playYT      ,ring.stopYT],
-                       [ring.playWebAudio,ring.stopWebAudio],
-                       [ring.playFallback,ring.stopFallback],
-                       [ring.playIframe  ,ring.stopIframe]
-                      ].filter(function(p){return !!(p[0]&&p[1])});
-          var ringing_;
-          notis.ring.play_=function()
-          {
-            console.log('notis.ring.play_');
-            players.forEach(function(p){
-              console.log('attempt');
-              if(!ringing_ && p&&p[0] && !p[0]()) {
-                console.log('success');
-                ringing_=true;
-              } else {
-                p[1]();
-              }
-            });
+          let ringing_;
+          notis.ring.play_=function() {
+            console.log('ring ring :)');
+            ringing_=true;
           };
-          notis.ring.stop=function()
-          {
+          notis.ring.stop=function() {
             console.log('notis.ring.stop');
             if(!ringing_) return;
-            players.forEach(function(p){p&&p[1]&&p[1]()});
             ringing_=false;
           };
         });
@@ -922,6 +615,7 @@ ctObj.Timer_dom=(function(){
 
         ml.safe_call(feature_fcts);
       })(); 
+
       var onTimesUp=[];
       onTimesUp.push(notis.ring.play_);
       onTimesUp.push(notis.popupNotification);
@@ -1071,9 +765,9 @@ ctObj.Timer_dom=(function(){
     var __isRinging;
     var __type=initialType;
     thisTimer.spark       = function(noNotification){ 
-      if(thisTimer.dom.youtubeDiv){ 
-        thisTimer.dom.youtubeDiv.onclick=interface_.stop_;
-        if(!noNotification) state_notifier = notify.state(thisTimer.dom.youtubeDiv,interface_.stop_);
+      if(thisTimer.dom.youtube_div){ 
+        thisTimer.dom.youtube_div.onclick=interface_.stop_;
+        if(!noNotification) state_notifier = notify.state(interface_.stop_);
       } 
       if(thisTimer.dom.inputs){ 
         if(thisTimer.dom.inputs.length===1) __type=thisTimer.dom.inputs[0].type;

@@ -36,7 +36,7 @@ function load_timer() {
   var TIMER_FORM  = document.getElementById('timerForm');
   var STOPW_FORM  = document.getElementById('stopwForm');
   var PAUSE_ELEM  = document.getElementById('pause');
-  var YT_EL       = document.getElementById('yt_vid_wrapper');
+  var youtube_div = document.getElementById('yt_vid_wrapper');
   var ALARM_TIME  = document.getElementById('alarmTime');
   //}}}
 
@@ -175,11 +175,13 @@ function load_timer() {
     //persistant goto
     postInitListeners.push(function(){ 
       var notFirstTime;
-      ml.optionInput('goto_url','https://youtu.be/PS5KAEgrtMA',function(newUrl){
-        YT_EL.parseUrl(newUrl);
-        if(notFirstTime) YT_EL.prefetch();
+      ml.optionInput('goto_url','https://youtu.be/PS5KAEgrtMA', function(newUrl){
+        // TOO2
+        return;
+        youtube_div.parseUrl(newUrl);
+        if(notFirstTime) youtube_div.prefetch();
         else {
-          setTimeout(function(){YT_EL.prefetch()},THIRD_PARTY_LOADING_DELAY);
+          setTimeout(function(){youtube_div.prefetch()},THIRD_PARTY_LOADING_DELAY);
           notFirstTime=true;
         }
       });
@@ -268,23 +270,6 @@ function load_timer() {
         })();
         //}}}
       },THIRD_PARTY_LOADING_DELAY);
-    });
-    //}}}
-
-    //generate audio tag
-    //{{{
-    feature_fcts.push(function(){
-      var formats=[['mp3','mpeg'],['ogg','ogg'],['wav','wav']];
-      var el=document.createElement('audio');
-        el.id='notify_sound';
-        el.style.display='none'
-        formats.forEach(function(d){var s=el.appendChild(document.createElement('source'));s.type="audio/"+d[1];s.src='https://brillcdn.appspot.com/sf/ring.'+d[0];});
-        document.body.appendChild(el);
-    // <audio style='display: none' id="notify_sound">
-    //   <source src="http://brillcdn.appspot.com/sf/ring.mp3" type="audio/mpeg"/>
-    //   <source src="http://brillcdn.appspot.com/sf/ring.ogg" type="audio/ogg"/>
-    //   <source src="http://brillcdn.appspot.com/sf/ring.wav" type="audio/wav"/>
-    // </audio>
     });
     //}}}
 
@@ -607,7 +592,7 @@ function load_timer() {
       timer_.dom = {};
       timer_.dom.counter   = document.getElementById('counter');
       timer_.dom.inputs = [[TIMER_FORM,ctObj.TYPES.TIMER],[ALARM_FORM,ctObj.TYPES.ALARM],[STOPW_FORM,ctObj.TYPES.STOPW]].map(function(d){return ctObj.input(d[0],d[1],timer_)});
-      timer_.dom.youtubeDiv = YT_EL;
+      timer_.dom.youtube_div = youtube_div;
       timer_.dom.pauseBtn   = PAUSE_ELEM;
       timer_.dom.alarmTime  = ALARM_TIME;
    // timer_.dom.name_input = document.getElementById('opt_name_input');
