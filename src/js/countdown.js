@@ -1,5 +1,5 @@
 import ml from './ml';
-import add_yt_ctrl from './add_yt_ctrl';
+import {play_youtube_alarm, stop_youtube_alarm} from './youtube_alarm';
 
 const ctObj = {};
 
@@ -600,15 +600,11 @@ ctObj.Timer_dom=(function(){
         //{{{
         feature_fcts.push(function()
         {
-          let ringing_;
           notis.ring.play_=function() {
-            console.log('ring ring :)');
-            ringing_=true;
+            play_youtube_alarm();
           };
           notis.ring.stop=function() {
-            console.log('notis.ring.stop');
-            if(!ringing_) return;
-            ringing_=false;
+            stop_youtube_alarm();
           };
         });
         //}}}

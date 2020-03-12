@@ -1,6 +1,7 @@
 import ml from './ml';
 import ctObj from './countdown';
 import {getScroll, setScroll} from './pretty_scroll_area';
+import {set_youtube_url} from './youtube_alarm';
 
 export default load_timer;
 
@@ -174,16 +175,8 @@ function load_timer() {
 
     //persistant goto
     postInitListeners.push(function(){ 
-      var notFirstTime;
-      ml.optionInput('goto_url','https://youtu.be/PS5KAEgrtMA', function(newUrl){
-        // TOO2
-        return;
-        youtube_div.parseUrl(newUrl);
-        if(notFirstTime) youtube_div.prefetch();
-        else {
-          setTimeout(function(){youtube_div.prefetch()},THIRD_PARTY_LOADING_DELAY);
-          notFirstTime=true;
-        }
+      ml.optionInput('goto_url','https://youtu.be/PS5KAEgrtMA', function(youtube_url){
+        set_youtube_url(youtube_url);
       });
     }); 
 
