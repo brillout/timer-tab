@@ -761,8 +761,8 @@ ctObj.Timer_dom=(function(){
     var __isRinging;
     var __type=initialType;
     thisTimer.spark       = function(noNotification){ 
-      if(thisTimer.dom.youtube_div){ 
-        thisTimer.dom.youtube_div.onclick=interface_.stop_;
+      if(thisTimer.dom.youtube_wrapper){ 
+        thisTimer.dom.youtube_wrapper.onclick=interface_.stop_;
         if(!noNotification) state_notifier = notify.state(interface_.stop_);
       } 
       if(thisTimer.dom.inputs){ 

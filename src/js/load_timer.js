@@ -37,7 +37,7 @@ function load_timer() {
   var TIMER_FORM  = document.getElementById('timerForm');
   var STOPW_FORM  = document.getElementById('stopwForm');
   var PAUSE_ELEM  = document.getElementById('pause');
-  var youtube_div = document.getElementById('yt_vid_wrapper');
+  var youtube_wrapper = document.getElementById('youtube_wrapper');
   var ALARM_TIME  = document.getElementById('alarmTime');
   //}}}
 
@@ -585,7 +585,7 @@ function load_timer() {
       timer_.dom = {};
       timer_.dom.counter   = document.getElementById('counter');
       timer_.dom.inputs = [[TIMER_FORM,ctObj.TYPES.TIMER],[ALARM_FORM,ctObj.TYPES.ALARM],[STOPW_FORM,ctObj.TYPES.STOPW]].map(function(d){return ctObj.input(d[0],d[1],timer_)});
-      timer_.dom.youtube_div = youtube_div;
+      timer_.dom.youtube_wrapper = youtube_wrapper;
       timer_.dom.pauseBtn   = PAUSE_ELEM;
       timer_.dom.alarmTime  = ALARM_TIME;
    // timer_.dom.name_input = document.getElementById('opt_name_input');

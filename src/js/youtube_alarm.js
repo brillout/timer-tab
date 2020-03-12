@@ -10,7 +10,8 @@ const DEBUG = true;
 const DEBUG = false;
 //*/
 
-const YOUTUBE_DIV_ID = 'yt_vid_wrapper';
+const youtube_wrapper = 'youtube_wrapper';
+const youtube_iframe = 'youtube_iframe';
 
 async function youtube_alarm() {
   add_style();
@@ -26,14 +27,14 @@ async function play_youtube_alarm() {
   player.seekTo(video_spec.start_time);
   player.unMute();
   player.playVideo();
-  document.querySelector('#'+YOUTUBE_DIV_ID).classList.add('youtube_alarm_show');
+  document.querySelector('#'+youtube_wrapper).classList.add('youtube_alarm_show');
   state = 'STARTED';
 }
 
 async function stop_youtube_alarm() {
   if( state==='STOPED' ) return;
   const player = await load_player();
-  document.querySelector('#'+YOUTUBE_DIV_ID).classList.remove('youtube_alarm_show');
+  document.querySelector('#'+youtube_wrapper).classList.remove('youtube_alarm_show');
   player.mute();
   state = 'STOPED';
 }
@@ -80,7 +81,7 @@ async function load_player() {
   window.onYouTubeIframeAPIReady = async () => {
     await wait_for_video_spec;
 
-    const player = new YT.Player(YOUTUBE_DIV_ID, {
+    const player = new YT.Player(youtube_iframe, {
       videoId: video_spec.video_id,
       events: {
         onReady: () => {
@@ -151,10 +152,31 @@ function load_script(url) {
 function add_style() {
   const CSS = (
 `
-#${YOUTUBE_DIV_ID}:not(.youtube_alarm_show) {
+#${youtube_wrapper}:not(.youtube_alarm_show) {
   position: absolute;
   z-index: -999999;
   visibility: hidden;
+  height: 0px;
+}
+#${youtube_wrapper} {
+  height: 150px;
+  overflow: hidden;
+  transition: height 0.7s;
+}
+
+/* transparent click-protecting cover */
+#${youtube_wrapper} {
+  position: relative;
+}
+#${youtube_wrapper}:before {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  content: "";
+  display: block;
 }
 `
   );
