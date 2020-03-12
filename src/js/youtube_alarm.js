@@ -4,6 +4,12 @@ export {play_youtube_alarm, stop_youtube_alarm, set_youtube_url};
 
 export default youtube_alarm;
 
+//*/
+const DEBUG = true;
+/*/
+const DEBUG = false;
+//*/
+
 const YOUTUBE_DIV_ID = 'yt_vid_wrapper';
 
 async function youtube_alarm() {
@@ -97,7 +103,7 @@ async function load_player() {
   return promise;
 
   function onStateChange(event) {
-    console.log('event', event);
+    DEBUG && console.log('[YOUTUBE] event.data', event.data);
   }
 }
 
