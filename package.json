@@ -10,7 +10,7 @@
     "prod:deploy": "push-dir --dir=dist/ --branch=gh-pages --cleanup",
     "prod:serve": "serve dist/ --listen 3000",
     "parcel:dev": "parcel serve src/index.html --port 3000",
-    "parcel:prod": "parcel build src/index.html src/donate.html"
+    "parcel:prod": "parcel build src/*.html"
   },
   "dependencies": {
     "@brillout/assert": "^0.1.1",

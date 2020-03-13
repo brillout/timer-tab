@@ -106,3 +106,13 @@ body::-webkit-scrollbar {
 #morePanel h3 {
  margin-top: 0;
 }
+
+
+#morePanel button {
+  font-size: 0.75em;
+  padding: 4px 10px;
+  padding-left: 7px;
+}
+#morePanel button:before {
+  padding-left: 19px;
+}

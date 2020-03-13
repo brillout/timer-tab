@@ -560,9 +560,6 @@ body.paused #counter {
   padding-left: 28px;
   font-size: 1.25em;
 }
-#settings_link:after {
-  content: "Settings";
-}
 #verticalBottom {
   display: flex;
   justify-content: space-around;

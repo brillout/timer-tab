@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reset - Timer Tab</title>
+<link rel='stylesheet' type='text/css' href='css/content_page.css'/>
+<style>
+button[disabled] {
+  opacity: 0.4;
+}
+</style>
+</head>
+
+<body>
+
+<h2>
+Factory Reset
+</h2>
+
+<p>
+Remove all your settings and set Timer Tab to a pristine state.
+</p>
+
+<p>
+<button type='button'>Factory Reset</button>
+</p>
+
+<p>
+<span id="state"></span>
+</p>
+
+<script>
+  const checkmark = "🗸 ";
+  const resetBtn = document.querySelector('button');
+  const resetState = document.querySelector('#state');
+
+  if( localStorage.length===0 ){
+    disableBtn();
+    resetState.innerHTML = checkmark+"Your Timer Tab is already factory reset.";
+  }
+
+  resetBtn.onclick = () => {
+    window.localStorage.clear();
+    disableBtn();
+    resetState.innerHTML = checkmark+"Reset done.";
+  };
+
+  function disableBtn() {
+    resetBtn.setAttribute('disabled', 'disabled');
+  }
+</script>
+
+</body>
+</html>
+
+

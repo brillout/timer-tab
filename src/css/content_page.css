@@ -1,0 +1,18 @@
+body {
+  color: #444;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+  max-width: 880px;
+  margin: auto;
+  padding: 10px;
+}
+html {
+  font-size: 1.05em;
+}
+h2 {
+  font-size: 1.4rem;
+  font-style: normal;
+  font-weight: bold;
+  letter-spacing: -.03rem;
+  line-height: 2rem;
+  margin: 2.8rem 0 1.4rem;
+}

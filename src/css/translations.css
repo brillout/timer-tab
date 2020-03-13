@@ -12,6 +12,8 @@ body.paused  #pause:before {content:"resume"}
 #hNoti > span:before {content:"Popup-Notification"}
 #goto_description:before {content:"YouTube Alarm"}
 #bg_description:before {content:"Background"}
+#reset_button:after {content:"Reset"}
+#settings_link:after { content: "Settings"}
 /*
 #opt_name_desc:before {content:"Name:"}
 */
@@ -25,6 +27,7 @@ html.de body.paused  #pause:before {content:"fortsetzen"}
 html.de #alarmTime:before{content:"bis "}
 html.de #hNoti > span:before {content:"Popup-Notifizierung"}
 html.de #bg_description:before {content:"Hintergrund"}
+html.de #settings_link:after { content: "Einstellungen"}
 
 html.fr #made_by:before {content: "Crée par "}
 html.fr .timerInput button:before{content:"lancer\A0\A0"}
@@ -36,6 +39,7 @@ html.fr #alarmTime:before{content:"jusqu'à "}
 html.fr #hNoti > span:before {content:"Notification Popup"}
 html.fr #goto_description:before {content:"Alarme YouTube"}
 html.fr #bg_description:before {content:"Arrière-Plan"}
+html.fr #settings_link:after { content: "Réglages"}
 /*
 html.fr #opt_name_desc:before {content:"Nom:"}
 */
