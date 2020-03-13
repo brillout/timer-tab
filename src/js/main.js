@@ -2,6 +2,7 @@
 import 'regenerator-runtime/runtime';
 import ml from './ml';
 import pretty_scroll_area, {scrollToElement} from './pretty_scroll_area';
+import 'tab-utils/more_panel';
 import load_ad from './load_ad';
 import load_timer from './load_timer';
 import auto_remove_hash from 'tab-utils/auto_remove_hash';
@@ -15,9 +16,7 @@ window.onload = () => {
 
   pretty_scroll_area();
 
-  auto_remove_hash({INCLUDE_LIST: ['#settings', '#roadmap']});
-
-  smoothen_settings_link();
+  auto_remove_hash({INCLUDE_LIST: ['#roadmap']});
 
   ml.loadAnalytics('UA-5263303-6',true);
 
@@ -26,13 +25,4 @@ window.onload = () => {
   setTimeout(() => {
     load_ad();
   }, 1000);
-}
-
-function smoothen_settings_link() {
-  const link_source = document.querySelector('#settings_link');
-  link_source.onclick = ev => {
-    scrollToElement('#settings');
-    ev.preventDefault();
-    return false;
-  };
 }

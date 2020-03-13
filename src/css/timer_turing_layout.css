@@ -538,29 +538,13 @@ body.paused #counter {
 /* }}} */
 
 
-
-
-
-#settings_link {
-  font-size: 1.1em;
-  position: relative;
-  top: -2px;
-}
-#settings_link > *,
-#settings_link:before,
-#settings_link:after {
-  vertical-align: middle;
-}
-#settings_link:before {
-  position: relative;
-  top: -1px;
-  background-repeat: no-repeat;
-  background-position: 0px;
-  content: "";
-  padding-left: 28px;
-  font-size: 1.25em;
-}
 #verticalBottom {
   display: flex;
   justify-content: space-around;
+}
+
+#more_panel_jumper {
+  font-size: 1.1em;
+  position: relative;
+  top: -2px;
 }
