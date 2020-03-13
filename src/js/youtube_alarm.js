@@ -194,43 +194,37 @@ function add_css(content) {
 }
 
 /*
-        //web audio API notification
-        feature_fcts.push(function(){
-          var AudioContext = window['AudioContext'] || window['webkitAudioContext'];
-          if(!AudioContext) return;
-          var node,ctx,timeout;
-          ring.playWebAudio=function()
-          {
-            DEBUG_AUDIO && console.log('DEBUG_AUDIO', 'playing web audio');
-            if(!node)
-            {
-              function fadeOut(i,length) { return 1-i/length }
-              function fadeIn (i,length) { return i/length }
-              function fade   (i,length) { var limit = length/100;return i>limit?fadeOut(i-limit,length):fadeIn(i,limit)}
+let node,ctx,timeout;
+function play_web_audio_fallback() {
+  console.log(11);
+  if(!node)
+  {
+    function fadeOut(i,length) { return 1-i/length }
+    function fadeIn (i,length) { return i/length }
+    function fade   (i,length) { var limit = length/100;return i>limit?fadeOut(i-limit,length):fadeIn(i,limit)}
 
-              ctx = new AudioContext();
+    ctx = new AudioContext();
 
-              var SAMPLE_RATE = ctx['sampleRate'];
-              var buf_size=1.35*512*128;
-              var freq = 440;
-              var PI_2 = Math.PI * 2;
+    var SAMPLE_RATE = ctx['sampleRate'];
+    var buf_size=1.35*512*128;
+    var freq = 440;
+    var PI_2 = Math.PI * 2;
 
-              var buffer = ctx['createBuffer'](1, buf_size, SAMPLE_RATE);
-                var buf = buffer['getChannelData'](0);
-                for (let i = 0; i < buf_size; ++i) buf[i] = fade(i,buf_size)*Math.sin(freq * PI_2 * i / SAMPLE_RATE);
-              node = ctx['createBufferSource'](0);
-                node['buffer']  = buffer;
-                node['loop']    = true;
-                node['looping'] = true;
-              node['noteOn'](ctx['currentTime']);
-            }
-            node['con'+'nect'](ctx['destination']);
-            if(timeout) clearTimeout(timeout);
-            if(!ctYt.repeat_) timeout=setTimeout(function(){node['disconnect']()},120*1000);
-          };
-          ring.stopWebAudio=function()
-          {
-            if(node) node['disconnect']();
-          };
-      });
+    var buffer = ctx['createBuffer'](1, buf_size, SAMPLE_RATE);
+      var buf = buffer['getChannelData'](0);
+      for (let i = 0; i < buf_size; ++i) buf[i] = fade(i,buf_size)*Math.sin(freq * PI_2 * i / SAMPLE_RATE);
+    node = ctx['createBufferSource'](0);
+      node['buffer']  = buffer;
+      node['loop']    = true;
+      node['looping'] = true;
+    node['start'](ctx['currentTime']);
+  }
+  node['con'+'nect'](ctx['destination']);
+  if(timeout) clearTimeout(timeout);
+  if(!ctYt.repeat_) timeout=setTimeout(function(){node['disconnect']()},120*1000);
+  console.log(22);
+}
+function stop() {
+  if(node) node['disconnect']();
+}
 */
