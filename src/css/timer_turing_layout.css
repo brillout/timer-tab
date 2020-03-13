@@ -476,6 +476,10 @@ a * {
  /*make sure pause button is above counter*/
  position: relative;
  z-index:9;
+ /*
+ margin-top: 8px;
+ margin-bottom: 12px;
+ */
 }
 html:not(.stopw):not(.alarm):not(.timer) #vertical
 {
