@@ -424,7 +424,8 @@ button:before {
   font-size: 1.2em;
 }
 #verticalBottom {
-  padding: 5px 0;
+  padding-bottom: 5px;
+  padding-top: 12px;
 }
 
 .timerInput button:before,
