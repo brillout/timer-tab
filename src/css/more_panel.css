@@ -100,6 +100,9 @@ body::-webkit-scrollbar {
 #more_panel a {
   text-decoration: underline;
 }
+#footer {
+  font-size: 0.87em;
+}
 
 
 
