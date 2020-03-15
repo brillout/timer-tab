@@ -1,13 +1,5 @@
-:root {
-  --ad-border-color: rgba(200,200,200,0.7);
-  /*
-  --ad-border-color: #ccc;
-  --ad-border-color: rgba(0,0,0,0.07);
-  --ad-border-color: #ededed;
-  */
-}
-
 /* layout */
+
 #timer_table {
   position: relative;
 }
@@ -15,7 +7,7 @@
   position: absolute;
 }
 #ad_section {
-  transition: top 0.7s linear;
+  transition: top 0.7s ease-out;
   top: calc(-90px - 23px);
   left: calc((100% - 728px) / 2);
   width: 728px;
@@ -29,7 +21,7 @@ html.show_ad #ad_section {
 
 /* make space for the ad */
 #ad_padder.ad_stuff {
-  transition: height 0.7s linear;
+  transition: height 0.7s ease-out;
   height: 130px;
 }
 
@@ -49,14 +41,13 @@ html.show_ad #ad_section {
   align-item: center;
 }
 
-
-
 /* ensure that ad doesn't creep out */
 #ad_content_wrapper {
   position: relative;
   overflow: hidden;
 }
-#ad_content_wrapper .ad_content {
+#ad_content_wrapper #ad_mobile,
+#ad_content_wrapper #ad_desktop {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -76,13 +67,20 @@ html:not(.show_ad) .ad_stuff {
 
 /* style */
 
+:root {
+  --ad-border-color: rgba(200,200,200,0.7);
+  /*
+  --ad-border-color: #ccc;
+  --ad-border-color: rgba(0,0,0,0.07);
+  --ad-border-color: #ededed;
+  */
+}
+
 /* ad gray border */
 #ad_content_wrapper {
   border: 1px solid var(--ad-border-color);
   border-top-width: 0;
   box-sizing: content-box !important;
-  /* align with ad remover button */
-  left: -1px;
 }
 
 /* remove button */
