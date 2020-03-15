@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Contact - Timer Tab</title>
+<link rel='stylesheet' type='text/css' href='css/content_page.css'/>
+</head>
+
+<body>
+
+<h1>Contact</h1>
+
+<a id="timertab-contact"></a>
+<script>
+  let timer_tab_email = 'timertab';
+  timer_tab_email+='@';
+  timer_tab_email+='brillout';
+  timer_tab_email+='.';
+  timer_tab_email+='com';
+  const contactEl = document.getElementById('timertab-contact');
+  contactEl.innerHTML = timer_tab_email;
+  const href = 'mailto:'+timer_tab_email;
+  contactEl.setAttribute('href', href);
+</script>
+
+</body>
+</html>
+
