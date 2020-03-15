@@ -1,3 +1,61 @@
+/* more_panel layout and background */
+
+#more_panel {
+  --header-height: 110px;
+}
+#more_panel {
+  background-color: #373a4a;
+  color: #ddd;
+  width: 100vw;
+  epadding-top: var(--header-height);
+}
+#more_panel:before {
+  content: "";
+  display: block;
+  height: var(--header-height);
+  /*
+  position: absolute;
+  top: 0;
+  left: 0;
+  */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 70px;
+}
+#more_panel:before,
+#more_panel_jumper:before {
+  background-image: url(./cog.svg);
+}
+
+#more_panel {
+  padding-bottom: 40px;
+}
+
+/* more_panel jumper */
+
+#more_panel_jumper > *,
+#more_panel_jumper:before,
+#more_panel_jumper:after {
+  vertical-align: middle;
+}
+#more_panel_jumper:before {
+  position: relative;
+  top: -1px;
+  background-repeat: no-repeat;
+  background-position: 0px;
+  content: "";
+  padding-left: 28px;
+  font-size: 1.25em;
+}
+#more_panel_jumper:after { content: "Settings"}
+html.de #more_panel_jumper:after { content: "Einstellungen"}
+html.fr #more_panel_jumper:after { content: "Réglages"}
+
+
+
+
+
+/* more_panel content */
 
 
 /*
@@ -88,3 +146,9 @@ body::-webkit-scrollbar {
 #more_panel button:before {
   padding-left: 19px;
 }
+
+
+
+
+
+
