@@ -9,6 +9,6 @@ export default () => {
     },
   ];
 
-  load_ad(AD_SLOTS);
+  load_ad(AD_SLOTS, {useOneTag: true});
 };
 
