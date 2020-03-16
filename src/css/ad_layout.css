@@ -1,35 +1,40 @@
 /* layout */
-
-#timer_table { position: relative; }
-#timer_table > #primary-ad { position: absolute; }
-#primary-ad {
-  transition: top 0.7s ease-out;
-  top: calc(-90px - 23px);
-  left: calc((100% - 728px) / 2);
-  width: 728px;
+@media (max-width:727px) {
+  :root {
+    --ad-width: 320px;
+    --ad-height: 50px;
+  }
 }
+@media (min-width:728px){
+  :root {
+    --ad-width: 728px;
+    --ad-height: 90px;
+  }
+}
+:root {
+  --ad-remover-height: 24px
+}
+
 .ad-content-wrapper {
-  height: 90px;
+  width: var(--ad-width);
+  height: var(--ad-height);
+  max-width: 100vw;
+  margin: auto;
 }
 
-/* make space for the ad */
-#ad_padder {
+#secondary-ad {
+  margin: auto;
   transition: height 0.7s ease-out;
-  height: 130px;
+  height: calc( var(--ad-height) + var(--ad-remover-height) );
+  overflow: hidden;
 }
 
 /* ad remover layout */
-#primary-ad {
-  position: relative;
-}
-#primary-ad > .ad_remover {
-  position: relative;
-  width: 100px;
-  left: calc((100% - 100px) / 2);
-}
-/* ensure that ad remover always has 21px height */
 .ad_remover {
-  height: 21px;
+  width: 105px;
+  margin: auto;
+  box-sizing: border-box;
+  height: var(--ad-remover-height);
   display: flex;
   align-item: center;
 }
@@ -39,8 +44,8 @@
   position: relative;
   overflow: hidden;
 }
-.ad-content-wrapper .ad_mobile,
-.ad-content-wrapper .ad_desktop {
+.ad-content-wrapper .ad_desktop,
+.ad-content-wrapper .ad_mobile {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -49,27 +54,28 @@
 }
 
 
-
 /* function */
 
-html.show_ad #primary-ad {
-  top: 0;
-}
-html:not(.show_ad) #ad_padder {
-  height: 0px !important;
+html:not(.show_ad) #secondary-ad {
+  height: 0;
 }
 
+@media (min-width:728px){
+  .ad_mobile {
+    display: none !important;
+  }
+}
+@media (max-width:727px) {
+  .ad_desktop {
+    display: none !important;
+  }
+}
 
 
 /* style */
 
 :root {
   --ad-border-color: rgba(200,200,200,0.7);
-  /*
-  --ad-border-color: #ccc;
-  --ad-border-color: rgba(0,0,0,0.07);
-  --ad-border-color: #ededed;
-  */
 }
 
 /* ad gray border */
@@ -84,11 +90,46 @@ html:not(.show_ad) #ad_padder {
   border-radius: 0 0 10px 10px;
   background-color: var(--ad-border-color);
   padding: 2px 10px;
-  display: inline-block;
 }
 .ad_remover {
-  text-decoration: none;
+  text-decoration: none !important;
   color: #333;
   text-shadow: none;
 }
+
+
+
+
+
+
+
+
+
+
+
+/* layout */
+
+#timer_table { position: relative; }
+#timer_table > #primary-ad { position: absolute; }
+#primary-ad {
+  transition: top 0.7s ease-out;
+  top: calc( -1 * ( var(--ad-height) + var(--ad-remover-height) ) );
+  left: calc((100% - var(--ad-width)) / 2);
+}
+html.show_ad #primary-ad {
+  top: 0;
+}
+
+/* make space for the ad */
+#ad_padder {
+  transition: height 0.7s ease-out;
+  height: 130px;
+}
+html:not(.show_ad) #ad_padder {
+  height: 0px !important;
+}
+
+
+
+
 
