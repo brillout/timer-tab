@@ -9,7 +9,7 @@
   width: 100vw;
   epadding-top: var(--header-height);
 }
-#more_panel:before {
+#more_panel_header {
   content: "";
   display: block;
   height: var(--header-height);
@@ -22,7 +22,7 @@
   background-position: center;
   background-size: 70px;
 }
-#more_panel:before,
+#more_panel_header,
 #more_panel_jumper:before {
   background-image: url(./cog.svg);
 }
