@@ -1,4 +1,7 @@
+#Ads.txt clocktab.com
+
 33across.com, 0010b00002SlIKjAAN, DIRECT, bbea06d9c4d2853c
+33across.com, 0010b00002VYZoUAAX, DIRECT, bbea06d9c4d2853c
 33across.com, 0013300001r0t9mAAA, RESELLER
 33across.com, 0014000001aXjnGAAS, RESELLER, bbea06d9c4d2853c
 33across.com, 010b000018lT8bAAE, DIRECT, bbea06d9c4d2853c
@@ -77,8 +80,10 @@ adtech.com, 9834, DIRECT
 adtech.com, 9834, RESELLER
 adtech.com, 9904, RESELLER
 adtech.com, 9993, RESELLER
+adtelligent.com, 500592, DIRECT
 adtrue.com, 1336, RESELLER
 adtrue.com, 2341, DIRECT
+adtrue.com, 4882, DIRECT
 advangelists.com, 8d3bba7425e7c98c50f52ca1b52d3735, RESELLER, 60d26397ec060f98
 advertising.com, 12624, RESELLER
 advertising.com, 14832, RESELLER
@@ -725,10 +730,12 @@ indexexchange.com, 187973, RESELLER, 50b1c356f2c5c8fc
 indexexchange.com, 188081, DIRECT, 50b1c356f2c5c8fc
 indexexchange.com, 188161, DIRECT
 Indexexchange.com, 188161, DIRECT, 50b1c356f2c5c8fc
+indexexchange.com, 188161, RESELLER, 50b1c356f2c5c8fc
 indexexchange.com, 189070, DIRECT
 indexexchange.com, 189744, RESELLER
 indexexchange.com, 190243, DIRECT
 indexexchange.com, 190856, RESELLER, 50b1c356f2c5c8fc
+indexexchange.com, 190966, RESELLER, 50b1c356f2c5c8fc
 justpremium.com, 2976, DIRECT
 lifestreet.com, 291081, DIRECT
 ligadx.com, 10265cc652c1366d, RESELLER
@@ -1013,6 +1020,7 @@ pubmatic.com, 158127, DIRECT, 5d62403b186f2ace
 pubmatic.com, 158127, RESELLER, 5d62403b186f2ace
 pubmatic.com, 158136, RESELLER, 5d62403b186f2ace
 pubmatic.com, 158236, RESELLER, 5d62403b186f2ace
+pubmatic.com, 158569, RESELLER, 5d62403b186f2ace
 pubmatic.com, 158615, RESELLER, 5d62403b186f2ace
 pubmatic.com, 158648, RESELLER, 5d62403b186f2ace
 pubmatic.com, 159110, RESELLER, 5d62403b186f2ace
@@ -1136,6 +1144,8 @@ rubiconproject.com, 20736, RESELLER, 0bfd66d529a55807
 rubiconproject.com, 21070, RESELLER, 0bfd66d529a55807
 rubiconproject.com, 21150, DIRECT, 0bfd66d529a55807
 rubiconproject.com, 21150, RESELLER, 0bfd66d529a55807
+rubiconproject.com, 21434, RESELLER, 0bfd66d529a55807
+rubiconproject.com, 21642, RESELLER, 0bfd66d529a55807
 rubiconproject.com, 22014, RESELLER, 0bfd66d529a55807
 rubiconproject.com, 8861, RESELLER, 0bfd66d529a55807
 seedtag.com, 6838-6991-01, RESELLER
@@ -1199,6 +1209,7 @@ smartyads.com, 92, RESELLER
 somoaudience.com, 7ec0502f670ef0899a5ae35e08b0ba0c, RESELLER
 sonobi.com, 06976a737a, DIRECT
 sonobi.com, 0b24fdfc82, DIRECT, d1a215d9eb5aee9e
+sonobi.com, a416546bb7, RESELLER, d1a215d9eb5aee9e
 sovrn.com, 231317, RESELLER, fafdf38b16bf6b2b
 sovrn.com, 245955, RESELLER
 sovrn.com, 246013, DIRECT, fafdf38b16bf6b2b
@@ -1389,6 +1400,7 @@ x.fidelity-media.com, 7256, RESELLER
 xad.com, 958, RESELLER, 81cbf0a75a5e0e9a
 xendiz.com, 126, RESELLER
 yahoo.com, 55029, RESELLER, e1a5b5b6e3255540
+yahoo.com, 55080, DIRECT
 yieldlab.net, 6378054, DIRECT
 yieldlab.net, 6378054, RESELLER
 yldbt.com, 5b522cc167f6b300b89dc6d3, DIRECT, cd184cb30abaabb5
