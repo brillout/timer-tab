@@ -1,4 +1,4 @@
-#Ads.txt clocktab.com
+#Ads.txt timer-tab.com
 
 33across.com, 0010b00002SlIKjAAN, DIRECT, bbea06d9c4d2853c
 33across.com, 0010b00002VYZoUAAX, DIRECT, bbea06d9c4d2853c
