@@ -9,7 +9,7 @@ export default () => {
     },
     {
       slotID: 'div-gpt-ad-1583509734584-0',
-      slotName: 'TIMER-TAB_leaderboard_ATF_mobile',
+      slotName: '/21735472908/TIMER-TAB_leaderboard_ATF_mobile',
       slotSize: [320, 50],
     },
     {
