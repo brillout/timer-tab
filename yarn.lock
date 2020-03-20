@@ -774,13 +774,6 @@
   resolved "https://registry.npmjs.org/@iarna/toml/-/toml-2.2.3.tgz#f060bf6eaafae4d56a7dac618980838b0696e2ab"
   integrity sha512-FmuxfCuolpLl0AnQ2NHSzoUKWEJDFl63qXjzdoWBVyFCXzMGm1spBzk7LeHNoVCiWCF7mRVms9e6jEV9+MoPbg==
 
-"@iktakahiro/youtube-url-parser@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/@iktakahiro/youtube-url-parser/-/youtube-url-parser-1.0.2.tgz#e004a7f313df957207ffea6dd6680b5402eeee95"
-  integrity sha512-TaCBny5R5LrD47HjGh5kxPoBpRpVVhJtQMWxcwg5/LRlimDUibOqkOs6+5h28xDLrnzyf9mCT0j5lF0FQU0Brw==
-  dependencies:
-    qs "^6.5.1"
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.npmjs.org/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -4291,11 +4284,6 @@ q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.npmjs.org/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
-
-qs@^6.5.1:
-  version "6.9.1"
-  resolved "https://registry.npmjs.org/qs/-/qs-6.9.1.tgz#20082c65cb78223635ab1a9eaca8875a29bf8ec9"
-  integrity sha512-Cxm7/SS/y/Z3MHWSxXb8lIFqgqBowP5JMlTUFyJN88y0SGQhVmZnqFK/PeuMX9LzUyWsqqhNxIyg0jlzq946yA==
 
 qs@~6.5.2:
   version "6.5.2"

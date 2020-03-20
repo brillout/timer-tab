@@ -1,5 +1,4 @@
 import assert from '@brillout/assert';
-import { YouTubeURLParser } from "@iktakahiro/youtube-url-parser";
 
 export {play_youtube_alarm, stop_youtube_alarm, set_youtube_url};
 
@@ -121,28 +120,26 @@ function parse_youtube_url(url) {
   //sanetize URL
   url=url.replace(' ','');
 
-  const parser = new YouTubeURLParser(url);
+  const video_spec = {};
 
-  if( !parser.isValid() ){
-    return {};
-  }
+  //retrieve ID
+  video_spec.video_id = url_to_id(url);
 
-  const video_id = parser.getId();
-
-  const video_start = parser.getStartAtSecond();
-
-  const video_repeat = /repeat|replay|loop/.test(url);
-
-  const video_spec = {
-    video_id,
-    video_start,
-    video_repeat,
-  };
-
-  console.log(video_spec);
+  //retrieve start & repeat
+  const matches=/(?:\?|&)(?:start|t)=([^&#]*)/.exec(url);
+  video_spec.video_start = matches?matches[1]:null;
+//video_repeat_=/(?:\?|&)(repeat|loop)/.test(url);
+  video_spec.video_repeat = /repeat|replay|loop/.test(url);
 
   return video_spec;
 }
+function url_to_id(url){
+  //ID chars: /[a-zA-Z0-9-_]+/ --http://stackoverflow.com/questions/830596/what-type-of-id-does-youtube-use-for-their-videos
+  //var matches=/youtube\.com.*(?:\?|&)v=([^&#]+)/.exec(url);
+  var matches=/youtube\.com.*(?:\?|&)v=([a-zA-Z0-9\-_]+)/.exec(url) || /youtu.be\/([a-zA-Z0-9\-_]+)/.exec(url);
+  return matches?matches[1]:null;
+}
+
 
 function load_script(url) {
   const scriptEl = document.createElement('script');
