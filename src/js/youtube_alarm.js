@@ -24,7 +24,7 @@ let state;
 async function play_youtube_alarm() {
   if( state==='STARTED' ) return;
   const player = await load_player();
-  player.seekTo(video_spec.start_time);
+  player.seekTo(video_spec.video_start);
   player.unMute();
   player.playVideo();
   document.querySelector('#'+youtube_wrapper).classList.add('youtube_alarm_show');
@@ -45,7 +45,7 @@ async function prefetch() {
   player.loadVideoById(video_spec.video_id);
   if( state==='STARTED' ) return;
   player.mute();
-  player.seekTo(video_spec.start_time);
+  player.seekTo(video_spec.video_start);
   player.playVideo();
 }
 
