@@ -4,7 +4,7 @@ export {play_youtube_alarm, stop_youtube_alarm, set_youtube_url};
 
 export default youtube_alarm;
 
-//*/
+/*/
 const DEBUG = true;
 /*/
 const DEBUG = false;
