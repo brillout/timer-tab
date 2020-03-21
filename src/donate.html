@@ -4,6 +4,9 @@
 <title>Donate - Timer Tab</title>
 <link rel='stylesheet' type='text/css' href='css/content_page.css'/>
 <style>
+body {
+  padding: 10px;
+}
 img {
   border: 2px solid #696969;
   border-radius: 5px;
@@ -39,17 +42,35 @@ Ads and donations allow me to maintain and improve Timer Tab.
 </p>
 
 <p>
-If you don't like ads, you can donate and I will give you a hidden code to remove ads.
+If you donate, I will give you a hidden code to remove ads.
+To donate, make a PayPal wire to my PayPal email:
+</p>
+<p style="padding-left: 20px">
+<b id='paypal-email'></b>
+</p>
+<script>
+  var paypal_email = 'paypal';
+  paypal_email+='@';
+  paypal_email+='brillout';
+  paypal_email+='.';
+  paypal_email+='com';
+  const paypalEl = document.getElementById('paypal-email');
+  paypalEl.innerHTML = paypal_email;
+</script>
+</p>
+
+<p>
 Any amount you are capable of donating is welcome.
+You can PayPal me only 0.01$ if you are short on money, it's totally fine.
 </p>
 
 <p>
-I'm looking forward for a bright Timer Tab future &mdash;
+You will receive an automatic email containing the ad removal code instantly after your PayPal wire.
+</p>
+
+<p>
+I'm looking forward to a bright Timer Tab future :-) &mdash;
 have a look at <a href="/#roadmap" target='_blank'>Timer Tab's Roadmap</a>.
-</p>
-
-<p>
-You can donate <a id="ad_contact_1">here</a>.
 </p>
 
 <p>
@@ -58,9 +79,8 @@ Yours sincerely,
 
 <p>
 Romuald<br/>
-<a id='ad_contact_2' target='_blank'></a>
+<a id='contact-email' target='_blank'></a>
 </p>
-
 <script>
   var email = 'timertab';
   email+='@';
@@ -68,19 +88,12 @@ Romuald<br/>
   email+='.';
   email+='com';
 
-  const ad_contact_1 = document.getElementById('ad_contact_1');
-  const ad_contact_2 = document.getElementById('ad_contact_2');
+  const contact_email = document.getElementById('contact-email');
 
-  ad_contact_2.innerHTML = email;
-  ad_contact_2.setAttribute(
+  contact_email.innerHTML = email;
+  contact_email.setAttribute(
     'href',
     'mailto:'+email
-  );
-  ad_contact_1.setAttribute(
-    'href',
-    'mailto:'+email+
-    '?subject='+encodeURIComponent("Donation")+
-    '&body='+encodeURIComponent("Hi Romuald, I would like to donate :-). ")
   );
 </script>
 
