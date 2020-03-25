@@ -1,4 +1,4 @@
-import load_ad from 'tab-utils/load_ad';
+import load_ad from '../../tab-utils/load_ad';
 
 export default () => {
   const AD_SLOTS = [

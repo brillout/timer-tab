@@ -1,11 +1,11 @@
 //console todo; get seo stats before uploading this version containing mod desc
 import 'regenerator-runtime/runtime';
 import ml from './ml';
-import more_panel from 'tab-utils/more_panel';
+import more_panel from '../../tab-utils/more_panel';
 import load_ad from './load_ad';
 import load_timer from './load_timer';
-import auto_remove_hash from 'tab-utils/auto_remove_hash';
-import deprecate_old_browsers from 'tab-utils/deprecate_old_browsers';
+import auto_remove_hash from '../../tab-utils/auto_remove_hash';
+import deprecate_old_browsers from '../../tab-utils/deprecate_old_browsers';
 import youtube_alarm from './youtube_alarm';
 
 window.onload = () => {

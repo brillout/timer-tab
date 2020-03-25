@@ -4,7 +4,7 @@
 //-window.neverCalled=function..;// --> neverCalled isn't removed
 //}}}
 
-import zoom_to_element from 'tab-utils/zoom_to_element';
+import zoom_to_element from '../../tab-utils/zoom_to_element';
 
 const ml = window.ml = {};
 
