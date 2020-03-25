@@ -1,0 +1,3 @@
+[submodule "tab-utils"]
+	path = tab-utils
+	url = git@github.com:brillout/tab-utils
