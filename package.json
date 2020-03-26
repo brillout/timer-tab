@@ -5,7 +5,7 @@
     "prod": "yarn prod:build && yarn prod:serve",
     "deploy": "yarn install-all && yarn prod:build && yarn prod:deploy",
 
-    "install-all": "yarn install && (cd tab-utils/ && git submodule update . && yarn install)",
+    "install-all": "yarn install && git submodule update tab-utils/ && (cd tab-utils/ && yarn install)",
 
     "prod:build": "yarn prod:build:clean && yarn parcel:prod && yarn prod:build:static",
     "prod:build:clean": "rm -rf dist/",
