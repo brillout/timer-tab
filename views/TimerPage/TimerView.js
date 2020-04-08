@@ -10,8 +10,7 @@ export default TimerView;
 function TimerView() {
   return <>
     <FullView>
-      content
-      <Ad_ATF />
+      <FullViewContent />
     </FullView>
 
     <MorePanel>
@@ -44,6 +43,85 @@ function AdView({id, slot: {slotName, slotID}}) {
         </div>
       }</div>
       <a className='ad_remover' href='donate' target="_blank">Remove ad</a>
+    </div>
+  );
+}
+
+function FullViewContent() {
+  return (
+    <div id='timer_table'>
+
+      <div id='bodypadding'>
+        <div id="ad_padder"></div>
+      </div>
+      <div id='stripH'></div>
+      <div id='middletable' style={{width: '100%'}}><div style={{width: '100%', position: 'relative'}}>
+        <div id='allcontent'>
+          <div>
+            <div id='inputs'>
+              <div className='tr'>
+                <div className='timerInput'>
+                  <form id="timerForm">
+                    <input type='tel' autocomplete="off" spellcheck="false" min='0' size='1' value=""  placeholder='h'/><span className='inputSep'></span
+                   ><input type='tel' autocomplete="off" spellcheck="false" min='0' size='1' value="" placeholder='m'/><span className='inputSep s'></span
+                   ><input type='tel' autocomplete="off" spellcheck="false" min='0' size='1' value=""  placeholder='s' className="s"/>
+                  <button form='timerForm' id='timerButton' tabindex='-1' type='submit'></button>
+                  </form>
+                </div>
+
+                <div className='timerInput'>
+                  <form id="alarmForm">
+                    <input type='tel' autocomplete="off" spellcheck="false" min='0' max='23' maxLength='2' placeholder='h'/><span className='inputSep'></span
+                   ><input type='tel' autocomplete="off" spellcheck="false" min='0' max='59' maxLength='2' placeholder='m'/><span className='inputSep s'></span
+                   ><input type='tel' autocomplete="off" spellcheck="false" min='0' max='59' maxLength='2' placeholder='s' className="s" value=""/>
+                   <button form='alarmForm' id='alarmButton' tabindex='-1' type='submit'></button>
+                  </form>
+                </div>
+
+                <div className='timerInput'>
+                  <form id='stopwForm'>
+                    {/*
+                    no dummy input, then bugfix needed for chrome:
+                      fix for chrome bug that offsets button
+                        form#stopwForm > button{ display:block;margin: auto }
+                      old bug fix some bug, but that leads to skinny button in IE
+                        form#stopwForm { line-height:0; }
+                    */}
+                    <input type='tel' maxLength='2' style={{display: 'block', position: 'relative', zIndex: -10, visibility: 'hidden'}}/>
+                    <button form='stopwForm' id='stopwButton' type='submit'></button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div id='vertical' style={{position: 'relative'}}>
+              <div id='stripV'></div>
+              <div id='head' style={{width: '100%', height: '100%'}}>
+                <div>
+                  <div>
+                    <div id='counter'></div>
+                    <div>
+                      <div id='alarmTime'></div>
+                      <button type='button' tabindex='-1' id='pause'></button>
+                    </div>
+                  </div>
+                </div>
+                <div id='youtube_wrapper'><div id='youtube_iframe'></div></div>
+                <div id='filler' style={{height: '100%', width: '100%'}}></div>
+                <div id="verticalBottom" style={{verticalAlign: 'bottom', textAlign: 'center'}}>
+                  <a id='more_panel_jumper' tabindex='-1'></a>
+                  <a id='time' href='http://www.clocktab.com' tabindex='-1' target='_blank' >Online Clock</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>{/* END allcontent */}
+      </div></div>{/* END middletable */}
+      <Ad_ATF />
+
+    {/* END of <div id='timer_table'> */}
     </div>
   );
 }
