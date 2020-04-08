@@ -4,11 +4,20 @@
 //-window.neverCalled=function..;// --> neverCalled isn't removed
 //}}}
 
-import zoom_to_element from '../../tab-utils/zoom_to_element';
+import zoom_to_element from '../../../tab-utils/zoom_to_element';
 
-const ml = window.ml = {};
+const ml = {};
 
 export default ml;
+
+(function () {
+  if( typeof window === "undefined" ){
+    return;
+  } else {
+    window.ml = ml;
+  }
+
+
 
 ml.date={};
 (function(){ 
@@ -3591,3 +3600,7 @@ ml.persistantInput=function(id,listener,default_,keyUpDelay,noFirstListenerCall)
 //}}}
 }}}
 */
+
+
+
+})();

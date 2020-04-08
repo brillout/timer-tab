@@ -11,6 +11,15 @@ const DEBUG_AUDIO = false;
 
 export default ctObj;
 
+
+(function() {
+  if( typeof window === "undefined" ){
+    return;
+  }
+
+
+
+
 ctObj.TYPES={STOPW:1,TIMER:2,ALARM:3};
 
 (function(){
@@ -1175,3 +1184,9 @@ ctObj.Timer_dom=(function(){
     }); 
   })();
 })();
+
+
+
+
+})();
+

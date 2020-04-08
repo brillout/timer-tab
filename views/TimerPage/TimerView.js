@@ -67,7 +67,7 @@ function FullViewContent() {
                     <input type='tel' autocomplete="off" spellcheck="false" min='0' size='1' value=""  placeholder='h'/><span className='inputSep'></span
                    ><input type='tel' autocomplete="off" spellcheck="false" min='0' size='1' value="" placeholder='m'/><span className='inputSep s'></span
                    ><input type='tel' autocomplete="off" spellcheck="false" min='0' size='1' value=""  placeholder='s' className="s"/>
-                  <button form='timerForm' id='timerButton' tabindex='-1' type='submit'></button>
+                  <button form='timerForm' id='timerButton' tabIndex='-1' type='submit'></button>
                   </form>
                 </div>
 
@@ -76,7 +76,7 @@ function FullViewContent() {
                     <input type='tel' autocomplete="off" spellcheck="false" min='0' max='23' maxLength='2' placeholder='h'/><span className='inputSep'></span
                    ><input type='tel' autocomplete="off" spellcheck="false" min='0' max='59' maxLength='2' placeholder='m'/><span className='inputSep s'></span
                    ><input type='tel' autocomplete="off" spellcheck="false" min='0' max='59' maxLength='2' placeholder='s' className="s" value=""/>
-                   <button form='alarmForm' id='alarmButton' tabindex='-1' type='submit'></button>
+                   <button form='alarmForm' id='alarmButton' tabIndex='-1' type='submit'></button>
                   </form>
                 </div>
 
@@ -106,15 +106,15 @@ function FullViewContent() {
                     <div id='counter'></div>
                     <div>
                       <div id='alarmTime'></div>
-                      <button type='button' tabindex='-1' id='pause'></button>
+                      <button type='button' tabIndex='-1' id='pause'></button>
                     </div>
                   </div>
                 </div>
                 <div id='youtube_wrapper'><div id='youtube_iframe'></div></div>
                 <div id='filler' style={{height: '100%', width: '100%'}}></div>
                 <div id="verticalBottom" style={{verticalAlign: 'bottom', textAlign: 'center'}}>
-                  <a id='more_panel_jumper' tabindex='-1'></a>
-                  <a id='time' href='http://www.clocktab.com' tabindex='-1' target='_blank' >Online Clock</a>
+                  <a id='more_panel_jumper' tabIndex='-1'></a>
+                  <a id='time' href='http://www.clocktab.com' tabIndex='-1' target='_blank' >Online Clock</a>
                 </div>
               </div>
             </div>

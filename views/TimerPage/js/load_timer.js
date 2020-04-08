@@ -1,6 +1,6 @@
 import ml from './ml';
 import ctObj from './countdown';
-import {getScroll, setScroll} from '../../tab-utils/pretty_scroll_area';
+import {getScroll, setScroll} from '../../../tab-utils/pretty_scroll_area';
 import {set_youtube_url} from './youtube_alarm';
 
 export default load_timer;
