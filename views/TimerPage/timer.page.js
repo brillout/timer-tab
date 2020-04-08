@@ -1,4 +1,3 @@
-//import './css/clock.css';
 import TimerView from './TimerView';
 import onPageLoad from './onPageLoad';
 import {config} from '../../tab-utils/views/FullViewWrapper';

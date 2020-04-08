@@ -1,3 +1,4 @@
+import './css/index.css';
 import React from 'react';
 import {FullView, MorePanel} from '../../tab-utils/views/FullViewWrapper';
 import {SettingsView} from '../../tab-utils/TabSettings/SettingsView';
