@@ -12,7 +12,6 @@ body.paused  #pause:before {content:"resume"}
 #hNoti > span:before {content:"Popup-Notification"}
 #goto_description:before {content:"YouTube Alarm"}
 #bg_description:before {content:"Background"}
-#reset_button:after {content:"Reset"}
 /*
 #opt_name_desc:before {content:"Name:"}
 */
