@@ -44,10 +44,6 @@
 {
   height: 100%;
 }
-#timer_table_scroll_area {
-  width: 100vw;
-  overflow-x: auto;
-}
 #timer_table {
   display:table;
 

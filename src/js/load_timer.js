@@ -219,6 +219,7 @@ function load_timer() {
     }); 
     //}}}
 
+    /* TODO
     //fullscreen
     //{{{
     feature_fcts.push(function(){
@@ -230,6 +231,7 @@ function load_timer() {
       //COUNTER_EL.unfullscreen();//avoid: fullscreen -> reload page -> wrong zooming
     });
     //}}}
+    */
 
     //third party stuff: google analytics+button + ressources app cache
     //{{{
