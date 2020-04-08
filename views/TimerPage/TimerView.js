@@ -33,6 +33,7 @@ function Ad_BTF() {
   return <AdView id="secondary-ad" slot={slots[0]} />;
 }
 
+// TODO - move to tab-utils
 function AdView({id, slot: {slotName, slotID}}) {
   assert(slotName && slotID);
   return (
