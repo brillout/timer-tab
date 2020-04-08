@@ -233,32 +233,6 @@ function load_timer() {
     //}}}
     */
 
-    //third party stuff: google analytics+button + ressources app cache
-    //{{{
-    //google analytics
-    //google plus button
-    //brillcdn app cache
-    feature_fcts.push(function(){
-      if(ml.isPackagedApp() || ml.isExtension()) return;
-      //__promo images:
-      //return;
-      setTimeout(function(){
-        //app cache iframe
-        //{{{
-        (function()
-        {
-          var sound_iframe = document.createElement('iframe');
-          sound_iframe.src = 'https://brillcdn.appspot.com/sf/tt.html';
-          sound_iframe.id  = 'files_iframe';
-          sound_iframe.style.display='none';
-          document.body.appendChild(sound_iframe);
-        })();
-        //}}}
-
-      },THIRD_PARTY_LOADING_DELAY);
-    });
-    //}}}
-
     //display time
     feature_fcts.push(function(){ 
       var lastTime;

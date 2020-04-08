@@ -113,7 +113,6 @@ function FullViewContent() {
                 <div id='youtube_wrapper'><div id='youtube_iframe'></div></div>
                 <div id='filler' style={{height: '100%', width: '100%'}}></div>
                 <div id="verticalBottom" style={{verticalAlign: 'bottom', textAlign: 'center'}}>
-                  <a id='more_panel_jumper' tabIndex='-1'></a>
                   <a id='time' href='http://www.clocktab.com' tabIndex='-1' target='_blank' >Online Clock</a>
                 </div>
               </div>

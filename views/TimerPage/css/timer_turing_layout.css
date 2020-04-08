@@ -538,9 +538,3 @@ body.paused #counter {
   display: flex;
   justify-content: space-around;
 }
-
-#more_panel_jumper {
-  font-size: 1.1em;
-  position: relative;
-  top: -2px;
-}
