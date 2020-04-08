@@ -125,3 +125,9 @@ button{
   line-height: .8em;
 }
 /* }}} */
+
+
+/* TMP */
+#footer_container {
+  font-weight: 300;
+}
