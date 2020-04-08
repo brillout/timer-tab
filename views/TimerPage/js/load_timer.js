@@ -255,15 +255,6 @@ function load_timer() {
         })();
         //}}}
 
-        //tweet
-        //{{{
-        (function(){
-          const tweetIframe = document.getElementById('tweet_iframe');
-          const tweetWrapper = document.getElementById('tweet_wrapper');
-          tweetIframe.src='https://platform.twitter.com/widgets/tweet_button.html?url=http%3A%2F%2Fwww.timer-tab.com&text=Well%20Designed%20Timer%20Web%20App,%20made%20by%20@brillout&count=horizontal';
-          tweetIframe.onload=function(){tweetWrapper.style.opacity='100'};
-        })();
-        //}}}
       },THIRD_PARTY_LOADING_DELAY);
     });
     //}}}
