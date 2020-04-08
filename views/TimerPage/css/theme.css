@@ -17,11 +17,13 @@ button
 @font-face {
   font-family: 'Lato';
   font-style: normal;
+  font-weight: 300;
   src: local('Lato Light'), local('Lato-Light'),
   url('./lato.woff') format('woff');
 }
 #timer_table * {
   font-family: 'Lato', sans-serif;
+  font-weight: 300;
 }
 /* }}} */
 
