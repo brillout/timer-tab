@@ -162,7 +162,7 @@ html.timer #vertical
   width: 300px;
   bottom:0;
 }
-button{
+#timer_table button{
   padding: 8px 10px;
 }
 #vertical[data-name]:before{
@@ -228,7 +228,7 @@ html.alarm body:not(.ringing) #pause {
   padding-top: 0;
   padding-bottom: 0;
 }
-#button
+#timer_table #button
 {
   font-size: 12px;
 }
@@ -240,8 +240,8 @@ input.s
   left:         12px;
 }
 */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+#timer_table input::-webkit-outer-spin-button,
+#timer_table input::-webkit-inner-spin-button {
     /* hides controler buttons of input[type='number'] */
     /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
@@ -316,8 +316,8 @@ select
 /* transitions & opacity & display */
 /* {{{ */
 #vertical,
-button,
-input,
+#timer_table button,
+#timer_table input,
 #counter {
   transition-duration: .3s;
   transition-timing-function: ease-in-out;
@@ -328,8 +328,8 @@ input,
 #counter {
   transition-property: opacity;
 }
-button,
-input {
+#timer_table button,
+#timer_table input {
   transition-property: background,color;
 }
 #yt_vid_wrapper
@@ -403,7 +403,7 @@ html { -webkit-overflow-scrolling: touch;}
 #pause:before{
   background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2NjIiB2aWV3Qm94PSIwIDAgMTUzNiAxNTM2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wIDcwdjEzOTZxMCAyOSAyMC41IDQ5LjV0NDkuNSAyMC41aDQ4OXEyOSAwIDQ5LjUgLTIwLjV0MjAuNSAtNDkuNXYtMTM5NnEwIC0yOSAtMjAuNSAtNDkuNXQtNDkuNSAtMjAuNWgtNDg5cS0yOSAwIC00OS41IDIwLjV0LTIwLjUgNDkuNXpNOTA3IDcwdjEzOTZxMCAyOSAyMC41IDQ5LjV0NDkuNSAyMC41aDQ4OXEyOSAwIDQ5LjUgLTIwLjV0MjAuNSAtNDkuNXYtMTM5NnEwIC0yOSAtMjAuNSAtNDkuNXQtNDkuNSAtMjAuNWgtNDg5IHEtMjkgMCAtNDkuNSAyMC41dC0yMC41IDQ5LjV6Ij48L3BhdGg+PC9zdmc+');
 }
-button:before {
+#timer_table button:before {
   background-repeat: no-repeat;
   background-position: 0px;
   padding-left: 20px;
@@ -442,8 +442,8 @@ html.noIcons #time:before {
   padding-left: 0!important;
 }
 */
-button{ text-transform: uppercase; }
-*
+#timer_table button{ text-transform: uppercase; }
+#timer_table *
 {
 	-webkit-user-select: none;
 	   -moz-user-select: -moz-none;
@@ -451,7 +451,7 @@ button{ text-transform: uppercase; }
 	        user-select: none;
 	cursor: default;
 }
-input
+#timer_table input
 {
 	cursor: text;
 	-webkit-user-select: text;
@@ -460,12 +460,10 @@ input
 	        user-select: text;
 
 }
-button,
-button *,
+#timer_table button,
+#timer_table button *,
 #counter,
-#counter *,
-a,
-a * {
+#counter * {
   cursor: pointer;
 }
 #pause{
