@@ -65,9 +65,9 @@ function FullViewContent() {
               <div className='tr'>
                 <div className='timerInput'>
                   <form id="timerForm">
-                    <input type='tel' autoComplete="off" spellCheck="false" min='0' size='1' value=""  placeholder='h'/><span className='inputSep'></span
-                   ><input type='tel' autoComplete="off" spellCheck="false" min='0' size='1' value="" placeholder='m'/><span className='inputSep s'></span
-                   ><input type='tel' autoComplete="off" spellCheck="false" min='0' size='1' value=""  placeholder='s' className="s"/>
+                    <input type='tel' autoComplete="off" spellCheck="false" min='0' size='1' defaultValue=""  placeholder='h'/><span className='inputSep'></span
+                   ><input type='tel' autoComplete="off" spellCheck="false" min='0' size='1' defaultValue="" placeholder='m'/><span className='inputSep s'></span
+                   ><input type='tel' autoComplete="off" spellCheck="false" min='0' size='1' defaultValue=""  placeholder='s' className="s"/>
                   <button form='timerForm' id='timerButton' tabIndex='-1' type='submit'></button>
                   </form>
                 </div>
@@ -76,7 +76,7 @@ function FullViewContent() {
                   <form id="alarmForm">
                     <input type='tel' autoComplete="off" spellCheck="false" min='0' max='23' maxLength='2' placeholder='h'/><span className='inputSep'></span
                    ><input type='tel' autoComplete="off" spellCheck="false" min='0' max='59' maxLength='2' placeholder='m'/><span className='inputSep s'></span
-                   ><input type='tel' autoComplete="off" spellCheck="false" min='0' max='59' maxLength='2' placeholder='s' className="s" value=""/>
+                   ><input type='tel' autoComplete="off" spellCheck="false" min='0' max='59' maxLength='2' placeholder='s' className="s" defaultValue=""/>
                    <button form='alarmForm' id='alarmButton' tabIndex='-1' type='submit'></button>
                   </form>
                 </div>
