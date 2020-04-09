@@ -51,6 +51,7 @@ function AdView({id, slot: {slotName, slotID}}) {
 
 function FullViewContent() {
   return (
+    <div id='timer_table_scroll_area'>
     <div id='timer_table'>
 
       <div id='bodypadding'>
@@ -123,6 +124,7 @@ function FullViewContent() {
       <Ad_ATF />
 
     {/* END of <div id='timer_table'> */}
+    </div>
     </div>
   );
 }

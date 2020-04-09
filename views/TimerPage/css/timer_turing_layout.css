@@ -536,3 +536,8 @@ body.paused #counter {
   display: flex;
   justify-content: space-around;
 }
+
+#timer_table_scroll_area {
+  width: 100vw;
+  overflow-x: auto;
+}
