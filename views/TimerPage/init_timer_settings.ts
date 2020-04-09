@@ -1,4 +1,5 @@
 import ml from './js/ml';
+import assert from '@brillout/assert';
 import {TabSettings} from '../../tab-utils/TabSettings';
 import {PRESETS} from './PRESETS';
 import {preset_concept_name} from './js/preset_concept_name';
@@ -33,7 +34,8 @@ function init_timer_settings() {
   }
 
   function update_youtube_url(){
-    const youtube_url = get_option_value('goto_url');
+    const youtube_url = get_option_value('timer_youtube_alarm');
+    assert(youtube_url, {youtube_url});
     set_youtube_url(youtube_url);
   }
 }
@@ -44,11 +46,11 @@ function get_option_list() {
       option_id:'timer_theme',
       option_type: 'preset-input',
       option_description: preset_concept_name,
-      option_default: 'steel',
+      option_default: 'classic',
     },
     {
-      //option_id: 'timer_background_image',
-      option_id: 'bg_url',
+      option_id: 'timer_background_image',
+      //option_id: 'bg_url',
       option_type: 'background-image-input',
       option_description: 'Background Image',
       option_default: ''    ,
@@ -63,8 +65,8 @@ function get_option_list() {
       is_creator_option: true,
     },
     {
-      //option_id: 'timer_youtube_alarm',
-      option_id: 'goto_url',
+      option_id: 'timer_youtube_alarm',
+      //option_id: 'goto_url',
       option_type: 'text-input',
       option_description: 'YouTube Alarm',
       option_default: ''    ,

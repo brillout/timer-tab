@@ -2,7 +2,7 @@ export {PRESETS};
 
 const PRESETS = {
    classic: {
-    'timer_background_image': '#000000',
+    'timer_background_image': '#FFFFFF',
     'timer_youtube_alarm': 'https://youtu.be/PS5KAEgrtMA',
    },
    dark: {

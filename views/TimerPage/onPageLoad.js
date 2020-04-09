@@ -1,5 +1,5 @@
 import load_timer from './js/load_timer';
-import init_timer_settings from './init_timer_settings';
+import {init_timer_settings} from './init_timer_settings';
 import youtube_alarm from './js/youtube_alarm';
 import auto_remove_hash from '../../tab-utils/auto_remove_hash';
 import {ad_slots} from './ad_slots';
