@@ -27,6 +27,7 @@ async function play_youtube_alarm() {
   player.seekTo(video_spec.video_start);
   player.unMute();
   player.playVideo();
+  player.setLoop(true);
   document.querySelector('#'+youtube_wrapper).classList.add('youtube_alarm_show');
   state = 'STARTED';
 }
@@ -36,17 +37,20 @@ async function stop_youtube_alarm() {
   const player = await load_player();
   document.querySelector('#'+youtube_wrapper).classList.remove('youtube_alarm_show');
   player.mute();
+  player.setLoop(false);
   state = 'STOPED';
 }
 
 
 async function prefetch() {
   const player = await load_player();
-  player.loadVideoById(video_spec.video_id);
-  if( state==='STARTED' ) return;
-  player.mute();
-  player.seekTo(video_spec.video_start);
-  player.playVideo();
+  if( state!=='STARTED' ){
+    player.mute();
+  }
+  player.loadVideoById({
+    videoId: video_spec.video_id,
+    startSeconds: video_spec.video_start,
+  });
 }
 
 let resolve__prefetch_enable;
@@ -58,7 +62,14 @@ function enable_prefetch() {
 let video_spec;
 let resolve__video_spec;
 let wait_for_video_spec = new Promise(r => resolve__video_spec = r);
+let last_youtube_url;
 async function set_youtube_url(youtube_url) {
+  assert(youtube_url);
+  if( last_youtube_url === youtube_url ) {
+    return;
+  }
+  last_youtube_url = youtube_url;
+
   video_spec = parse_youtube_url(youtube_url);
   resolve__video_spec();
 
@@ -96,7 +107,6 @@ async function load_player() {
       height: '150', width: '300',
       playerVars: {
         controls: 0,
-        loop: 1,
         modestbranding: 1,
         rel: 0,
         color: 'white',
@@ -109,6 +119,13 @@ async function load_player() {
 
   function onStateChange(event) {
     if( !DEBUG ) return;
+    // `event.data` possible values:
+    // -1 – unstarted
+    //  0 – ended
+    //  1 – playing
+    //  2 – paused
+    //  3 – buffering
+    //  5 – video cued
     const time = (new Date()).toTimeString().split(' ')[0];
     console.log('[YOUTUBE]['+time+'] event.data', event.data);
   }
