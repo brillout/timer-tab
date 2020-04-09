@@ -2,11 +2,11 @@ export {PRESETS};
 
 const PRESETS = {
    classic: {
-    'timer_background_image': '#000',
-    'timer_youtube_alarm': 'https://www.youtube.com/watch?v=PS5KAEgrtMA',
+    'timer_background_image': '#000000',
+    'timer_youtube_alarm': 'https://youtu.be/PS5KAEgrtMA',
    },
    dark: {
-    'timer_background_image': '#222',
+    'timer_background_image': '#222222',
     'timer_youtube_alarm': 'https://www.youtube.com/watch?v=ziX9i7VKLQU',
    },
    'miami_night': {

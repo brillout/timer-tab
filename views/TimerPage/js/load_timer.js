@@ -1,35 +1,10 @@
 import ml from './ml';
 import ctObj from './countdown';
 import {getScroll, setScroll} from '../../../tab-utils/pretty_scroll_area';
-import {set_youtube_url} from './youtube_alarm';
 
 export default load_timer;
 
 function load_timer() {
-
-  //HTML5 check
-  //{{{
-  if(!/passtest/.test(location.href) && !(
-     !/fallback/.test(location.href) &&
-    [].map && [].reduce && [].filter &&
-    document.querySelectorAll && document.documentElement['classList'] &&
-    ['Transition','Transform','BoxSizing']
-      .map(function(p){return ['Webkit','Moz','ms','O',''] //attention: new line after return -> returns undefined
-          .map(function(x){return document.documentElement.style[x+(x?p:(p[0].toLowerCase()+p.substring(1)))]!==undefined})
-          .reduce(function(a,b){return a||b});
-      })
-      .reduce(function(a,b){return a&&b})
-  ))
-  {
-  // -http://omahaproxy.appspot.com/revision?version=19.0.1084.56
-  // -http://www.chromium.org/getting-involved/download-chromium
-  // -https://www.google.com/analytics/web/?pli=1#report/visitors-browser/a5263303w24659437p23108626/%3F_r.drilldown%3Danalytics.browser%3AChrome/
-  // no way to check svg as background image; https://github.com/Modernizr/Modernizr/issues/687
-  // no svg background images for IE<=8 -- http://caniuse.com/svg-css
-
-     if(ml.replaceWebApp('https://4b.timerintab.appspot.com/')) return;
-  }
-  //}}}
 
   //DOM El refs
   //{{{
@@ -52,7 +27,7 @@ function load_timer() {
     var THIRD_PARTY_LOADING_DELAY=1600;
     var COUNTER_EL  = document.getElementById('counter');
     function unfullscreen(){COUNTER_EL.unfullscreen&&COUNTER_EL.unfullscreen()}
-    var headMovementListeners=ml.safe_call(function(){ 
+    var headMovementListeners=ml.safe_call(function(){
       if(!window.MutationObserver) return undefined;
       var HEAD_MOVEMENT_DELAY = 600;
       var ret=[];
@@ -70,14 +45,14 @@ function load_timer() {
       //TIMER_FORM.submitListeners=[shift];
       //ALARM_FORM.submitListeners=[shift];
       //STOPW_FORM.submitListeners=[shift];
-    }); 
+    });
 
-    function displayTimeWithPeriod(){ 
+    function displayTimeWithPeriod(){
       if(document.documentElement['classList']['contains']('de') ||
          document.documentElement['classList']['contains']('fr'))
         return false;
       return true;
-    }; 
+    };
 
     var feature_fcts = [];
 
@@ -92,7 +67,7 @@ function load_timer() {
     //input stuff
     //{{{
     //input[type="tel"] => input[type="number"] for webkit||metro
-    feature_fcts.push(function(){ 
+    feature_fcts.push(function(){
       if(ml.browser().usesWebkit && document.querySelectorAll) {
         //pattern="[0-9]*" doesn't seem to be implemented in any browser
         //type=tel triggers numpad on mobile devices
@@ -110,9 +85,9 @@ function load_timer() {
             num.value=num.value.replace(/^0*(?=.)/,'');
         }
       }
-    }); 
+    });
     //for inputs: click == double click
-    feature_fcts.push(function(){ 
+    feature_fcts.push(function(){
       var INPUTS__ = document.querySelectorAll&&document.querySelectorAll('input');
       if(!INPUTS__) return;
 
@@ -129,11 +104,11 @@ function load_timer() {
           }catch(e){}
         },0);
       },false);
-    }); 
+    });
     //}}}
 
     //add transitions
-    postInitListeners.push(function(){ 
+    postInitListeners.push(function(){
     //this css is added with javascript because otherwise the inline values will be transitioned into the _.css values
       setTimeout(function(){
       ml.addCss(" \
@@ -157,9 +132,9 @@ function load_timer() {
         } \
       ");
       */
-    }); 
+    });
     ////unfullscreen on change
-    //feature_fcts.push(function(){ 
+    //feature_fcts.push(function(){
     //  var lastForm;
     //  function shift()
     //  {
@@ -171,18 +146,11 @@ function load_timer() {
     //  TIMER_FORM.submitListeners=[shift];
     //  ALARM_FORM.submitListeners=[shift];
     //  STOPW_FORM.submitListeners=[shift];
-    //}); 
-
-    //persistant goto
-    postInitListeners.push(function(){ 
-      ml.optionInput('goto_url','https://youtu.be/PS5KAEgrtMA', function(youtube_url){
-        set_youtube_url(youtube_url);
-      });
-    }); 
+    //});
 
     /* TODO
     //webkit notification setting
-    feature_fcts.push(function(){ 
+    feature_fcts.push(function(){
       if(!ml.noti.isAvailable()){
         document.getElementById('hNoti').style.display='none';
         return;
@@ -210,14 +178,8 @@ function load_timer() {
           ml.asyncStore.set('disableNotification',"true");
         refreshOpt();
       })};
-    }); 
+    });
     */
-
-    //set up background setting
-    feature_fcts.push(function(){ 
-      ml.optionInput('bg_url', '', ml.htmlBackgroundListener());
-    }); 
-    //}}}
 
     /* TODO
     //fullscreen
@@ -234,7 +196,7 @@ function load_timer() {
     */
 
     //display time
-    feature_fcts.push(function(){ 
+    feature_fcts.push(function(){
       var lastTime;
       function setTime() {
         ml.reqFrame(function(){
@@ -249,17 +211,17 @@ function load_timer() {
         });
       }
       setTime();
-    }); 
+    });
 
     //input stuff [shortcuts, autofocus, ...]
-    (function(){ 
+    (function(){
       var STOPW_BUTTON = document.getElementById('stopwButton');
       var INPUTS_ALL = [].slice.call(TIMER_FORM.getElementsByTagName('input')).concat([].slice.call(ALARM_FORM.getElementsByTagName('input')));
       var DEFAULT_FOCUS = INPUTS_ALL[1];
       //filter + keybindings
       //{{{
       feature_fcts.push(function(){
-        window.onkeydown=function(ev){ 
+        window.onkeydown=function(ev){
           ev = ev || window.event;
           if(ml.controlKeyPressed(ev)) return;
           var targetType = ml.getEventSource(ev).type;
@@ -268,8 +230,8 @@ function load_timer() {
                if(char_===' ') ev.preventDefault();
                if(char_===' ' || char_==='p') PAUSE_ELEM.click();
           else if(char_==='esc'  ) unfullscreen();
-        }; 
-        function filter(ev){ 
+        };
+        function filter(ev){
           ev = ev || window.event;
           if(ml.controlKeyPressed(ev)) return;
           var charCode=ev.charCode || ev.which; //stupid opera storing charCode in which
@@ -282,8 +244,8 @@ function load_timer() {
           //var char_=ml.getChar(ev);
           //if(/^[a-z\s]$/.test(char_)){ev.preventDefault();return false}
           //return true;
-        } 
-        function upDown(ev){ 
+        }
+        function upDown(ev){
           ev = ev || window.event;
           if(ml.controlKeyPressed(ev)) return;
           var char_ = ml.getChar(ev);
@@ -330,7 +292,7 @@ function load_timer() {
             }
             if(do_) return false;
           }
-        } 
+        }
         var KEYEVENT = ml.browser().usesGecko?'keypress':'keydown'; //key holded down => gecko repeats press event, webkit repeats down event
         for(var i=0;i<INPUTS_ALL.length;i++)(function(){
           if(INPUTS_ALL[i].tagName==='INPUT') { //not for metro timepicker
@@ -338,7 +300,7 @@ function load_timer() {
             INPUTS_ALL[i].addEventListener(KEYEVENT  ,upDown,false);
           }
           var index=i;
-          function navigationKeybindings(ev){ 
+          function navigationKeybindings(ev){
             ev = ev || window.event;
             if(ml.controlKeyPressed(ev)) return;
             var char_ = ml.getChar(ev);
@@ -370,7 +332,7 @@ function load_timer() {
             var end   = this.value===undefined?undefined:this.value.length;//metro -> end===undefined
             //for metro_ time picker -> this.selectionStart===undefined
             //->!this.selectionStart === this.selectionStart===0 || this.selectionStart===undefined
-            if(left  && index>=0                && !this.selectionStart                                && (!this.selectionEnd || this.selectionEnd===end)  || 
+            if(left  && index>=0                && !this.selectionStart                                && (!this.selectionEnd || this.selectionEnd===end)  ||
                right && index<=INPUTS_ALL.length-1 && (this.selectionStart===end || !this.selectionStart) && (this.selectionEnd===end || this.selectionEnd===undefined))
             {
               ev.preventDefault();
@@ -386,7 +348,7 @@ function load_timer() {
               }
               return false;
             }
-          } 
+          }
           INPUTS_ALL[i].addEventListener(KEYEVENT,navigationKeybindings,false);
         })();
         STOPW_BUTTON.addEventListener(KEYEVENT,function(ev)
@@ -409,7 +371,7 @@ function load_timer() {
       });
       //}}}
       //regain focus + unfullscreen on input focus
-      feature_fcts.push(function(){ 
+      feature_fcts.push(function(){
         //return;
         //var inputs = Array().slice.call(document.getElementsByTagName('input'));
         //inputs.push(STOPW_BUTTON);
@@ -427,15 +389,15 @@ function load_timer() {
           }
         };
         window.onclick=function(){setTimeout(regainFocus,1)};//no timeout -> [unfullscreen -> loss of focus]
-      }); 
+      });
       postInitListeners.push(function(){
         scroll_perserving_focus(DEFAULT_FOCUS);
       });
-    })(); 
+    })();
 
 
     //replace down/up click/touch => action with down click/touch => action
-    (function(){ 
+    (function(){
       [].slice.call(document.querySelectorAll('button,#counter')).forEach(function(b){
         //difficulty: avoid click event to be called twice
         //-test by clicking on counter to see if fullscreen happens
@@ -450,16 +412,16 @@ function load_timer() {
         //-source: http://www.html5rocks.com/en/mobile/touchandmouse/
         b.addEventListener('touchstart',function(ev){ev.preventDefault();b.click()});
       });
-    })(); 
+    })();
     /*
-    feature_fcts.push(function(){ 
+    feature_fcts.push(function(){
       if(ml.isTouchDevice()) new ml.FastClick(document.body);
-    }); 
+    });
     //*/
 
 
     //language related stuff, i18n
-    feature_fcts.push(function(){ 
+    feature_fcts.push(function(){
       ml.i18n.get(function(lang){
         if(lang && lang!=='en') document.documentElement['classList']['add'](lang);
 
@@ -472,10 +434,10 @@ function load_timer() {
           ['bg_url'  ,languageText.address+languageText.image]
         ].forEach(function(d){var el=document.getElementById(d[0]);if(el)el.setAttribute("placeholder",d[1])});
       });
-    }); 
+    });
 
     //auto zoom
-    feature_fcts.push(function autoZoom(){ 
+    feature_fcts.push(function autoZoom(){
        //ressources
        //-zoom stuff
        // -text-size-adjust
@@ -500,7 +462,7 @@ function load_timer() {
        //onsole.log(document.documentElement.scrollHeight);
        //onsole.log(document.documentElement.clientHeight);
        //onsole.log(ml.element.getStyle(document.documentElement,'height'));
-       
+
      //var zoomCoeffizient = Math.min(window.innerWidth  / (document.documentElement.scrollWidth+1),
      //                               window.innerHeight / (document.documentElement.scrollHeight));
        var zoomCoeffizient = Math.min(window.innerWidth  / (ALL_CONTENT_EL.scrollWidth+1),
@@ -508,10 +470,10 @@ function load_timer() {
        document.documentElement.style.zoom=zoomCoeffizient;
 
        ml.addResizeTimeoutEvent(autoZoom,100,function(){document.documentElement.style.zoom=""});
-    }); 
+    });
 
     //IE/Presto (manual 100% height + no icons)
-    feature_fcts.push(function(){ 
+    feature_fcts.push(function(){
       //see http://jsfiddle.net/5DgYm/3/
       //opera with webkit <=> !window['opera'] -- source; "The window.opera object will not exist in future versions of Opera."[http://my.opera.com/ODIN/blog/300-million-users-and-move-to-webkit]
       if(!/MSIE/.test(navigator.userAgent) && !window['opera']) return;
@@ -540,7 +502,7 @@ function load_timer() {
       }
       window.addEventListener('resize',manual100PercHeight);
       manual100PercHeight();
-    }); 
+    });
 
     ml.safe_call(feature_fcts);
   //}}}
@@ -548,7 +510,7 @@ function load_timer() {
 
   (function(){
     var firstInit=true;
-    function initTimer(timer_){ 
+    function initTimer(timer_){
       timer_.dom = {};
       timer_.dom.counter   = document.getElementById('counter');
       timer_.dom.inputs = [[TIMER_FORM,ctObj.TYPES.TIMER],[ALARM_FORM,ctObj.TYPES.ALARM],[STOPW_FORM,ctObj.TYPES.STOPW]].map(function(d){return ctObj.input(d[0],d[1],timer_)});
@@ -576,9 +538,9 @@ function load_timer() {
         firstInit=false;
       }
 
-    } 
+    }
 
-    try{(function(){ 
+    try{(function(){
       if(/doreset/.test(location.href.toLowerCase())){
         ml.asyncStore.clear();
         wontwork();
@@ -588,7 +550,7 @@ function load_timer() {
 
         var currentTimer;
         (function(){
-          function getPersistedTimer(callback){ 
+          function getPersistedTimer(callback){
             //clean expired tab-to-search timers
             var TTS_TAG = 'tab-to-search';
             ctObj.timers.all.forEach(function(t){if(t.data.getTags()===TTS_TAG&&t.data.expired) t.data.removeData()});
@@ -606,8 +568,8 @@ function load_timer() {
             }
 
             //tab-to-search
-            if(!retTimer) retTimer=(function(){ 
-              var hashInput=(function(str){ 
+            if(!retTimer) retTimer=(function(){
+              var hashInput=(function(str){
                 if(str&&/^\d+$/.test(str)) return [undefined,parseInt(str,10)];
                 var seperators="\\+|:|\\s|\\.|\\-";
                 if(str&&new RegExp("^\\d*("+seperators+")\\d*$").test(str)) {
@@ -617,7 +579,7 @@ function load_timer() {
                   if(h<24&&h>=0&&m<60&&m>=0) return [h,m];
                 }
                 return null;
-              })(ml.getUrlVars()['timer']||window['decodeURIComponent'](location.hash.replace('#',''))); 
+              })(ml.getUrlVars()['timer']||window['decodeURIComponent'](location.hash.replace('#','')));
               if(!hashInput) return false;
 
               var _type    = hashInput[0]===undefined?ctObj.TYPES.TIMER:ctObj.TYPES.ALARM;
@@ -638,11 +600,11 @@ function load_timer() {
                 callback(ret);
               });
               return true;
-            })(); 
+            })();
             if(retTimer) return;
 
             if(!retTimer) ml.asyncStore.get('showed',function(val){
-              for(var i=0;i<ctObj.timers.all.length;i++) 
+              for(var i=0;i<ctObj.timers.all.length;i++)
                 if(!(JSON.parse(val||"{}")[ctObj.timers.all[i].data.id]>+new Date-2000)){
                   retTimer=ctObj.timers.all[i];
                   break;
@@ -656,7 +618,7 @@ function load_timer() {
                 });
               }
             });
-          } 
+          }
           function retrieveNinitTimer(){
             getPersistedTimer(function(t){
               currentTimer=t;
@@ -670,7 +632,7 @@ function load_timer() {
         })();
 
         //timer reservation
-        (function(){ 
+        (function(){
           if(ml.isExtension() || ml.isPackagedApp()) return;//singelton timer
 
           function setShowed(id,newVal){
@@ -699,17 +661,17 @@ function load_timer() {
 
           ml.addCloseEvent(function(){if(currentTimer)setShowed(currentTimer.data.id)});
 
-        })(); 
+        })();
 
       });//end init
-    })();} 
-    catch(e){ 
+    })();}
+    catch(e){
       var _timer = new ctObj.Timer_dom({start:+new Date},ctObj.TYPES.STOPW);
       initTimer(_timer);
       _timer.dom.inputs[0].getElementsByTagName('input')[1].value='10';
       _timer.dom.inputs[1].getElementsByTagName('input')[0].value=ml.date.readablize(ml.date.add(new Date(),0,10,0).getHours()  );
       _timer.dom.inputs[1].getElementsByTagName('input')[1].value=ml.date.readablize(ml.date.add(new Date(),0,10,0).getMinutes());
-    } 
+    }
   })();
 }
 
