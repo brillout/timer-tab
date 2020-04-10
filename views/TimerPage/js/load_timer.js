@@ -1,6 +1,7 @@
 import ml from './ml';
 import ctObj from './countdown';
 import {getScroll, setScroll} from '../../../tab-utils/pretty_scroll_area';
+import {make_element_zoomable} from '../../../tab-utils/make_element_zoomable';
 
 export default load_timer;
 
@@ -181,19 +182,18 @@ function load_timer() {
     });
     */
 
-    /* TODO
     //fullscreen
     //{{{
     feature_fcts.push(function(){
-      var opts = {bottomElements:[PAUSE_ELEM,ALARM_TIME]};
-      if(headMovementListeners) opts.posChangeListeners=headMovementListeners;
-      const zoom_from_container = document.getElementById('timer_table_scroll_area');
-      const zoom_from = document.getElementById('timer_table');
-      ml.fullscreenElement(COUNTER_EL, 'f', opts, {zoom_from, zoom_from_container})
-      //COUNTER_EL.unfullscreen();//avoid: fullscreen -> reload page -> wrong zooming
+      const containerEl = document.getElementById('timer_table_scroll_area');
+      const scaleEl = document.getElementById('timer_table');
+      const zoomEl = document.getElementById('counter_wrapper');
+
+   // if(headMovementListeners) opts.posChangeListeners=headMovementListeners;
+
+      make_element_zoomable({containerEl, scaleEl, zoomEl});
     });
     //}}}
-    */
 
     //display time
     feature_fcts.push(function(){

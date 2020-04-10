@@ -130,3 +130,11 @@ a,
   cursor: pointer;
   text-decoration: none;
 }
+
+
+.zoomed-state #header-container {
+  border-bottom: 2px solid #cecece;
+}
+.zoomed-state #more_panel {
+  border-top: 2px solid #cecece;
+}

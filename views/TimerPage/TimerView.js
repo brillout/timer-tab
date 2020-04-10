@@ -102,7 +102,7 @@ function FullViewContent() {
             <div id='vertical' style={{position: 'relative'}}>
               <div id='stripV'></div>
               <div id='head' style={{width: '100%', height: '100%'}}>
-                <div>
+                <div id="counter_wrapper">
                   <div>
                     <div id='counter'></div>
                     <div>
