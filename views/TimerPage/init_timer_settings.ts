@@ -50,10 +50,9 @@ function get_option_list() {
     },
     {
       option_id: 'timer_background_image',
-      //option_id: 'bg_url',
       option_type: 'background-image-input',
       option_description: 'Background Image',
-      option_default: ''    ,
+      option_default: '',
       option_placeholder: 'Image URL',
       is_creator_option: true,
     },
@@ -66,10 +65,9 @@ function get_option_list() {
     },
     {
       option_id: 'timer_youtube_alarm',
-      //option_id: 'goto_url',
       option_type: 'text-input',
       option_description: 'YouTube Alarm',
-      option_default: ''    ,
+      option_default: 'https://youtu.be/PS5KAEgrtMA',
       option_placeholder: 'Image URL',
       is_creator_option: true,
     },
