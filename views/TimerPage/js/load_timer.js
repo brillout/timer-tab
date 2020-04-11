@@ -1,7 +1,7 @@
 import ml from './ml';
 import ctObj from './countdown';
 import {getScroll, setScroll} from '../../../tab-utils/pretty_scroll_area';
-import {make_element_zoomable} from '../../../tab-utils/make_element_zoomable';
+import {make_element_zoomable, on_zoom_end, is_zoomed} from '../../../tab-utils/make_element_zoomable';
 
 export default load_timer;
 
@@ -27,7 +27,6 @@ function load_timer() {
     var ALL_CONTENT_EL = document.getElementById('allcontent');
     var THIRD_PARTY_LOADING_DELAY=1600;
     var COUNTER_EL  = document.getElementById('counter');
-    function unfullscreen(){COUNTER_EL.unfullscreen&&COUNTER_EL.unfullscreen()}
     var headMovementListeners=ml.safe_call(function(){
       if(!window.MutationObserver) return undefined;
       var HEAD_MOVEMENT_DELAY = 600;
@@ -185,13 +184,14 @@ function load_timer() {
     //fullscreen
     //{{{
     feature_fcts.push(function(){
+      const toggleEl = COUNTER_EL;
       const containerEl = document.getElementById('timer_table_scroll_area');
       const scaleEl = document.getElementById('timer_table');
       const zoomEl = document.getElementById('counter_wrapper');
 
    // if(headMovementListeners) opts.posChangeListeners=headMovementListeners;
 
-      make_element_zoomable({containerEl, scaleEl, zoomEl});
+      make_element_zoomable({containerEl, scaleEl, zoomEl, toggleEl});
     });
     //}}}
 
@@ -370,7 +370,7 @@ function load_timer() {
         STOPW_BUTTON.onkeyup=function(ev){if(ml.getChar(ev)===' ')ev.preventDefault()};//avoid [space -> submit in FF]
       });
       //}}}
-      //regain focus + unfullscreen on input focus
+      //regain focus
       feature_fcts.push(function(){
         //return;
         //var inputs = Array().slice.call(document.getElementsByTagName('input'));
@@ -380,15 +380,19 @@ function load_timer() {
         ml.assert(ctrls.length===7);
         var lastFocus=DEFAULT_FOCUS;
         for(var i=0;i<ctrls.length;i++) ctrls[i].onfocus=function(){
-          if(lastFocus!==this) unfullscreen();//needed because chrome changes scroll when other input gets focused
           lastFocus=this;
         };
+        window.onclick=function(){
+          if( is_zoomed ) return;
+          //no timeout -> [unfullscreen -> loss of focus]
+          setTimeout(regainFocus,1)
+        };
+        on_zoom_end(regainFocus);
         function regainFocus() {
           if(document.activeElement && document.activeElement.tagName!=="INPUT" && document.activeElement.tagName!=="SELECT" && document.activeElement!==STOPW_BUTTON) {
             scroll_perserving_focus(lastFocus);
           }
         };
-        window.onclick=function(){setTimeout(regainFocus,1)};//no timeout -> [unfullscreen -> loss of focus]
       });
       postInitListeners.push(function(){
         scroll_perserving_focus(DEFAULT_FOCUS);
@@ -676,7 +680,10 @@ function load_timer() {
 }
 
 function scroll_perserving_focus(el) {
+  el.focus({preventScroll: true});
+  /*
   const scrollPos = getScroll();
   el.focus();
   setScroll(scrollPos);
+  */
 }
