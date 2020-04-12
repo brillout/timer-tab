@@ -10,17 +10,6 @@ button
   font-family: arial,sans-serif;
 }
 */
-/* <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:300">
-   CORS font serving in app engine: http://blog.yjl.im/2010/05/font-face-and-cross-domain-cross-origin.html
-   Infos about FF and fonts: http://tech.davemx.com/2010/firefox-font-face-not-working-on-different-domain/
-*/
-@font-face {
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 300;
-  src: local('Lato Light'), local('Lato-Light'),
-  url('./lato.woff') format('woff');
-}
 #timer_table * {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
