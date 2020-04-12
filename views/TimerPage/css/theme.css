@@ -34,10 +34,8 @@ button
 {
   background: rgba(255,255,255,0.7);
 }
-#timer_table input.s,
-#timer_table .inputSep.s
-{
-  color: #999;
+#timer_table input.s {
+  color: #aaa;
 }
 /* button & input colors */
 #timer_table button,
