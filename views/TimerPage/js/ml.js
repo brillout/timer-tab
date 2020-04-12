@@ -879,8 +879,7 @@ ml.changeIcon=function(url)
   var createNewEl=ml.browser().usesGecko;
   if(!faviconEl || createNewEl)
   {
-  //var REL = 'shortcut icon';
-    var REL = 'icon';
+    var REL = 'shortcut icon';
     var oldlinks=document.getElementsByTagName('link');
     for(var i=0;i<oldlinks.length;i++){
       var rel = oldlinks[i].getAttribute('rel');
