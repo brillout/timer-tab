@@ -1,4 +1,4 @@
-import logoUrl from './logo.png';
+import logoUrl from './logo.svg';
 import assert from '@brillout/assert';
 
 import React from 'react';
