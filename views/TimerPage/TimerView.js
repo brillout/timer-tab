@@ -5,6 +5,7 @@ import {SettingsView} from '../../tab-utils/TabSettings/SettingsView';
 import {preset_concept_name} from './js/preset_concept_name';
 import {ad_slots} from './ad_slots';
 import assert from '@brillout/assert';
+import {HotNews} from '../HotNews';
 
 export default TimerView;
 
@@ -17,6 +18,7 @@ function TimerView() {
     <MorePanel>
       <Ad_BTF />
       <SettingsView preset_concept_name={preset_concept_name} />
+      <HotNews />
     </MorePanel>
   </>;
 }

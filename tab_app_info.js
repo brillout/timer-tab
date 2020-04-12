@@ -17,7 +17,12 @@ export const tab_app_header_links = [
   {link_url: 'https://www.clocktab.com', link_name: 'Clock Tab', link_target: "_blank"},
 ];
 export const TabAppRoadmap = () => <>
-  <li>TODO</li>
+  <li>Time Tracker app.</li>
+  <li>Pomodoro Timer app.</li>
+  <li>Support multiple timers.</li>
+  <li>Timer history.</li>
+  <li>Improved load performance.</li>
+  <li>Offline support.</li>
 </>;
 
 function compute_mail(mail_user) {
