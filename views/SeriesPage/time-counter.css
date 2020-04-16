@@ -1,0 +1,9 @@
+#time-counter-list {
+  display: flex;
+}
+.time-counter {
+  border: 5px solid #aaa;
+  border-radius: 20px;
+  width: 200px;
+  padding: 20px;
+}
