@@ -45,9 +45,22 @@ class TimeCounterList {
             {this.#counter_list.map((time_counter) =>
               time_counter.view({ time })
             )}
+            <div className="#time-counter-creator">
+              <form onSubmit={this.onSubmit.bind(this)}>
+                <button type="submit">New Stopwatch</button>
+              </form>
+            </div>
           </div>
         );
       }));
+  }
+  onSubmit(ev) {
+    ev.preventDefault();
+    console.log("sub", this);
+    const counter_id = (Math.random() * 1000000) | 0;
+    const target_time = new Date();
+    const time_counter = new TimeCounter({ target_time, counter_id });
+    this.#counter_list.push(time_counter);
   }
 }
 
