@@ -5,31 +5,59 @@ import "./time-counter.css";
 export { SeriesView };
 
 class TimeCounter {
-  #target_time: Date;
-  #counter_id: number;
-  constructor({ target_time, counter_id }) {
-    this.#target_time = target_time;
-    this.#counter_id = counter_id;
+  counter_target: Date;
+  counter_id: number;
+  constructor({ counter_target, counter_id }) {
+    this.counter_target = counter_target;
+    this.counter_id = counter_id;
   }
   render_data({ time }) {
-    const ms = this.#target_time.getTime() - time.getTime();
+    const ms = this.counter_target.getTime() - time.getTime();
     return (ms / 1000) | 0;
   }
   view({ time }) {
     return (
       <div className="time-counter">
-        <div>{this.#counter_id}</div>
+        <div>{this.counter_id}</div>
         <div>{this.render_data({ time })}</div>
       </div>
     );
   }
 }
 
+/*
+const future_time = (seconds) =>
+  new Date(new Date().getTime() + 1000 * seconds);
+time_counter_list.add_time_counter(
+  new TimeCounter({ counter_target: future_time(60), counter_id: 31 })
+);
+time_counter_list.add_time_counter(
+  new TimeCounter({ counter_target: future_time(10), counter_id: 3 })
+);
+*/
+
+@persist({
+  key: "timer-tab_time-counter-list",
+  deserializer: (data) => {
+    const time_counter_list = new TimeCounterList();
+    data.forEach((time_counter_data) => {
+      const { counter_target, counter_id } = time_counter_data;
+      const time_counter = new TimeCounter({ counter_target, counter_id });
+      time_counter_list.add_time_counter(time_counter);
+    });
+    return time_counter_list;
+  },
+  serializer: (time_counter_list) =>
+    time_counter_list.counter_list.map((time_counter) => ({
+      counter_id: time_counter.id,
+      counter_target: time_counter.counter_target,
+    })),
+})
 class TimeCounterList {
-  #counter_list: TimeCounter[] = [];
+  counter_list: TimeCounter[] = [];
   #view;
-  add(time_counter: TimeCounter) {
-    this.#counter_list.push(time_counter);
+  add_time_counter(time_counter: TimeCounter) {
+    this.counter_list.push(time_counter);
   }
   get view() {
     return (this.#view =
@@ -42,7 +70,7 @@ class TimeCounterList {
         });
         return (
           <div className="#time-counter-list">
-            {this.#counter_list.map((time_counter) =>
+            {this.counter_list.map((time_counter) =>
               time_counter.view({ time })
             )}
             <div className="#time-counter-creator">
@@ -58,21 +86,19 @@ class TimeCounterList {
     ev.preventDefault();
     console.log("sub", this);
     const counter_id = (Math.random() * 1000000) | 0;
-    const target_time = new Date();
-    const time_counter = new TimeCounter({ target_time, counter_id });
-    this.#counter_list.push(time_counter);
+    const counter_target = new Date();
+    const time_counter = new TimeCounter({ counter_target, counter_id });
+    this.counter_list.push(time_counter);
   }
 }
 
+function persist(args: any) {
+  return (constructor: Function) => {
+    console.log(constructor);
+  };
+}
+
 const time_counter_list = new TimeCounterList();
-const future_time = (seconds) =>
-  new Date(new Date().getTime() + 1000 * seconds);
-time_counter_list.add(
-  new TimeCounter({ target_time: future_time(60), counter_id: 31 })
-);
-time_counter_list.add(
-  new TimeCounter({ target_time: future_time(10), counter_id: 3 })
-);
 
 function SeriesView() {
   return (
