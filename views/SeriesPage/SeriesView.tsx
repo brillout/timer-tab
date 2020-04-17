@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FullView, MorePanel } from "../../tab-utils/views/FullViewWrapper";
 import "./time-counter.css";
+import assert from "@brillout/assert";
 
 export { SeriesView };
 
@@ -8,6 +9,8 @@ class TimeCounter {
   counter_target: Date;
   counter_id: number;
   constructor({ counter_target, counter_id }) {
+    assert(counter_target);
+    assert(counter_id);
     this.counter_target = counter_target;
     this.counter_id = counter_id;
   }
@@ -37,19 +40,18 @@ time_counter_list.add_time_counter(
 */
 
 @persist({
-  key: "timer-tab_time-counter-list",
-  deserializer: (data) => {
-    const time_counter_list = new TimeCounterList();
+  key: "timer_tab-time_counter_list",
+  deserializer: (data, time_counter_list) => {
     data.forEach((time_counter_data) => {
-      const { counter_target, counter_id } = time_counter_data;
+      let { counter_target, counter_id } = time_counter_data;
+      counter_target = new Date(counter_target);
       const time_counter = new TimeCounter({ counter_target, counter_id });
-      time_counter_list.add_time_counter(time_counter);
+      time_counter_list.counter_list.push(time_counter);
     });
-    return time_counter_list;
   },
   serializer: (time_counter_list) =>
-    time_counter_list.counter_list.map((time_counter) => ({
-      counter_id: time_counter.id,
+    time_counter_list.counter_list.map((time_counter: TimeCounter) => ({
+      counter_id: time_counter.counter_id,
       counter_target: time_counter.counter_target,
     })),
 })
@@ -58,6 +60,8 @@ class TimeCounterList {
   #view;
   add_time_counter(time_counter: TimeCounter) {
     this.counter_list.push(time_counter);
+    // @ts-ignore
+    this.save();
   }
   get view() {
     return (this.#view =
@@ -88,7 +92,7 @@ class TimeCounterList {
     const counter_id = (Math.random() * 1000000) | 0;
     const counter_target = new Date();
     const time_counter = new TimeCounter({ counter_target, counter_id });
-    this.counter_list.push(time_counter);
+    this.add_time_counter(time_counter);
   }
 }
 
@@ -97,13 +101,33 @@ function persist({ key, serializer, deserializer }) {
     return class extends cls {
       constructor(...args) {
         super(...args);
-        deserializer(window.localStorage[key]);
+        deserialize(this);
       }
       save() {
-        window.localStorage[key] = serializer(this);
+        serialize(this);
       }
     };
   };
+
+  function serialize(instance) {
+    const data = serializer(instance);
+    assert(
+      data.every((d) => d.counter_id && d.counter_target),
+      data
+    );
+    window.localStorage[key] = JSON.stringify(data);
+  }
+
+  function deserialize(instance) {
+    let data;
+    const data__str = window.localStorage[key];
+    if (data__str) {
+      data = JSON.parse(data__str);
+    } else {
+      data = [];
+    }
+    deserializer(data, instance);
+  }
 }
 
 function SeriesView() {
