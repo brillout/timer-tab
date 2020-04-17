@@ -17,7 +17,7 @@ class TimeCounter {
   }
   view({ time }) {
     return (
-      <div className="time-counter">
+      <div className="time-counter" key={this.counter_id}>
         <div>{this.counter_id}</div>
         <div>{this.render_data({ time })}</div>
       </div>
@@ -92,23 +92,37 @@ class TimeCounterList {
   }
 }
 
-function persist(args: any) {
-  return (constructor: Function) => {
-    console.log(constructor);
+function persist({ key, serializer, deserializer }) {
+  return function <T extends { new (...args: any[]): {} }>(cls: T) {
+    return class extends cls {
+      constructor(...args) {
+        super(...args);
+        deserializer(window.localStorage[key]);
+      }
+      save() {
+        window.localStorage[key] = serializer(this);
+      }
+    };
   };
 }
-
-const time_counter_list = new TimeCounterList();
 
 function SeriesView() {
   return (
     <>
       <FullView>
-        <time_counter_list.view />
+        <Content />
       </FullView>
       <MorePanel>
         <div>Hello</div>
       </MorePanel>
     </>
   );
+}
+
+function Content() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  const time_counter_list = new TimeCounterList();
+  return <time_counter_list.view />;
 }
