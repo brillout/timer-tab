@@ -6,24 +6,31 @@ export { TimeCounterList };
 
 @persist({
   key: "timer_tab-time_counter_list",
-  deserializer: (data, time_counter_list) => {
-    data.forEach((time_counter_data) => {
+  deserializer: function (data) {
+    const counters = data.map((time_counter_data) => {
       let { counter_target, counter_id } = time_counter_data;
       counter_target = new Date(counter_target);
-      const time_counter = new TimeCounter({ counter_target, counter_id });
-      time_counter_list.counter_list.push(time_counter);
+      const counter = new TimeCounter({ counter_target, counter_id });
+      return counter;
     });
+    this.set_counter_list(counters);
   },
-  serializer: (time_counter_list) =>
-    time_counter_list.counter_list.map((time_counter: TimeCounter) => ({
-      counter_id: time_counter.counter_id,
-      counter_target: time_counter.counter_target,
-    })),
+  serializer: function () {
+    const data = this.counter_list.map((counter: TimeCounter) => ({
+      counter_id: counter.counter_id,
+      counter_target: counter.counter_target,
+    }));
+    return data;
+  },
 })
 class TimeCounterList {
-  counter_list: TimeCounter[] = [];
+  time_counter_creator: TimeCounterCreator = new TimeCounterCreator(this);
+  counter_list: TimeCounter[];
   #view;
-  add_time_counter(time_counter: TimeCounter) {
+  set_counter_list(counters: TimeCounter[]) {
+    this.counter_list = counters;
+  }
+  add_new_time_counter(time_counter: TimeCounter) {
     this.counter_list.push(time_counter);
     // @ts-ignore
     this.save();
@@ -43,38 +50,12 @@ class TimeCounterList {
               {this.counter_list.map((time_counter) =>
                 time_counter.view({ time })
               )}
-              <div id="time-counter-creator">
-                <form onSubmit={this.onSubmit.bind(this)}>
-                  <button type="submit">New Stopwatch</button>
-                </form>
-              </div>
+              <this.time_counter_creator.view />
             </div>
           </Center>
         );
       }));
   }
-  onSubmit(ev) {
-    ev.preventDefault();
-    console.log("sub", this);
-    const counter_id = (Math.random() * 1000000) | 0;
-    const counter_target = new Date();
-    const time_counter = new TimeCounter({ counter_target, counter_id });
-    this.add_time_counter(time_counter);
-  }
-}
-
-function Center({ style, ...props }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        ...style,
-      }}
-      {...props}
-    ></div>
-  );
 }
 
 class TimeCounter {
@@ -98,4 +79,76 @@ class TimeCounter {
       </div>
     );
   }
+}
+
+class TimeCounterCreator {
+  #selected_timer_type = null;
+  #forceUpdate;
+  #time_counter_list: TimeCounterList;
+  constructor(time_counter_list: TimeCounterList) {
+    this.#time_counter_list = time_counter_list;
+  }
+  get selected_timer_type() {
+    return this.#selected_timer_type;
+  }
+  set selected_timer_type(newVal) {
+    this.#selected_timer_type = newVal;
+    this.update_view();
+  }
+  update_view() {
+    this.#forceUpdate();
+  }
+  #view;
+  get view() {
+    return (this.#view =
+      this.#view ||
+      (() => {
+        {
+          const [_, setState] = useState();
+          this.#forceUpdate = () => setState(Math.random());
+        }
+        const content = (this.selected_timer_type === null && (
+          <>
+            <div onClick={() => (this.selected_timer_type = "countdown")}>
+              New Countdown
+            </div>
+            <div onClick={() => (this.selected_timer_type = "alarm")}>
+              New Alarm Clock
+            </div>
+            <div onClick={() => this.create_new_stopwatch()}>New Stopwatch</div>
+          </>
+        )) ||
+          (this.selected_timer_type === "countdown" && <div>New CT</div>) || (
+            <div>New AC</div>
+          );
+        return (
+          <div
+            id="time-counter-creator"
+            className="time-counter glass-background"
+          >
+            {content}
+          </div>
+        );
+      }));
+  }
+  create_new_stopwatch() {
+    const counter_id = (Math.random() * 1000000) | 0;
+    const counter_target = new Date();
+    const time_counter = new TimeCounter({ counter_target, counter_id });
+    this.#time_counter_list.add_new_time_counter(time_counter);
+  }
+}
+
+function Center({ style, ...props }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        ...style,
+      }}
+      {...props}
+    ></div>
+  );
 }

@@ -16,7 +16,7 @@ function persist({ key, serializer, deserializer }) {
   };
 
   function serialize(instance) {
-    const data = serializer(instance);
+    const data = serializer.call(instance);
     assert(
       data.every((d) => d.counter_id && d.counter_target),
       data
@@ -32,6 +32,6 @@ function persist({ key, serializer, deserializer }) {
     } else {
       data = [];
     }
-    deserializer(data, instance);
+    deserializer.call(instance, data);
   }
 }
