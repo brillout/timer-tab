@@ -31,23 +31,25 @@ class TimeCounterList {
   get view() {
     return (this.#view =
       this.#view ||
-      (() => {
+      ((props) => {
         const getTime = () => new Date();
         const [time, updateView] = useState(getTime());
         useEffect(() => {
           setTimeout(() => updateView(getTime()), 300);
         });
         return (
-          <div id="time-counter-list">
-            {this.counter_list.map((time_counter) =>
-              time_counter.view({ time })
-            )}
-            <div id="time-counter-creator">
-              <form onSubmit={this.onSubmit.bind(this)}>
-                <button type="submit">New Stopwatch</button>
-              </form>
+          <Center {...props}>
+            <div id="time-counter-list">
+              {this.counter_list.map((time_counter) =>
+                time_counter.view({ time })
+              )}
+              <div id="time-counter-creator">
+                <form onSubmit={this.onSubmit.bind(this)}>
+                  <button type="submit">New Stopwatch</button>
+                </form>
+              </div>
             </div>
-          </div>
+          </Center>
         );
       }));
   }
@@ -59,6 +61,20 @@ class TimeCounterList {
     const time_counter = new TimeCounter({ counter_target, counter_id });
     this.add_time_counter(time_counter);
   }
+}
+
+function Center({ style, ...props }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        ...style,
+      }}
+      {...props}
+    ></div>
+  );
 }
 
 class TimeCounter {

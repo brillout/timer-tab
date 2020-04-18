@@ -1,13 +1,15 @@
 #time-counter-list {
-  display: flex;
-  flex-wrap: wrap;
+  --time-counter-width: 187px;
+  display: grid;
+  /* Automatic width: https://stackoverflow.com/questions/52504049/why-doesnt-min-content-work-with-auto-fill-or-auto-fit */
+  grid-template-columns: repeat(auto-fill, var(--time-counter-width));
+  max-width: 100%;
+  grid-gap: 20px;
 }
 .time-counter,
 .time-counter:after {
   border-radius: 20px;
 }
 .time-counter {
-  width: 200px;
   padding: 20px;
-  margin: 20px;
 }

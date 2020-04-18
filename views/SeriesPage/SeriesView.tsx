@@ -23,5 +23,7 @@ function Content() {
     return null;
   }
   const time_counter_list = new TimeCounterList();
-  return <time_counter_list.view />;
+  return (
+    <time_counter_list.view style={{ width: "100vw", minHeight: "100vh" }} />
+  );
 }
