@@ -20,24 +20,13 @@ class TimeCounter {
   }
   view({ time }) {
     return (
-      <div className="time-counter" key={this.counter_id}>
+      <div className="time-counter glass-background" key={this.counter_id}>
         <div>{this.counter_id}</div>
         <div>{this.render_data({ time })}</div>
       </div>
     );
   }
 }
-
-/*
-const future_time = (seconds) =>
-  new Date(new Date().getTime() + 1000 * seconds);
-time_counter_list.add_time_counter(
-  new TimeCounter({ counter_target: future_time(60), counter_id: 31 })
-);
-time_counter_list.add_time_counter(
-  new TimeCounter({ counter_target: future_time(10), counter_id: 3 })
-);
-*/
 
 @persist({
   key: "timer_tab-time_counter_list",
@@ -73,11 +62,11 @@ class TimeCounterList {
           setTimeout(() => updateView(getTime()), 300);
         });
         return (
-          <div className="#time-counter-list">
+          <div id="time-counter-list">
             {this.counter_list.map((time_counter) =>
               time_counter.view({ time })
             )}
-            <div className="#time-counter-creator">
+            <div id="time-counter-creator">
               <form onSubmit={this.onSubmit.bind(this)}>
                 <button type="submit">New Stopwatch</button>
               </form>

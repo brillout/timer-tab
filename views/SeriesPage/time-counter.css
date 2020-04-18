@@ -1,9 +1,13 @@
 #time-counter-list {
   display: flex;
+  flex-wrap: wrap;
+}
+.time-counter,
+.time-counter:after {
+  border-radius: 20px;
 }
 .time-counter {
-  border: 5px solid #aaa;
-  border-radius: 20px;
   width: 200px;
   padding: 20px;
+  margin: 20px;
 }
