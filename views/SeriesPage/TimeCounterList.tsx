@@ -24,10 +24,10 @@ export { TimeCounterList };
     return data;
   },
 })
+@reactiveView
 class TimeCounterList {
   time_counter_creator: TimeCounterCreator = new TimeCounterCreator(this);
   counter_list: TimeCounter[];
-  #view;
   set_counter_list(counters: TimeCounter[]) {
     this.counter_list = counters;
   }
@@ -36,26 +36,20 @@ class TimeCounterList {
     // @ts-ignore
     this.save();
   }
-  get view() {
-    return (this.#view =
-      this.#view ||
-      ((props) => {
-        const getTime = () => new Date();
-        const [time, updateView] = useState(getTime());
-        useEffect(() => {
-          setTimeout(() => updateView(getTime()), 300);
-        });
-        return (
-          <Center {...props}>
-            <div id="time-counter-list">
-              {this.counter_list.map((time_counter) =>
-                time_counter.view({ time })
-              )}
-              <this.time_counter_creator.view />
-            </div>
-          </Center>
-        );
-      }));
+  view(props) {
+    const getTime = () => new Date();
+    const [time, updateView] = useState(getTime());
+    useEffect(() => {
+      setTimeout(() => updateView(getTime()), 300);
+    });
+    return (
+      <Center {...props}>
+        <div id="time-counter-list">
+          {this.counter_list.map((time_counter) => time_counter.view({ time }))}
+          <this.time_counter_creator.view />
+        </div>
+      </Center>
+    );
   }
 }
 
