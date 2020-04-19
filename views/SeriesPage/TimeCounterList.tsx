@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { persist } from "./utils/persist";
 import assert from "@brillout/assert";
+import { reactiveView } from "./reactiveView";
 
 export { TimeCounterList };
 
@@ -81,55 +82,33 @@ class TimeCounter {
   }
 }
 
+@reactiveView
 class TimeCounterCreator {
-  #selected_timer_type = null;
-  #forceUpdate;
+  selected_timer_type = null;
   #time_counter_list: TimeCounterList;
   constructor(time_counter_list: TimeCounterList) {
     this.#time_counter_list = time_counter_list;
   }
-  get selected_timer_type() {
-    return this.#selected_timer_type;
-  }
-  set selected_timer_type(newVal) {
-    this.#selected_timer_type = newVal;
-    this.update_view();
-  }
-  update_view() {
-    this.#forceUpdate();
-  }
-  #view;
-  get view() {
-    return (this.#view =
-      this.#view ||
-      (() => {
-        {
-          const [_, setState] = useState();
-          this.#forceUpdate = () => setState(Math.random());
-        }
-        const content = (this.selected_timer_type === null && (
-          <>
-            <div onClick={() => (this.selected_timer_type = "countdown")}>
-              New Countdown
-            </div>
-            <div onClick={() => (this.selected_timer_type = "alarm")}>
-              New Alarm Clock
-            </div>
-            <div onClick={() => this.create_new_stopwatch()}>New Stopwatch</div>
-          </>
-        )) ||
-          (this.selected_timer_type === "countdown" && <div>New CT</div>) || (
-            <div>New AC</div>
-          );
-        return (
-          <div
-            id="time-counter-creator"
-            className="time-counter glass-background"
-          >
-            {content}
-          </div>
-        );
-      }));
+  view() {
+    const content = (this.selected_timer_type === null && (
+      <>
+        <div onClick={() => (this.selected_timer_type = "countdown")}>
+          New Countdown
+        </div>
+        <div onClick={() => (this.selected_timer_type = "alarm")}>
+          New Alarm Clock
+        </div>
+        <div onClick={() => this.create_new_stopwatch()}>New Stopwatch</div>
+      </>
+    )) ||
+      (this.selected_timer_type === "countdown" && <div>New CT</div>) || (
+        <div>New AC</div>
+      );
+    return (
+      <div id="time-counter-creator" className="time-counter glass-background">
+        {content}
+      </div>
+    );
   }
   create_new_stopwatch() {
     const counter_id = (Math.random() * 1000000) | 0;
