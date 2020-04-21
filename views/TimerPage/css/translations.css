@@ -1,41 +1,103 @@
-.inputSep:before{content:" : "}
+.inputSep:before {
+  content: " : ";
+}
 
-#made_by:before {content: "Made by "}
-.timerInput button:before{content:"start\A0\A0"}
-#timerButton:after{content:"Countdown"}
-#alarmButton:after{content:"Alarm Clock"}
-#stopwButton:after{content:"Stopwatch"}
-             #pause:before {content:"pause"}
-body.ringing #pause:before, body.stoped  #pause:before {content:"stop"}
-body.paused  #pause:before {content:"resume"}
-#alarmTime:before{content:"until "}
-#hNoti > span:before {content:"Popup-Notification"}
-#goto_description:before {content:"YouTube Alarm"}
-#bg_description:before {content:"Background"}
+#made_by:before {
+  content: "Made by ";
+}
+.timerInput button:before {
+  content: "start\A0\A0";
+}
+#timerButton:after {
+  content: "Countdown";
+}
+#alarmButton:after {
+  content: "Alarm Clock";
+}
+#stopwButton:after {
+  content: "Stopwatch";
+}
+#pause:before {
+  content: "pause";
+}
+body.ringing #pause:before,
+body.stoped #pause:before {
+  content: "stop";
+}
+body.paused #pause:before {
+  content: "resume";
+}
+#alarmTime:before {
+  content: "until ";
+}
+#hNoti > span:before {
+  content: "Popup-Notification";
+}
+#goto_description:before {
+  content: "YouTube Alarm";
+}
+#bg_description:before {
+  content: "Background";
+}
 /*
 #opt_name_desc:before {content:"Name:"}
 */
 
+html.de #made_by:before {
+  content: "Hergestellt von ";
+}
+html.de .timerInput button:before {
+  content: "starte\A0\A0";
+}
+html.de #alarmButton:after {
+  content: "Wecker";
+}
+html.de #stopwButton:after {
+  content: "Stoppuhr";
+}
+html.de body.paused #pause:before {
+  content: "fortsetzen";
+}
+html.de #alarmTime:before {
+  content: "bis ";
+}
+html.de #hNoti > span:before {
+  content: "Popup-Notifizierung";
+}
+html.de #bg_description:before {
+  content: "Hintergrund";
+}
 
-html.de #made_by:before {content: "Hergestellt von "}
-html.de .timerInput button:before{content:"starte\A0\A0"}
-html.de #alarmButton:after{content:"Wecker"}
-html.de #stopwButton:after{content:"Stoppuhr"}
-html.de body.paused  #pause:before {content:"fortsetzen"}
-html.de #alarmTime:before{content:"bis "}
-html.de #hNoti > span:before {content:"Popup-Notifizierung"}
-html.de #bg_description:before {content:"Hintergrund"}
-
-html.fr #made_by:before {content: "Crée par "}
-html.fr .timerInput button:before{content:"lancer\A0\A0"}
-html.fr #timerButton:after{content:"Décompte"}
-html.fr #alarmButton:after{content:"Réveil"}
-html.fr #stopwButton:after{content:"Chronomètre"}
-html.fr body.paused  #pause:before {content:"continuer"}
-html.fr #alarmTime:before{content:"jusqu'à "}
-html.fr #hNoti > span:before {content:"Notification Popup"}
-html.fr #goto_description:before {content:"Alarme YouTube"}
-html.fr #bg_description:before {content:"Arrière-Plan"}
+html.fr #made_by:before {
+  content: "Crée par ";
+}
+html.fr .timerInput button:before {
+  content: "lancer\A0\A0";
+}
+html.fr #timerButton:after {
+  content: "Décompte";
+}
+html.fr #alarmButton:after {
+  content: "Réveil";
+}
+html.fr #stopwButton:after {
+  content: "Chronomètre";
+}
+html.fr body.paused #pause:before {
+  content: "continuer";
+}
+html.fr #alarmTime:before {
+  content: "jusqu'à ";
+}
+html.fr #hNoti > span:before {
+  content: "Notification Popup";
+}
+html.fr #goto_description:before {
+  content: "Alarme YouTube";
+}
+html.fr #bg_description:before {
+  content: "Arrière-Plan";
+}
 /*
 html.fr #opt_name_desc:before {content:"Nom:"}
 */

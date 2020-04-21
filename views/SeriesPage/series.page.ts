@@ -1,13 +1,13 @@
-import {SeriesView} from './SeriesView';
-import {onPageLoad} from './onPageLoad';
-import {config} from '../../tab-utils/views/FullViewWrapper';
+import { SeriesView } from "./SeriesView";
+import { onPageLoad } from "./onPageLoad";
+import { config } from "../../tab-utils/views/FullViewWrapper";
 
 export default config({
-  route: '/series',
+  route: "/series",
   view: SeriesView,
   renderToDom: true,
 
-  title: 'Timer Series - Timer Tab',
+  title: "Timer Series - Timer Tab",
 
   head: [
     '<meta name="keywords" content="timer series multiple sequences"/>',
@@ -15,4 +15,3 @@ export default config({
   ],
   onPageLoad,
 });
-

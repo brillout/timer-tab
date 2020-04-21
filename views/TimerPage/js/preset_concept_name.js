@@ -1,2 +1,2 @@
-const preset_concept_name = 'Theme';
-export {preset_concept_name};
+const preset_concept_name = "Theme";
+export { preset_concept_name };

@@ -4,33 +4,52 @@
 //-window.neverCalled=function..;// --> neverCalled isn't removed
 //}}}
 
-import zoom_to_element from '../../../tab-utils/zoom_to_element';
+import zoom_to_element from "../../../tab-utils/zoom_to_element";
 
 const ml = {};
 
 export default ml;
 
 (function () {
-  if( typeof window === "undefined" ){
+  if (typeof window === "undefined") {
     return;
   } else {
     window.ml = ml;
   }
 
-
-
-ml.date={};
-(function(){ 
-  ml.date.readablize=function(str){ 
-    if(str===undefined||str==='') return '';
-    if(str.constructor===String) str=parseInt(str,10);
-    return (str<10?'0':'')+str;
-  }; 
-  var weekday=new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-  var month  =new Array("January","February","March","April","May","June","July","August","September","October","November","December");
-  ml.date.getWeek = function(that) 
-  //{{{
-  {
+  ml.date = {};
+  (function () {
+    ml.date.readablize = function (str) {
+      if (str === undefined || str === "") return "";
+      if (str.constructor === String) str = parseInt(str, 10);
+      return (str < 10 ? "0" : "") + str;
+    };
+    var weekday = new Array(
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
+    );
+    var month = new Array(
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    );
+    ml.date.getWeek = function (
+      that //{{{
+    ) {
       /* False
       var determinedate = new Date();
       determinedate.setFullYear(that.getFullYear(), that.getMonth(), that.getDate());
@@ -43,172 +62,189 @@ ml.date={};
       return WN;
       */
 
+      /**
+       * Returns the week number for that date.  dowOffset is the day of week the week
+       * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
+       * the week returned is the ISO 8601 week number.
+       * @param int dowOffset
+       * @return int
+       */
+      //Date.prototype.getWeek = function (dowOffset) {
+      /*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.meanfreepath.com */
 
-  /**
-   * Returns the week number for that date.  dowOffset is the day of week the week
-   * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
-   * the week returned is the ISO 8601 week number.
-   * @param int dowOffset
-   * @return int
-   */
-  //Date.prototype.getWeek = function (dowOffset) {
-  /*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.meanfreepath.com */
-
-    dowOffset = typeof(dowOffset) == 'int' ? dowOffset : 0; //default dowOffset to zero
-    var newYear = new Date(that.getFullYear(),0,1);
-    var day = newYear.getDay() - dowOffset; //the day of week the year begins on
-    day = (day >= 0 ? day : day + 7);
-    var daynum = Math.floor((that.getTime() - newYear.getTime() - 
-    (that.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
-    var weeknum;
-    //if the year starts before the middle of a week
-    if(day < 4) {
-      weeknum = Math.floor((daynum+day-1)/7) + 1;
-      if(weeknum > 52) {
-        nYear = new Date(that.getFullYear() + 1,0,1);
-        nday = nYear.getDay() - dowOffset;
-        nday = nday >= 0 ? nday : nday + 7;
-        /*if the next year starts before the middle of
+      dowOffset = typeof dowOffset == "int" ? dowOffset : 0; //default dowOffset to zero
+      var newYear = new Date(that.getFullYear(), 0, 1);
+      var day = newYear.getDay() - dowOffset; //the day of week the year begins on
+      day = day >= 0 ? day : day + 7;
+      var daynum =
+        Math.floor(
+          (that.getTime() -
+            newYear.getTime() -
+            (that.getTimezoneOffset() - newYear.getTimezoneOffset()) * 60000) /
+            86400000
+        ) + 1;
+      var weeknum;
+      //if the year starts before the middle of a week
+      if (day < 4) {
+        weeknum = Math.floor((daynum + day - 1) / 7) + 1;
+        if (weeknum > 52) {
+          nYear = new Date(that.getFullYear() + 1, 0, 1);
+          nday = nYear.getDay() - dowOffset;
+          nday = nday >= 0 ? nday : nday + 7;
+          /*if the next year starts before the middle of
           the week, it is week #1 of that year*/
-        weeknum = nday < 4 ? 1 : 53;
-      }
-    }
-    else {
-      weeknum = Math.floor((daynum+day-1)/7);
-    }
-    return weeknum;
-  //};
-
-  }
-  //}}}
-  ml.date.add = function(that,h,m,s,ms) //time -> time + h + m + s
-  //{{{
-  {
-    if(ms===undefined) ms=0;
-    if( s===undefined)  s=0;
-    if( m===undefined)  m=0;
-    if( h===undefined)  h=0;
-    var newMs=that.getMilliseconds()+ms;
-    //var newS=that.getSeconds()+s+1;
-    var newS=that.getSeconds()      +s+newMs/1000;
-    var newM=that.getMinutes()      +m+newS /60;
-    var newH=that.getHours()        +h+newM /60;
-    //new Date(year, month, day, hours, minutes, seconds, milliseconds)
-    //setHours(hours, [minutes], [seconds], [millisec])
-    that.setHours(newH%24, newM%60, newS%60, newMs%1000);
-    that.setUTCDate(that.getUTCDate()+newH/24);
-    return that;
-  };
-  //}}}
-  ml.date.getDayBegining=function(date) { 
-    var d = new Date(+date);
-    var ret = +new Date(d.getFullYear(),d.getMonth(),d.getDate());
-    ret += (d.getTimezoneOffset() - new Date(ret).getTimezoneOffset())*60*1000;
-    return ret;
-  }; 
-  ml.date.readable={};
-  ml.date.readable.getHours= function(that,twelveClock)
-  //{{{
-  {
-    var ret=that.getHours();
-    if(twelveClock)
-    {
-      ret %= 12;
-      if(ret==0) ret=12;
-    }
-    return ml.date.readablize(ret);
-  };
-  //}}}
-  ml.date.readable.getMinutes= function(that)
-  //{{{
-  {
-    return ml.date.readablize(that.getMinutes());
-  };
-  //}}}
-  ml.date.readable.getSeconds= function(that)
-  //{{{
-  {
-    return ml.date.readablize(that.getSeconds());
-  };
-  //}}}
-  ml.date.readable.getDate= function(that)
-  //{{{
-  {
-    return ml.date.readablize(that.getDate());
-  };
-  //}}}
-  ml.date.readable.getDay=function(that)
-  //{{{
-  {
-    return weekday[that.getDay()];
-  };
-  //}}}
-  ml.date.readable.getMonth=function(that)
-  //{{{
-  {
-    return month[that.getMonth()];
-  };
-  //}}}
-  ml.date.readable.getTime=function(that,withPeriod){ 
-    ml.assert(arguments.length===2);
-    ml.assert(withPeriod.constructor===Boolean);
-
-    var diff = that - ml.date.getDayBegining(that);
-    if(withPeriod) {
-      var MID_DAY = 12*60*60*1000;
-      var isPm = diff>=MID_DAY;
-       if(isPm)  diff-=MID_DAY;
-    }
-    var ret = ml.date.readable.getCounter(diff,withPeriod?'periodclock':'alarmclock');
-    if(withPeriod) ret+=' '+(isPm?'PM':'AM');
-    return ret;
-  }; 
-  ml.date.readable.getCounter=function(diff,preset){ 
-    ml.assert(arguments.length===2);
-
-    var PRESETS = {
-      'text':'%hv?%mv?%0sv?',
-      //'text_verbose':'%hv? %mv? %sv',
-      'countdown':'%0h:?%0m:?%0s',
-      'alarmclock':'%0h:%0m',
-      'periodclock':'%h%:0m?'
-    };
-    const format=PRESETS[preset];
-    ml.assert(format);
-
-    var digits=format.match(/%:?0?(h|s|m)v?\s?:?\??/g);
-    ml.assert(digits);
-
-    var data = {
-      'ms':diff%1000      |0,
-      's' :diff/1000%60   |0,
-      'm' :diff/1000/60%60|0,
-      'h' :diff/1000/60/60|0 
-    };
-
-    digits=digits.map(function(d){
-      if(d[0]!=='%') return d;
-      d=d.substring(1);
-      if(d[d.length-1]==='?'){
-        var optional=true;
-        d=d.substring(0,d.length-1);
-      }
-      for(var i in data) if(d.indexOf(i)!==-1){
-        if(optional){
-          if(i==='h' && !data['h'] ||
-             i==='m' && !data['h'] && !data['m'] ||
-             i==='s' &&  data['h']
-            )
-          return '';
+          weeknum = nday < 4 ? 1 : 53;
         }
-        return d.replace(new RegExp('(0?)'+i),(data[i]<10?'$1':'')+data[i]).replace('v',i);
+      } else {
+        weeknum = Math.floor((daynum + day - 1) / 7);
       }
-      ml.assert(false);
-    });
+      return weeknum;
+      //};
+    };
+    //}}}
+    ml.date.add = function (
+      that,
+      h,
+      m,
+      s,
+      ms //time -> time + h + m + s //{{{
+    ) {
+      if (ms === undefined) ms = 0;
+      if (s === undefined) s = 0;
+      if (m === undefined) m = 0;
+      if (h === undefined) h = 0;
+      var newMs = that.getMilliseconds() + ms;
+      //var newS=that.getSeconds()+s+1;
+      var newS = that.getSeconds() + s + newMs / 1000;
+      var newM = that.getMinutes() + m + newS / 60;
+      var newH = that.getHours() + h + newM / 60;
+      //new Date(year, month, day, hours, minutes, seconds, milliseconds)
+      //setHours(hours, [minutes], [seconds], [millisec])
+      that.setHours(newH % 24, newM % 60, newS % 60, newMs % 1000);
+      that.setUTCDate(that.getUTCDate() + newH / 24);
+      return that;
+    };
+    //}}}
+    ml.date.getDayBegining = function (date) {
+      var d = new Date(+date);
+      var ret = +new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      ret +=
+        (d.getTimezoneOffset() - new Date(ret).getTimezoneOffset()) * 60 * 1000;
+      return ret;
+    };
+    ml.date.readable = {};
+    ml.date.readable.getHours = function (
+      that,
+      twelveClock //{{{
+    ) {
+      var ret = that.getHours();
+      if (twelveClock) {
+        ret %= 12;
+        if (ret == 0) ret = 12;
+      }
+      return ml.date.readablize(ret);
+    };
+    //}}}
+    ml.date.readable.getMinutes = function (
+      that //{{{
+    ) {
+      return ml.date.readablize(that.getMinutes());
+    };
+    //}}}
+    ml.date.readable.getSeconds = function (
+      that //{{{
+    ) {
+      return ml.date.readablize(that.getSeconds());
+    };
+    //}}}
+    ml.date.readable.getDate = function (
+      that //{{{
+    ) {
+      return ml.date.readablize(that.getDate());
+    };
+    //}}}
+    ml.date.readable.getDay = function (
+      that //{{{
+    ) {
+      return weekday[that.getDay()];
+    };
+    //}}}
+    ml.date.readable.getMonth = function (
+      that //{{{
+    ) {
+      return month[that.getMonth()];
+    };
+    //}}}
+    ml.date.readable.getTime = function (that, withPeriod) {
+      ml.assert(arguments.length === 2);
+      ml.assert(withPeriod.constructor === Boolean);
 
-    return digits.join('');
-  }; 
-  /*
+      var diff = that - ml.date.getDayBegining(that);
+      if (withPeriod) {
+        var MID_DAY = 12 * 60 * 60 * 1000;
+        var isPm = diff >= MID_DAY;
+        if (isPm) diff -= MID_DAY;
+      }
+      var ret = ml.date.readable.getCounter(
+        diff,
+        withPeriod ? "periodclock" : "alarmclock"
+      );
+      if (withPeriod) ret += " " + (isPm ? "PM" : "AM");
+      return ret;
+    };
+    ml.date.readable.getCounter = function (diff, preset) {
+      ml.assert(arguments.length === 2);
+
+      var PRESETS = {
+        text: "%hv?%mv?%0sv?",
+        //'text_verbose':'%hv? %mv? %sv',
+        countdown: "%0h:?%0m:?%0s",
+        alarmclock: "%0h:%0m",
+        periodclock: "%h%:0m?",
+      };
+      const format = PRESETS[preset];
+      ml.assert(format);
+
+      var digits = format.match(/%:?0?(h|s|m)v?\s?:?\??/g);
+      ml.assert(digits);
+
+      var data = {
+        ms: diff % 1000 | 0,
+        s: (diff / 1000) % 60 | 0,
+        m: (diff / 1000 / 60) % 60 | 0,
+        h: (diff / 1000 / 60 / 60) | 0,
+      };
+
+      digits = digits.map(function (d) {
+        if (d[0] !== "%") return d;
+        d = d.substring(1);
+        if (d[d.length - 1] === "?") {
+          var optional = true;
+          d = d.substring(0, d.length - 1);
+        }
+        for (var i in data)
+          if (d.indexOf(i) !== -1) {
+            if (optional) {
+              if (
+                (i === "h" && !data["h"]) ||
+                (i === "m" && !data["h"] && !data["m"]) ||
+                (i === "s" && data["h"])
+              )
+                return "";
+            }
+            return d
+              .replace(
+                new RegExp("(0?)" + i),
+                (data[i] < 10 ? "$1" : "") + data[i]
+              )
+              .replace("v", i);
+          }
+        ml.assert(false);
+      });
+
+      return digits.join("");
+    };
+    /*
   ml.date.readable.getTime=function(s,format,digitShift,shiftTodo){ 
     //random info about epoch
     //1000000000000 ms ~= 31 years
@@ -309,133 +345,143 @@ ml.date={};
     return d;
   }; 
   */
-  ml.date.readable.getDateRelative=function(that,verbose){ 
-    ml.assert(that);
-    that = new Date(that);
-    var todayEnd = new Date();
+    ml.date.readable.getDateRelative = function (that, verbose) {
+      ml.assert(that);
+      that = new Date(that);
+      var todayEnd = new Date();
       todayEnd.setHours(23);
       todayEnd.setMinutes(59);
       todayEnd.setSeconds(59);
       todayEnd.setMilliseconds(999);
-  //ml.assert(todayEnd>that);
-    var daysAgo = (todayEnd-that)/(1000*60*60*24);
-    var ret;
-    if(daysAgo<1)        return "today";
-    else if(daysAgo<2)   ret = "yesterday";
-    else if(daysAgo<15)  ret = (daysAgo|0)+" days ago";
-    else if(daysAgo<31)  ret = ((daysAgo/7)|0)+" weeks ago";
-    else {
-      var months = ((daysAgo/30.5)|0);
-      if(daysAgo<356) ret = months+" month"+(months>1?"s":"")+" ago";
+      //ml.assert(todayEnd>that);
+      var daysAgo = (todayEnd - that) / (1000 * 60 * 60 * 24);
+      var ret;
+      if (daysAgo < 1) return "today";
+      else if (daysAgo < 2) ret = "yesterday";
+      else if (daysAgo < 15) ret = (daysAgo | 0) + " days ago";
+      else if (daysAgo < 31) ret = ((daysAgo / 7) | 0) + " weeks ago";
       else {
-        var years = ((daysAgo/356.24)|0);
-        ret = years+" year"+(years>1?"s":"")+" ago";
+        var months = (daysAgo / 30.5) | 0;
+        if (daysAgo < 356)
+          ret = months + " month" + (months > 1 ? "s" : "") + " ago";
+        else {
+          var years = (daysAgo / 356.24) | 0;
+          ret = years + " year" + (years > 1 ? "s" : "") + " ago";
+        }
       }
-    }
-    if(!verbose) return ret;
-    return ret+", "+ml.date.readable.getDay(that)+(daysAgo<8?'':(" "+that.getDate()+"."+ml.date.readable.getMonth(that)))+(!years?'':('.'+that.getFullYear()));
-  }; 
-})(); 
-
-ml.element={};
-ml.element.getStyle=function(that,styleProp)
-//{{{
-{
-  return document.defaultView.getComputedStyle(that,null).getPropertyValue(styleProp);
-};
-//}}}
-ml.element.removeFromDOM=function(that){ 
-  ml.assert(that);
-  that.parentElement.removeChild(that);
-}; 
-ml.element.create=function(type,props){ 
-  var newEl = document.createElement(type);
-  var insertToDom;
-  if(props.appendTo) {
-    insertToDom=function(){
-      hook.appendChild(newEl);
+      if (!verbose) return ret;
+      return (
+        ret +
+        ", " +
+        ml.date.readable.getDay(that) +
+        (daysAgo < 8
+          ? ""
+          : " " + that.getDate() + "." + ml.date.readable.getMonth(that)) +
+        (!years ? "" : "." + that.getFullYear())
+      );
     };
-    var hook=props.appendTo;
-    delete props.appendTo;
-  }
-  if(props.prependTo) {
-    insertToDom=function(){
-      if(!hook.firstChild)
+  })();
+
+  ml.element = {};
+  ml.element.getStyle = function (
+    that,
+    styleProp //{{{
+  ) {
+    return document.defaultView
+      .getComputedStyle(that, null)
+      .getPropertyValue(styleProp);
+  };
+  //}}}
+  ml.element.removeFromDOM = function (that) {
+    ml.assert(that);
+    that.parentElement.removeChild(that);
+  };
+  ml.element.create = function (type, props) {
+    var newEl = document.createElement(type);
+    var insertToDom;
+    if (props.appendTo) {
+      insertToDom = function () {
         hook.appendChild(newEl);
-      else
-        hook.insertBefore(newEl,hook.firstChild);
-    };
-    var hook=props.prependTo;
-    delete props.prependTo;
-  }
-  if(props.childs) {
-    for(var i in props.childs) newEl.appendChild(props.childs[i]);
-    delete props.childs;
-  }
-  for(var i in props) newEl[i]=props[i];
-  if(insertToDom) insertToDom();
-  return newEl;
-}; 
-
-(function(){
-  function getDummy(tagName) { 
-    var dummy = document.createElement(tagName||'div');
-    dummy.style.display='inline-block';
-    dummy.style.position='absolute';
-    dummy.style.top='-9999px';
-    dummy.style.zIndex='-9999';
-    dummy.style.visibility='hidden';
-    return dummy;
-  } 
-  function getWidestChar(chars) { 
-    var widestChar;
-    var widestSize=-1;
-    var dummy = document.body.appendChild(getDummy());
-    for(var i=0;i<chars.length;i++) {
-      dummy.innerHTML=chars[i];
-      var charWidth=parseInt(ml.element.getStyle(dummy,'width'),10);
-      if(charWidth>widestSize)
-      {
-        widestSize=charWidth;
-        widestChar=chars[i];
-      }
+      };
+      var hook = props.appendTo;
+      delete props.appendTo;
     }
+    if (props.prependTo) {
+      insertToDom = function () {
+        if (!hook.firstChild) hook.appendChild(newEl);
+        else hook.insertBefore(newEl, hook.firstChild);
+      };
+      var hook = props.prependTo;
+      delete props.prependTo;
+    }
+    if (props.childs) {
+      for (var i in props.childs) newEl.appendChild(props.childs[i]);
+      delete props.childs;
+    }
+    for (var i in props) newEl[i] = props[i];
+    if (insertToDom) insertToDom();
+    return newEl;
+  };
 
-    //window.bla=window.bla||0;
-    //if(window.bla!==2&&window.bla!==0) document.body.removeChild(dummy);
-    //window.bla++;
+  (function () {
+    function getDummy(tagName) {
+      var dummy = document.createElement(tagName || "div");
+      dummy.style.display = "inline-block";
+      dummy.style.position = "absolute";
+      dummy.style.top = "-9999px";
+      dummy.style.zIndex = "-9999";
+      dummy.style.visibility = "hidden";
+      return dummy;
+    }
+    function getWidestChar(chars) {
+      var widestChar;
+      var widestSize = -1;
+      var dummy = document.body.appendChild(getDummy());
+      for (var i = 0; i < chars.length; i++) {
+        dummy.innerHTML = chars[i];
+        var charWidth = parseInt(ml.element.getStyle(dummy, "width"), 10);
+        if (charWidth > widestSize) {
+          widestSize = charWidth;
+          widestChar = chars[i];
+        }
+      }
 
-    //dummyinspect
-    //onsole
-    document.body.removeChild(dummy);
-    ml.assert(widestChar);
-    return widestChar;
-  } 
-  function getData(el,width,height,possibleChars,minTextLength){ 
-    var dummyContent=(el.getAttribute('data-text')||'')+el.innerHTML;
-      if(dummyContent.length<(minTextLength&&minTextLength.length)) dummyContent=minTextLength;
-      if(dummyContent.length<1) dummyContent='y';
-      if(possibleChars) //if possibleChars not given we then assume that all char have same width
-      {
-        ml.assert(el.children.length===0);
+      //window.bla=window.bla||0;
+      //if(window.bla!==2&&window.bla!==0) document.body.removeChild(dummy);
+      //window.bla++;
+
+      //dummyinspect
+      //onsole
+      document.body.removeChild(dummy);
+      ml.assert(widestChar);
+      return widestChar;
+    }
+    function getData(el, width, height, possibleChars, minTextLength) {
+      var dummyContent = (el.getAttribute("data-text") || "") + el.innerHTML;
+      if (dummyContent.length < (minTextLength && minTextLength.length))
+        dummyContent = minTextLength;
+      if (dummyContent.length < 1) dummyContent = "y";
+      if (possibleChars) {
+        //if possibleChars not given we then assume that all char have same width
+        ml.assert(el.children.length === 0);
         var widestChar = getWidestChar(possibleChars);
         var dummyTextLength = dummyContent.length;
-        dummyContent = '';
-        for(var i=0;i<dummyTextLength;i++) dummyContent+=widestChar;
+        dummyContent = "";
+        for (var i = 0; i < dummyTextLength; i++) dummyContent += widestChar;
       }
 
-    var dummy= getDummy(el.tagName);
-      dummy.style.fontFamily=ml.element.getStyle(el,'font-family');
-      dummy.style.fontFamily=ml.element.getStyle(el,'font-family');
-      dummy.style.fontSize=DUMMY_SIZE+'px';
-      dummy.style.whiteSpace='nowrap';//should el be equal to el.getStyle('white-space')?
-      dummy.style.letterSpacing=ml.element.getStyle(el,'letter-spacing');
+      var dummy = getDummy(el.tagName);
+      dummy.style.fontFamily = ml.element.getStyle(el, "font-family");
+      dummy.style.fontFamily = ml.element.getStyle(el, "font-family");
+      dummy.style.fontSize = DUMMY_SIZE + "px";
+      dummy.style.whiteSpace = "nowrap"; //should el be equal to el.getStyle('white-space')?
+      dummy.style.letterSpacing = ml.element.getStyle(el, "letter-spacing");
 
-    dummy.innerHTML=dummyContent;
-    document.body.appendChild(dummy);
-    //dummyinspect
-    //onsole
-    /*
+      dummy.innerHTML = dummyContent;
+      document.body.appendChild(dummy);
+      //dummyinspect
+      //onsole
+      /*
     if(!window.bla)window.bla=0;
     window.bla++;
     var c = window.bla;
@@ -468,17 +514,31 @@ ml.element.create=function(type,props){
     onsole.log(ml.element.getStyle(dummy,'width'));
     },5000);
     */
-    var  width_dummy =  width&&parseInt(ml.element.getStyle(dummy,'width' ),10);
-    var height_dummy = height&&parseInt(ml.element.getStyle(dummy,'height'),10);
-    var ratio = Math.min(height?(height/height_dummy):Infinity,
-                          width?( width/ width_dummy):Infinity);
-    document.body.removeChild(dummy);
-    return {fontSize:ratio*DUMMY_SIZE,width:ratio*width_dummy,height:ratio*height_dummy};
-  } 
-  var DUMMY_SIZE=100;//intuitively: the bigger the font-size the more precise the approximation
-  var boxSizingPropName=null;
-  ml.adjustFontSize=function(el,possibleChars,noHeight,minTextLength,isInsideATable) { 
-    /* to reuse cache; clear it when box size changes
+      var width_dummy =
+        width && parseInt(ml.element.getStyle(dummy, "width"), 10);
+      var height_dummy =
+        height && parseInt(ml.element.getStyle(dummy, "height"), 10);
+      var ratio = Math.min(
+        height ? height / height_dummy : Infinity,
+        width ? width / width_dummy : Infinity
+      );
+      document.body.removeChild(dummy);
+      return {
+        fontSize: ratio * DUMMY_SIZE,
+        width: ratio * width_dummy,
+        height: ratio * height_dummy,
+      };
+    }
+    var DUMMY_SIZE = 100; //intuitively: the bigger the font-size the more precise the approximation
+    var boxSizingPropName = null;
+    ml.adjustFontSize = function (
+      el,
+      possibleChars,
+      noHeight,
+      minTextLength,
+      isInsideATable
+    ) {
+      /* to reuse cache; clear it when box size changes
     //using cache -> assumption is made that font familly and box size doesn't change
     //based on assumption that width of a text is approx proportional to its fontSize
     //notes
@@ -491,50 +551,80 @@ ml.element.create=function(type,props){
     if(el._ml_textSizeRatioCache[textLength]) return el._ml_textSizeRatioCache[textLength];
     */
 
-    //noHeight computed automatically using getMatchedCSSRules
-    //-http://stackoverflow.com/questions/2952667/find-all-css-rules-that-apply-to-an-element
-    //-but only implemented in webkit: https://bugzilla.mozilla.org/show_bug.cgi?id=438278
-    //-gecko polyfill: https://gist.github.com/3033012
+      //noHeight computed automatically using getMatchedCSSRules
+      //-http://stackoverflow.com/questions/2952667/find-all-css-rules-that-apply-to-an-element
+      //-but only implemented in webkit: https://bugzilla.mozilla.org/show_bug.cgi?id=438278
+      //-gecko polyfill: https://gist.github.com/3033012
 
-    function getSize(el,prop){return parseInt(ml.element.getStyle(el,prop)||0,10)};
+      function getSize(el, prop) {
+        return parseInt(ml.element.getStyle(el, prop) || 0, 10);
+      }
 
-    if(isInsideATable){
-      //-alternatively & easier: temporarely set fontSize to 0px
-      //-to avoid following: adjust font size ~> text length increases => el size increases
-      //-using el.style.overflow='hidden' doesn't work for procentual width
-      var oldInnerHTML= el.innerHTML;
-      var oldDataText = el.getAttribute('data-text');
-      el.innerHTML='';
-      el.removeAttribute('data-text');
-    }
-    var width  = getSize(el,'width');
-    var height;
-    if(!noHeight) height = getSize(el,'height');
-    if(isInsideATable){
-      el.innerHTML=oldInnerHTML;
-      if(oldDataText) el.setAttribute('data-text',oldDataText);
-    }
+      if (isInsideATable) {
+        //-alternatively & easier: temporarely set fontSize to 0px
+        //-to avoid following: adjust font size ~> text length increases => el size increases
+        //-using el.style.overflow='hidden' doesn't work for procentual width
+        var oldInnerHTML = el.innerHTML;
+        var oldDataText = el.getAttribute("data-text");
+        el.innerHTML = "";
+        el.removeAttribute("data-text");
+      }
+      var width = getSize(el, "width");
+      var height;
+      if (!noHeight) height = getSize(el, "height");
+      if (isInsideATable) {
+        el.innerHTML = oldInnerHTML;
+        if (oldDataText) el.setAttribute("data-text", oldDataText);
+      }
 
-    if(boxSizingPropName===null) boxSizingPropName = ['box-sizing','-moz-box-sizing','-o-box-sizing','-ms-box-sizing','-webkit-box-sizing']
-                                         .filter(function(p){return document.createElement('div').style[p]!==undefined})[0];
-    if(boxSizingPropName&&ml.element.getStyle(el,boxSizingPropName)==='border-box') {
-       width -= getSize(el,'border-left')+getSize(el,'border-right' )+getSize(el,'padding-left')+getSize(el,'padding-right' );
-      if(height)
-      height -= getSize(el,'border-top' )+getSize(el,'border-bottom')+getSize(el,'padding-top' )+getSize(el,'padding-bottom');
-    }
+      if (boxSizingPropName === null)
+        boxSizingPropName = [
+          "box-sizing",
+          "-moz-box-sizing",
+          "-o-box-sizing",
+          "-ms-box-sizing",
+          "-webkit-box-sizing",
+        ].filter(function (p) {
+          return document.createElement("div").style[p] !== undefined;
+        })[0];
+      if (
+        boxSizingPropName &&
+        ml.element.getStyle(el, boxSizingPropName) === "border-box"
+      ) {
+        width -=
+          getSize(el, "border-left") +
+          getSize(el, "border-right") +
+          getSize(el, "padding-left") +
+          getSize(el, "padding-right");
+        if (height)
+          height -=
+            getSize(el, "border-top") +
+            getSize(el, "border-bottom") +
+            getSize(el, "padding-top") +
+            getSize(el, "padding-bottom");
+      }
 
-    
-    el.style.fontSize=Math.floor(getData(el,width,height,possibleChars,minTextLength).fontSize)+'px';
+      el.style.fontSize =
+        Math.floor(
+          getData(el, width, height, possibleChars, minTextLength).fontSize
+        ) + "px";
 
-    ml.assert(ml.element.getStyle(el,'display')==='block' || ml.element.getStyle(el,'display')==='inline-block' || ml.element.getStyle(el,'display')==='table-cell',"ml.element.getStyle(el,'display')=="+ml.element.getStyle(el,'display'),1);
+      ml.assert(
+        ml.element.getStyle(el, "display") === "block" ||
+          ml.element.getStyle(el, "display") === "inline-block" ||
+          ml.element.getStyle(el, "display") === "table-cell",
+        "ml.element.getStyle(el,'display')==" +
+          ml.element.getStyle(el, "display"),
+        1
+      );
 
-    //following assert fails with browser zoom
-    //ml.assert(ml.element.getStyle(el,'font-size')===el.style.fontSize);
+      //following assert fails with browser zoom
+      //ml.assert(ml.element.getStyle(el,'font-size')===el.style.fontSize);
 
-    //good enough without refinment?
-    //note: will break minTextLength option
-    //******** Refinment ********
-    /*
+      //good enough without refinment?
+      //note: will break minTextLength option
+      //******** Refinment ********
+      /*
     ml.assert(!minTextLength);
     var max=100;
     ml.assert(width!==0&&height!==0);
@@ -544,168 +634,172 @@ ml.element.create=function(type,props){
            ml.element.getStyle(el,'height')>(height||Infinity)) &&--max) el.style.fontSize=parseInt(el.style.fontSize,10)-1+'px';
     ml.assert(max>0,'max===0');
     */
-  }; 
-  ml.getTextSize=function(el,w,h){return getData(el,w,h)};
-})();
+    };
+    ml.getTextSize = function (el, w, h) {
+      return getData(el, w, h);
+    };
+  })();
 
-ml.showBrowserHint=function(name,additionalText)
-//{{{
-{
-  var browserDetect = {
-  //{{{
-    init: function () {
-      //this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
-      this.browser = this.searchString(this.dataBrowser);
-      this.version = this.searchVersion(navigator.userAgent)
-        || this.searchVersion(navigator.appVersion)
-        ;//|| "an unknown version";
-      //this.OS = this.searchString(this.dataOS) || "an unknown OS";
-    },
-    searchString: function (data) {
-      for (var i=0;i<data.length;i++)	{
-        var dataString = data[i].string;
-        var dataProp = data[i].prop;
-        this.versionSearchString = data[i].versionSearch || data[i].identity;
-        if (dataString) {
-          if (dataString.indexOf(data[i].subString) != -1)
-            return data[i].identity;
+  ml.showBrowserHint = function (
+    name,
+    additionalText //{{{
+  ) {
+    var browserDetect = {
+      //{{{
+      init: function () {
+        //this.browser = this.searchString(this.dataBrowser) || "An unknown browser";
+        this.browser = this.searchString(this.dataBrowser);
+        this.version =
+          this.searchVersion(navigator.userAgent) ||
+          this.searchVersion(navigator.appVersion); //|| "an unknown version";
+        //this.OS = this.searchString(this.dataOS) || "an unknown OS";
+      },
+      searchString: function (data) {
+        for (var i = 0; i < data.length; i++) {
+          var dataString = data[i].string;
+          var dataProp = data[i].prop;
+          this.versionSearchString = data[i].versionSearch || data[i].identity;
+          if (dataString) {
+            if (dataString.indexOf(data[i].subString) != -1)
+              return data[i].identity;
+          } else if (dataProp) return data[i].identity;
         }
-        else if (dataProp)
-          return data[i].identity;
-      }
-    },
-    searchVersion: function (dataString) {
-      var index = dataString.indexOf(this.versionSearchString);
-      if (index == -1) return;
-      return parseFloat(dataString.substring(index+this.versionSearchString.length+1));
-    },
-    dataBrowser: [
-      {
-        string: navigator.userAgent,
-        subString: "Chrome",
-        identity: "Chrome"
       },
-      { 	string: navigator.userAgent,
-        subString: "OmniWeb",
-        versionSearch: "OmniWeb/",
-        identity: "OmniWeb"
+      searchVersion: function (dataString) {
+        var index = dataString.indexOf(this.versionSearchString);
+        if (index == -1) return;
+        return parseFloat(
+          dataString.substring(index + this.versionSearchString.length + 1)
+        );
       },
-      {
-        string: navigator.vendor,
-        subString: "Apple",
-        identity: "Safari",
-        versionSearch: "Version"
-      },
-      {
-        prop: window.opera,
-        identity: "Opera"
-      },
-      {
-        string: navigator.vendor,
-        subString: "iCab",
-        identity: "iCab"
-      },
-      {
-        string: navigator.vendor,
-        subString: "KDE",
-        identity: "Konqueror"
-      },
-      {
-        string: navigator.userAgent,
-        subString: "Firefox",
-        identity: "Firefox"
-      },
-      {
-        string: navigator.vendor,
-        subString: "Camino",
-        identity: "Camino"
-      },
-      {		// for newer Netscapes (6+)
-        string: navigator.userAgent,
-        subString: "Netscape",
-        identity: "Netscape"
-      },
-      {
-        string: navigator.userAgent,
-        subString: "MSIE",
-        identity: "Explorer",
-        versionSearch: "MSIE"
-      },
-      {
-        string: navigator.userAgent,
-        subString: "Gecko",
-        identity: "Mozilla",
-        versionSearch: "rv"
-      },
-      { 		// for older Netscapes (4-)
-        string: navigator.userAgent,
-        subString: "Mozilla",
-        identity: "Netscape",
-        versionSearch: "Mozilla"
-      }
-    ],
-    dataOS : [
-      {
-        string: navigator.platform,
-        subString: "Win",
-        identity: "Windows"
-      },
-      {
-        string: navigator.platform,
-        subString: "Mac",
-        identity: "Mac"
-      },
-      {
-           string: navigator.userAgent,
-           subString: "iPhone",
-           identity: "iPhone/iPod"
+      dataBrowser: [
+        {
+          string: navigator.userAgent,
+          subString: "Chrome",
+          identity: "Chrome",
         },
-      {
-        string: navigator.platform,
-        subString: "Linux",
-        identity: "Linux"
-      }
-    ]
-  };
-  //}}}
+        {
+          string: navigator.userAgent,
+          subString: "OmniWeb",
+          versionSearch: "OmniWeb/",
+          identity: "OmniWeb",
+        },
+        {
+          string: navigator.vendor,
+          subString: "Apple",
+          identity: "Safari",
+          versionSearch: "Version",
+        },
+        {
+          prop: window.opera,
+          identity: "Opera",
+        },
+        {
+          string: navigator.vendor,
+          subString: "iCab",
+          identity: "iCab",
+        },
+        {
+          string: navigator.vendor,
+          subString: "KDE",
+          identity: "Konqueror",
+        },
+        {
+          string: navigator.userAgent,
+          subString: "Firefox",
+          identity: "Firefox",
+        },
+        {
+          string: navigator.vendor,
+          subString: "Camino",
+          identity: "Camino",
+        },
+        {
+          // for newer Netscapes (6+)
+          string: navigator.userAgent,
+          subString: "Netscape",
+          identity: "Netscape",
+        },
+        {
+          string: navigator.userAgent,
+          subString: "MSIE",
+          identity: "Explorer",
+          versionSearch: "MSIE",
+        },
+        {
+          string: navigator.userAgent,
+          subString: "Gecko",
+          identity: "Mozilla",
+          versionSearch: "rv",
+        },
+        {
+          // for older Netscapes (4-)
+          string: navigator.userAgent,
+          subString: "Mozilla",
+          identity: "Netscape",
+          versionSearch: "Mozilla",
+        },
+      ],
+      dataOS: [
+        {
+          string: navigator.platform,
+          subString: "Win",
+          identity: "Windows",
+        },
+        {
+          string: navigator.platform,
+          subString: "Mac",
+          identity: "Mac",
+        },
+        {
+          string: navigator.userAgent,
+          subString: "iPhone",
+          identity: "iPhone/iPod",
+        },
+        {
+          string: navigator.platform,
+          subString: "Linux",
+          identity: "Linux",
+        },
+      ],
+    };
+    //}}}
 
-  browserDetect.init();
+    browserDetect.init();
 
-  var str="<div style='padding: 30px'>";
-  var instruction='in order to use '+name+' download the latest version of your browser at <a target="_blank" href=';
-  if(browserDetect.browser)
-  {
-    var browser=browserDetect.browser;
-    if(browser==='Chrome')
-    {
-      browser='Google Chrome';
-      instruction+="'https://www.google.com/chrome/'>www.google.com/chrome</a>";
-    }
-    else if(browser==='Firefox')
-    {
-      instruction+="'https://www.mozilla.com/firefox/'>www.mozilla.com/firefox</a>";
-    }
-    else if(browser==='Safari')
-    {
-      instruction+="'https://www.apple.com/safari/download/'>www.apple.com/safari/download</a>";
-    }
-    else if(browser==='Explorer')
-    {
-      browser='Internet Explorer';
-      instruction="in order to use "+name+" install the Google Chrome Frame plug-in at <a target='_blank' href='https://code.google.com/chrome/chromeframe/'>https://code.google.com/chrome/chromeframe</a>";
-    }
-    else
-      instruction=null;
+    var str = "<div style='padding: 30px'>";
+    var instruction =
+      "in order to use " +
+      name +
+      ' download the latest version of your browser at <a target="_blank" href=';
+    if (browserDetect.browser) {
+      var browser = browserDetect.browser;
+      if (browser === "Chrome") {
+        browser = "Google Chrome";
+        instruction +=
+          "'https://www.google.com/chrome/'>www.google.com/chrome</a>";
+      } else if (browser === "Firefox") {
+        instruction +=
+          "'https://www.mozilla.com/firefox/'>www.mozilla.com/firefox</a>";
+      } else if (browser === "Safari") {
+        instruction +=
+          "'https://www.apple.com/safari/download/'>www.apple.com/safari/download</a>";
+      } else if (browser === "Explorer") {
+        browser = "Internet Explorer";
+        instruction =
+          "in order to use " +
+          name +
+          " install the Google Chrome Frame plug-in at <a target='_blank' href='https://code.google.com/chrome/chromeframe/'>https://code.google.com/chrome/chromeframe</a>";
+      } else instruction = null;
 
-
-    str+="you are using the browser "+browser;
-    if(browserDetect.version)
-      str+=" "+browserDetect.version;
-    str+="<br><br>";
-    if(instruction)
-      str+=instruction+'.<br><br>';
-  }
-  str+=name+" supports following browsers:<br> \
+      str += "you are using the browser " + browser;
+      if (browserDetect.version) str += " " + browserDetect.version;
+      str += "<br><br>";
+      if (instruction) str += instruction + ".<br><br>";
+    }
+    str +=
+      name +
+      " supports following browsers:<br> \
     <ul> \
       <li><b>Internet Explorer</b> with the <b>Google Chrome Frame</b> plug-in</li> \
       <li><b>Firefox 3.5</b> or higher</li> \
@@ -714,24 +808,26 @@ ml.showBrowserHint=function(name,additionalText)
     </ul> \
     ";
 
-  if(additionalText) str+='<br>'+additionalText;
+    if (additionalText) str += "<br>" + additionalText;
 
-  str+="</div>";
+    str += "</div>";
 
-  document.body.innerHTML=str;
-}
-//}}}
+    document.body.innerHTML = str;
+  };
+  //}}}
 
-ml.out=function(){ 
-  window['co'+'nsole']&&window['co'+'nsole']['log']&&window['co'+'nsole']['log'].apply(window['co'+'nsole'],arguments);
-}; 
-if(typeof window !== "undefined" && window['co'+'nsole']){
-  window['co'+'nsole'].print=function(obj) //nice print for objects
-  //{{{
-  {
-    //return JSON.stringify(obj);
-    window['co'+'nsole'].log(JSON.stringify(obj));
-    /*
+  ml.out = function () {
+    window["co" + "nsole"] &&
+      window["co" + "nsole"]["log"] &&
+      window["co" + "nsole"]["log"].apply(window["co" + "nsole"], arguments);
+  };
+  if (typeof window !== "undefined" && window["co" + "nsole"]) {
+    window["co" + "nsole"].print = function (
+      obj //nice print for objects //{{{
+    ) {
+      //return JSON.stringify(obj);
+      window["co" + "nsole"].log(JSON.stringify(obj));
+      /*
     function to_str(foo)
     {
       if(foo===undefined)
@@ -749,77 +845,78 @@ if(typeof window !== "undefined" && window['co'+'nsole']){
     if(window['co'+'nsole'] && window['co'+'nsole'].log)
       window['co'+'nsole'].log(to_str(obj));
     */
-  };
-  //}}}
-  window['co'+'nsole'].printStack=function()
-  //{{{
-  {
-    if(window['co'+'nsole'] && window['co'+'nsole'].log)
+    };
+    //}}}
+    window["co" + "nsole"].printStack = function () //{{{
     {
-      //http://stackoverflow.com/questions/2060272/while-debugging-javascript-is-there-a-way-to-alert-current-call-stack
-      window['co'+'nsole'].log(new Error().stack);
-      /*
+      if (window["co" + "nsole"] && window["co" + "nsole"].log) {
+        //http://stackoverflow.com/questions/2060272/while-debugging-javascript-is-there-a-way-to-alert-current-call-stack
+        window["co" + "nsole"].log(new Error().stack);
+        /*
       try{wontwork}
       catch(e){
         window['co'+'nsole'].log(e.stack);
         return e.stack;
         }
         */
-    }
-  };
-  //}}}
-}
-ml.assert=function(bool,msg,skipCallFcts,api_error){ 
-//works properly in webkit only
-  if(typeof window === "undefined") return;
-  if(!bool)
-  {
-    var errorStack = new Error().stack;
-    var errorStr = (function()
-    {
-      if(!skipCallFcts) skipCallFcts=0;
-      skipCallFcts++;
-      if(ml.browser().usesGecko && window['co'+'nsole'] && window['co'+'nsole'].log) window['co'+'nsole'].log(errorStack);
-      if(errorStack)
-      {
-        do
-        {
-          errorStack = errorStack.replace(/.*[\s\S]/,'');
-        //fct=fct.caller;
-        }while(skipCallFcts--)
-        var fctLine = /[^\/]*$/.exec(errorStack.split('\n')[0]).toString().replace(/\:[^\:]*$/,'');
-        //return 'assertion fail at '+scriptSource+':'+(fct.name?fct.name:'(anonymous)')+':'+/[^:]*(?=:(?!.*:.*))/.exec(fctLine);
       }
-      return 'assertion fail at '+fctLine;
-    })();
-    if(msg!==undefined) errorStr+=' ('+(msg.join&&msg.join(',')||msg)+')';
-    if(api_error)
-    {
-      throw errorStr;
-    //return;//returns anyways since throw
-    }
+    };
+    //}}}
+  }
+  ml.assert = function (bool, msg, skipCallFcts, api_error) {
+    //works properly in webkit only
+    if (typeof window === "undefined") return;
+    if (!bool) {
+      var errorStack = new Error().stack;
+      var errorStr = (function () {
+        if (!skipCallFcts) skipCallFcts = 0;
+        skipCallFcts++;
+        if (
+          ml.browser().usesGecko &&
+          window["co" + "nsole"] &&
+          window["co" + "nsole"].log
+        )
+          window["co" + "nsole"].log(errorStack);
+        if (errorStack) {
+          do {
+            errorStack = errorStack.replace(/.*[\s\S]/, "");
+            //fct=fct.caller;
+          } while (skipCallFcts--);
+          var fctLine = /[^\/]*$/
+            .exec(errorStack.split("\n")[0])
+            .toString()
+            .replace(/\:[^\:]*$/, "");
+          //return 'assertion fail at '+scriptSource+':'+(fct.name?fct.name:'(anonymous)')+':'+/[^:]*(?=:(?!.*:.*))/.exec(fctLine);
+        }
+        return "assertion fail at " + fctLine;
+      })();
+      if (msg !== undefined)
+        errorStr += " (" + ((msg.join && msg.join(",")) || msg) + ")";
+      if (api_error) {
+        throw errorStr;
+        //return;//returns anyways since throw
+      }
 
-    //*
-    var HARD=false;
-    /*/
+      //*
+      var HARD = false;
+      /*/
     var HARD=window.location.hostname==='localhost';
     //*/
 
-    if(window['co'+'nsole'] && window['co'+'nsole'].log && !HARD)
-    {
-      window['co'+'nsole'].log(errorStr);
-      //if(cwindow['co'+'nsole']onsole['assert']) window['co'+'nsole']['assert'](false);
+      if (window["co" + "nsole"] && window["co" + "nsole"].log && !HARD) {
+        window["co" + "nsole"].log(errorStr);
+        //if(cwindow['co'+'nsole']onsole['assert']) window['co'+'nsole']['assert'](false);
+      }
+      for (var i = 3; i < arguments.length; i++) {
+        if (window["co" + "nsole"] && window["co" + "nsole"].log)
+          window["co" + "nsole"].log(arguments[i]);
+        else errorStr += arguments[i] + "\n";
+      }
+      if (HARD) window.alert(errorStr + "\n" + errorStack);
+      window["co" + "nsole"].log(errorStr + "\n" + errorStack);
+      if (HARD) throw errorStr;
     }
-    for(var i=3;i<arguments.length;i++)
-    {
-      if(window['co'+'nsole'] && window['co'+'nsole'].log) window['co'+'nsole'].log(arguments[i]);
-      else errorStr += arguments[i]+'\n';
-    }
-    if(HARD)    window.alert(errorStr+'\n'+errorStack);
-    window['co'+'nsole'].log(errorStr+'\n'+errorStack);
-    if(HARD) throw(errorStr);
-  }
-/*
+    /*
 var scriptSource =
 //{{{
   //source:
@@ -835,66 +932,66 @@ var scriptSource =
 }());
 //}}}
 */
-}; 
+  };
 
-//}}}
-ml.addHashListener=function(fct,runOnInit)
-//{{{
-{
-  if(window.onhashchange!==undefined)
-  {
-    //window.onhashchange=function(){
-    //  fct();
-    //};
-    //window.addEventListener('hashchange',fct,false);
-    window.addEventListener('hashchange',function(){fct()},false);
-  }
-  else
-  {
-    var actualHash=location.hash;
-    ml.addTactFct(function()
-    {
-      if(location.hash!=actualHash)
-      {
-        actualHash=location.hash;
-        fct();
+  //}}}
+  ml.addHashListener = function (
+    fct,
+    runOnInit //{{{
+  ) {
+    if (window.onhashchange !== undefined) {
+      //window.onhashchange=function(){
+      //  fct();
+      //};
+      //window.addEventListener('hashchange',fct,false);
+      window.addEventListener(
+        "hashchange",
+        function () {
+          fct();
+        },
+        false
+      );
+    } else {
+      var actualHash = location.hash;
+      ml.addTactFct(function () {
+        if (location.hash != actualHash) {
+          actualHash = location.hash;
+          fct();
+        }
+      });
+    }
+    if (runOnInit) fct();
+  };
+  //}}}
+  ml.controlKeyPressed = function (
+    ev //{{{
+  ) {
+    return ev.ctrlKey || ev.altKey || ev.metaKey;
+  };
+  //}}}
+
+  var faviconEl;
+  ml.changeIcon = function (
+    url //{{{
+  ) {
+    var createNewEl = ml.browser().usesGecko;
+    if (!faviconEl || createNewEl) {
+      var REL = "shortcut icon";
+      var oldlinks = document.getElementsByTagName("link");
+      for (var i = 0; i < oldlinks.length; i++) {
+        var rel = oldlinks[i].getAttribute("rel");
+        if (rel && rel.toLowerCase() == REL)
+          document.head.removeChild(oldlinks[i]);
       }
-    });
-  }
-  if(runOnInit) fct();
-};
-//}}}
-ml.controlKeyPressed=function(ev)
-//{{{
-{
-  return ev.ctrlKey || ev.altKey || ev.metaKey;
-};
-//}}}
 
+      faviconEl = document.createElement("link");
+      faviconEl.rel = REL;
+      faviconEl.type = "image/png"; //needed for webkit dynamic favicon
+      document.head.appendChild(faviconEl);
+    }
+    faviconEl.href = url;
 
-var faviconEl;
-ml.changeIcon=function(url)
-//{{{
-{
-  var createNewEl=ml.browser().usesGecko;
-  if(!faviconEl || createNewEl)
-  {
-    var REL = 'shortcut icon';
-    var oldlinks=document.getElementsByTagName('link');
-    for(var i=0;i<oldlinks.length;i++){
-      var rel = oldlinks[i].getAttribute('rel');
-      if(rel && rel.toLowerCase()==REL)
-        document.head.removeChild(oldlinks[i]);
-   }
-
-    faviconEl      = document.createElement('link');
-    faviconEl.rel  = REL;
-    faviconEl.type = 'image/png'; //needed for webkit dynamic favicon
-    document.head.appendChild(faviconEl);
-  }
-  faviconEl.href=url;
-
-  /*
+    /*
   if(!faviconEl)
   {
   //var REL = 'shortcut icon';
@@ -911,7 +1008,7 @@ ml.changeIcon=function(url)
   }
   faviconEl.href=url;
   */
-  /*
+    /*
   //var REL = 'shortcut icon';
   var REL = 'icon';
   if(!faviconEl)
@@ -930,309 +1027,318 @@ ml.changeIcon=function(url)
   faviconEl.type = 'image/png'; //needed for webkit dynamic favicon
   if(!window.stopi) document.head.appendChild(faviconEl);
   //*/
-};
-//}}}
-ml.canvasIcon=function(ctxTsf)
-//{{{
-{
-  var canvas=document.createElement('canvas');
-  canvas.height=32;
-  canvas.width=32;
-  var ctx=canvas.getContext('2d');
+  };
+  //}}}
+  ml.canvasIcon = function (
+    ctxTsf //{{{
+  ) {
+    var canvas = document.createElement("canvas");
+    canvas.height = 32;
+    canvas.width = 32;
+    var ctx = canvas.getContext("2d");
 
-  ctx=ctxTsf(ctx);
+    ctx = ctxTsf(ctx);
 
-  ml.changeIcon(canvas.toDataURL());
-  //if(firstTime) //chrome bug fix
+    ml.changeIcon(canvas.toDataURL());
+    //if(firstTime) //chrome bug fix
     //ml.changeIcon(canvas.toDataURL());
-}
-//}}}
-ml.timeIcon = function(scale,color,twelveClock)
-//{{{
-{
-  if(!scale) scale=1;
-  if(!color) color='black'
-  var d= new Date();
-  var canvas=document.createElement('canvas');
-  canvas.height=32/scale;
-  canvas.width =32/scale;
-  var ctx=canvas.getContext('2d');
-
-  ctx.fillStyle=color;
-  ctx.font=Math.floor(15/scale)+'pt arial';
-  ctx.fillText(ml.date.readable.getHours(d,twelveClock)  ,0,ml.browser().usesGecko?15/scale:14/scale);
-  ctx.font=16/scale+'pt arial';
-  ctx.fillText(ml.date.readable.getMinutes(d),5/scale,32/scale);
-
-  return canvas.toDataURL();
-};
-//}}}
-ml.doneIcon = function(d,color1,color2)
-//{{{
-{
-  var canvas = document.createElement('canvas');
-  var ctx = canvas.getContext('2d');
-  var h=d;
-  var w=d;
-  canvas.height=h;
-  canvas.width=w;
-  ctx.clearRect(0,0,w,h);
-  //var lingrad=ctx.createLinearGradient(0,0,0,150);
-  var lingrad=ctx.createLinearGradient(0,0,0,h);
-  lingrad.addColorStop(0, color2);
-  lingrad.addColorStop(1, color1);
-  ctx.fillStyle = lingrad;
-
-  ctx.beginPath();
-
-  var delta=[w/20,-h/4];
-
-  var p1  =[0,h/2];
-  var p2  =[w/10,h/2];
-  //var p3  =[w/4,h/2+h/5+h/10];
-  var p3 = [w/4,h-h/4];
-  var p4  =[w-w/10,0];
-  var p5  =[w,0];
-  var p6  =[w,h/10];
-  var p7  =[w/4,h];
-  var p6a =[p7[0]+delta[0]+w/10,p7[1]+delta[1]-h/10];
-  var p6b =[p7[0]+w/10,p7[1]-h/10];
-  var p8  =[0,h/2+h/10];
-
-  var p3a =[p7[0]-w/10,p7[1]-h/10];
-  var p3a =[p3a[0]+w/40,p3a[1]-h/40];
-  var p3b =[p3[0]+delta[0],p3[1]+delta[1]];
-  //var p3b =[p3a[0]+delta[0]+w/10,p3a[1]+delta[1]-h/10];
-
-  function grad()
-  {
-    ctx.moveTo(p1[0],p1[1]);
-    ctx.lineTo(p2[0],p2[1]);
-    ctx.lineTo(p3[0],p3[1]);
-    ctx.lineTo(p3a[0],p3a[1]);  
-    //ctx.lineTo(p3b[0],p3b[1]);
-    //ctx.lineTo(p4[0],p4[1]);
-    ctx.quadraticCurveTo(p3b[0],p3b[1],p4[0],p4[1]);
-    ctx.lineTo(p5[0],p5[1]);
-    ctx.lineTo(p6[0],p6[1]);
-    //ctx.lineTo(p6b[0],p6b[1]);
-    //ctx.lineTo(p6a[0],p6a[1]);
-    //ctx.quadraticCurveTo(p6a[0],p6a[1],p6b[0],p6b[1]);
-    ctx.quadraticCurveTo(p6a[0],p6a[1],p7[0],p7[1]); 
-    ctx.lineTo(p7[0],p7[1]);
-    ctx.lineTo(p8[0],p8[1]);
-    ctx.lineTo(p1[0],p1[1]);
-  }
-
-  grad();
-
-  ctx.fill();
-  //ctx.stroke();
-
-  return canvas.toDataURL();
-};
-//}}}
-const cache__colorImageUrls = {};
-ml.getColorImageURL=function(color,scale)
-//{{{
-{
-  if(!scale) scale=1;
-
-  if(!cache__colorImageUrls[color])
-  {
-    var canvas=document.createElement('canvas');
-    canvas.height=32/scale;
-    canvas.width=32/scale;
-    var ctx=canvas.getContext('2d');
-
-    ctx.scale(1/scale,1/scale);
+  };
+  //}}}
+  ml.timeIcon = function (
+    scale,
+    color,
+    twelveClock //{{{
+  ) {
+    if (!scale) scale = 1;
+    if (!color) color = "black";
+    var d = new Date();
+    var canvas = document.createElement("canvas");
+    canvas.height = 32 / scale;
+    canvas.width = 32 / scale;
+    var ctx = canvas.getContext("2d");
 
     ctx.fillStyle = color;
-    ctx.fillRect(0,0,300,150);
+    ctx.font = Math.floor(15 / scale) + "pt arial";
+    ctx.fillText(
+      ml.date.readable.getHours(d, twelveClock),
+      0,
+      ml.browser().usesGecko ? 15 / scale : 14 / scale
+    );
+    ctx.font = 16 / scale + "pt arial";
+    ctx.fillText(ml.date.readable.getMinutes(d), 5 / scale, 32 / scale);
 
-    cache__colorImageUrls[color] = canvas.toDataURL();
-  }
-  return cache__colorImageUrls[color];
-};
-//}}}
-ml.timerIcon = function(diff,percent,scale,color)
-//{{{
-{
-  ml.assert(scale===undefined);
-  ml.assert(color===undefined);
+    return canvas.toDataURL();
+  };
+  //}}}
+  ml.doneIcon = function (
+    d,
+    color1,
+    color2 //{{{
+  ) {
+    var canvas = document.createElement("canvas");
+    var ctx = canvas.getContext("2d");
+    var h = d;
+    var w = d;
+    canvas.height = h;
+    canvas.width = w;
+    ctx.clearRect(0, 0, w, h);
+    //var lingrad=ctx.createLinearGradient(0,0,0,150);
+    var lingrad = ctx.createLinearGradient(0, 0, 0, h);
+    lingrad.addColorStop(0, color2);
+    lingrad.addColorStop(1, color1);
+    ctx.fillStyle = lingrad;
 
-//var FILL_DONE='#faa';
-//var FILL_LEFT='#0f0';
-//var FILL_FINISH='red';
-//var FILL_STOPW='transparent';
+    ctx.beginPath();
 
-  var FILL_DONE='#aaf';
-  var FILL_LEFT='#eee';
-//var FILL_LEFT='transparent';
-  var FILL_FINISH='#e11';
-  var FILL_STOPW=FILL_LEFT;
-//FILL_FINISH=FILL_DONE;
-//var TEXT_COLOR="#444";
-  var TEXT_COLOR="black";
-//var TEXT_COLOR="#111";
+    var delta = [w / 20, -h / 4];
 
-  var ICON_SIZE = 16;
+    var p1 = [0, h / 2];
+    var p2 = [w / 10, h / 2];
+    //var p3  =[w/4,h/2+h/5+h/10];
+    var p3 = [w / 4, h - h / 4];
+    var p4 = [w - w / 10, 0];
+    var p5 = [w, 0];
+    var p6 = [w, h / 10];
+    var p7 = [w / 4, h];
+    var p6a = [p7[0] + delta[0] + w / 10, p7[1] + delta[1] - h / 10];
+    var p6b = [p7[0] + w / 10, p7[1] - h / 10];
+    var p8 = [0, h / 2 + h / 10];
 
-  if(diff<=0 && percent) return ml.getColorImageURL(Math.abs(diff)%2===0?FILL_FINISH:'transparent',32/ICON_SIZE);
-  if(diff<=0) diff=0;
-  
-  var canvas=document.createElement('canvas');
-  canvas.height = ICON_SIZE;
-  canvas.width  = ICON_SIZE;
-  var ctx=canvas.getContext('2d');
+    var p3a = [p7[0] - w / 10, p7[1] - h / 10];
+    var p3a = [p3a[0] + w / 40, p3a[1] - h / 40];
+    var p3b = [p3[0] + delta[0], p3[1] + delta[1]];
+    //var p3b =[p3a[0]+delta[0]+w/10,p3a[1]+delta[1]-h/10];
 
-  var hours   = diff/3600|0;
-  var minutes = diff/60|0;
-  var seconds = diff%60;
-  var minutesOnBot=minutes>59;
-  if(minutesOnBot)
-    minutes = minutes % 60;
-  var top=minutesOnBot?hours:minutes;
-  var bot=minutesOnBot?minutes:seconds;
+    function grad() {
+      ctx.moveTo(p1[0], p1[1]);
+      ctx.lineTo(p2[0], p2[1]);
+      ctx.lineTo(p3[0], p3[1]);
+      ctx.lineTo(p3a[0], p3a[1]);
+      //ctx.lineTo(p3b[0],p3b[1]);
+      //ctx.lineTo(p4[0],p4[1]);
+      ctx.quadraticCurveTo(p3b[0], p3b[1], p4[0], p4[1]);
+      ctx.lineTo(p5[0], p5[1]);
+      ctx.lineTo(p6[0], p6[1]);
+      //ctx.lineTo(p6b[0],p6b[1]);
+      //ctx.lineTo(p6a[0],p6a[1]);
+      //ctx.quadraticCurveTo(p6a[0],p6a[1],p6b[0],p6b[1]);
+      ctx.quadraticCurveTo(p6a[0], p6a[1], p7[0], p7[1]);
+      ctx.lineTo(p7[0], p7[1]);
+      ctx.lineTo(p8[0], p8[1]);
+      ctx.lineTo(p1[0], p1[1]);
+    }
 
-  //background
-  if(percent!==undefined && percent!==null) { 
-    ml.assert(percent<=1 && percent>=0,'percent==='+percent);
-    var h=canvas.height;
-    var w=canvas.width;
+    grad();
 
-    ctx.fillStyle=FILL_LEFT;
-    ctx.fillRect(0,0,w,h);
+    ctx.fill();
+    //ctx.stroke();
 
-    ctx.moveTo(w/2,0);
-    var borderPos = (2*h+2*w)*percent;
-    if(borderPos<=w/2)
-      borderPos=[w/2+borderPos,0];
-    else
-    {
-      ctx.lineTo(w,0);   
-      if(borderPos<=w/2+h)
-        borderPos=[w,borderPos-w/2];
-      else
-      {
-        ctx.lineTo(w,h);
-        if(borderPos<=w/2+h+w)
-          borderPos=[w-(borderPos-w/2-h),h];
-        else
-        {
-          ctx.lineTo(0,h);
-          if(borderPos<=w/2+h+w+h)
-            borderPos=[0,h-(borderPos-w/2-h-w)];
-          else
-          {
-            ml.assert(borderPos<=w/2+h+w+h+w/2,percent);
-            ctx.lineTo(0,0);
-            borderPos=[borderPos-(w/2+h+w+h),0];
+    return canvas.toDataURL();
+  };
+  //}}}
+  const cache__colorImageUrls = {};
+  ml.getColorImageURL = function (
+    color,
+    scale //{{{
+  ) {
+    if (!scale) scale = 1;
+
+    if (!cache__colorImageUrls[color]) {
+      var canvas = document.createElement("canvas");
+      canvas.height = 32 / scale;
+      canvas.width = 32 / scale;
+      var ctx = canvas.getContext("2d");
+
+      ctx.scale(1 / scale, 1 / scale);
+
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, 300, 150);
+
+      cache__colorImageUrls[color] = canvas.toDataURL();
+    }
+    return cache__colorImageUrls[color];
+  };
+  //}}}
+  ml.timerIcon = function (
+    diff,
+    percent,
+    scale,
+    color //{{{
+  ) {
+    ml.assert(scale === undefined);
+    ml.assert(color === undefined);
+
+    //var FILL_DONE='#faa';
+    //var FILL_LEFT='#0f0';
+    //var FILL_FINISH='red';
+    //var FILL_STOPW='transparent';
+
+    var FILL_DONE = "#aaf";
+    var FILL_LEFT = "#eee";
+    //var FILL_LEFT='transparent';
+    var FILL_FINISH = "#e11";
+    var FILL_STOPW = FILL_LEFT;
+    //FILL_FINISH=FILL_DONE;
+    //var TEXT_COLOR="#444";
+    var TEXT_COLOR = "black";
+    //var TEXT_COLOR="#111";
+
+    var ICON_SIZE = 16;
+
+    if (diff <= 0 && percent)
+      return ml.getColorImageURL(
+        Math.abs(diff) % 2 === 0 ? FILL_FINISH : "transparent",
+        32 / ICON_SIZE
+      );
+    if (diff <= 0) diff = 0;
+
+    var canvas = document.createElement("canvas");
+    canvas.height = ICON_SIZE;
+    canvas.width = ICON_SIZE;
+    var ctx = canvas.getContext("2d");
+
+    var hours = (diff / 3600) | 0;
+    var minutes = (diff / 60) | 0;
+    var seconds = diff % 60;
+    var minutesOnBot = minutes > 59;
+    if (minutesOnBot) minutes = minutes % 60;
+    var top = minutesOnBot ? hours : minutes;
+    var bot = minutesOnBot ? minutes : seconds;
+
+    //background
+    if (percent !== undefined && percent !== null) {
+      ml.assert(percent <= 1 && percent >= 0, "percent===" + percent);
+      var h = canvas.height;
+      var w = canvas.width;
+
+      ctx.fillStyle = FILL_LEFT;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.moveTo(w / 2, 0);
+      var borderPos = (2 * h + 2 * w) * percent;
+      if (borderPos <= w / 2) borderPos = [w / 2 + borderPos, 0];
+      else {
+        ctx.lineTo(w, 0);
+        if (borderPos <= w / 2 + h) borderPos = [w, borderPos - w / 2];
+        else {
+          ctx.lineTo(w, h);
+          if (borderPos <= w / 2 + h + w)
+            borderPos = [w - (borderPos - w / 2 - h), h];
+          else {
+            ctx.lineTo(0, h);
+            if (borderPos <= w / 2 + h + w + h)
+              borderPos = [0, h - (borderPos - w / 2 - h - w)];
+            else {
+              ml.assert(borderPos <= w / 2 + h + w + h + w / 2, percent);
+              ctx.lineTo(0, 0);
+              borderPos = [borderPos - (w / 2 + h + w + h), 0];
+            }
           }
         }
       }
+      ctx.lineTo(borderPos[0], borderPos[1]);
+      ctx.lineTo(w / 2, h / 2);
+      ctx.fillStyle = FILL_DONE;
+      //ctx.fillStyle='rgba(255,0,0,1)';
+      ctx.fill();
+    } else {
+      ctx.fillStyle = FILL_STOPW;
+      ctx.fillRect(0, 0, ctx.canvas.height, ctx.canvas.width);
     }
-    ctx.lineTo(borderPos[0],borderPos[1]);
-    ctx.lineTo(w/2,h/2);
-    ctx.fillStyle=FILL_DONE;
-    //ctx.fillStyle='rgba(255,0,0,1)';
-    ctx.fill();
-  } 
-  else { 
-    ctx.fillStyle = FILL_STOPW;
-    ctx.fillRect(0,0,ctx.canvas.height,ctx.canvas.width);
-  } 
 
-  //text
-  ctx.fillStyle=TEXT_COLOR;
-  if(top>0) {
-    ctx.font='7pt arial';
-    ctx.fillText(ml.date.readablize(top),0,7);
-    ctx.font='9pt arial';
-    ctx.fillText(ml.date.readablize(bot),2,16);
-    /*
+    //text
+    ctx.fillStyle = TEXT_COLOR;
+    if (top > 0) {
+      ctx.font = "7pt arial";
+      ctx.fillText(ml.date.readablize(top), 0, 7);
+      ctx.font = "9pt arial";
+      ctx.fillText(ml.date.readablize(bot), 2, 16);
+      /*
     ctx.font='8pt arial';
     ctx.fillText(ml.date.readablize(top),1,8);
     ctx.font='8pt arial';
     ctx.fillText(ml.date.readablize(bot),1,17);
     */
-  } else {
-    ctx.font='10pt arial';
-    ctx.textAlign='center';
-    ctx.fillText(bot,
-                8+(bot.length===1?1:0),
-                12+(ml.browser().usesGecko?1:0));
-  }
+    } else {
+      ctx.font = "10pt arial";
+      ctx.textAlign = "center";
+      ctx.fillText(
+        bot,
+        8 + (bot.length === 1 ? 1 : 0),
+        12 + (ml.browser().usesGecko ? 1 : 0)
+      );
+    }
 
-  return canvas.toDataURL();
+    return canvas.toDataURL();
 
-  // old code
-  //{{{
-//====background color with time gradient
-//  function getColor()
-//  {
-//    //G: 255 -> 180
-//    //R: 0 -> 255
-//    //G: 180 -> 0
-//    var green=255;
-//    var red=0;
-//    var GREEN_STOP = 180;
-//    ml.assert(percent<=1,'percent==='+percent);
-//    var delta = 255*2*percent;
-//    green = Math.max(255-delta,GREEN_STOP);
-//    delta -= 255-GREEN_STOP;
-//    if(delta>0)
-//    {
-//      red = Math.min(delta,255);
-//      delta -= 255;
-//    }
-//    if(delta>0)
-//    {
-//      green = GREEN_STOP-delta;
-//      delta -= GREEN_STOP;
-//    }
-//    ml.assert(delta<=0);
-//    return 'rgb('+parseInt(red)+','+parseInt(green)+',0)';
-//  }
-//  ctx.fillStyle = percent===undefined?getColor():'#00F';
-//  ctx.fillRect(0,0,ctx.canvas.height,ctx.canvas.width);
+    // old code
+    //{{{
+    //====background color with time gradient
+    //  function getColor()
+    //  {
+    //    //G: 255 -> 180
+    //    //R: 0 -> 255
+    //    //G: 180 -> 0
+    //    var green=255;
+    //    var red=0;
+    //    var GREEN_STOP = 180;
+    //    ml.assert(percent<=1,'percent==='+percent);
+    //    var delta = 255*2*percent;
+    //    green = Math.max(255-delta,GREEN_STOP);
+    //    delta -= 255-GREEN_STOP;
+    //    if(delta>0)
+    //    {
+    //      red = Math.min(delta,255);
+    //      delta -= 255;
+    //    }
+    //    if(delta>0)
+    //    {
+    //      green = GREEN_STOP-delta;
+    //      delta -= GREEN_STOP;
+    //    }
+    //    ml.assert(delta<=0);
+    //    return 'rgb('+parseInt(red)+','+parseInt(green)+',0)';
+    //  }
+    //  ctx.fillStyle = percent===undefined?getColor():'#00F';
+    //  ctx.fillRect(0,0,ctx.canvas.height,ctx.canvas.width);
 
-//====icon generation with scaling
-//  canvas.height=32/scale;
-//  canvas.width=32/scale;
-//  ctx.scale(1/scale,1/scale);
-//
-////ctx.fillStyle=percent===undefined || percent===null?'white':'black';
-//  ctx.fillStyle=TEXT_COLOR;
-//  if(top>0)
-//  {
-//    ctx.font='15pt arial';
-//    ctx.fillText(ml.date.readablize(top),0,ml.browser().usesGecko?15:14);
-//    ctx.font='16pt arial';
-//    ctx.fillText(ml.date.readablize(bot),5,32);
-//  }
-//  else
-//  {
-//    ctx.font='20pt arial';
-//    ctx.textAlign='center';
-//    ctx.fillText(bot,
-//                16+(scale&&bot.length===1?1:0),
-//                24+(scale>1);
-//  }
+    //====icon generation with scaling
+    //  canvas.height=32/scale;
+    //  canvas.width=32/scale;
+    //  ctx.scale(1/scale,1/scale);
+    //
+    ////ctx.fillStyle=percent===undefined || percent===null?'white':'black';
+    //  ctx.fillStyle=TEXT_COLOR;
+    //  if(top>0)
+    //  {
+    //    ctx.font='15pt arial';
+    //    ctx.fillText(ml.date.readablize(top),0,ml.browser().usesGecko?15:14);
+    //    ctx.font='16pt arial';
+    //    ctx.fillText(ml.date.readablize(bot),5,32);
+    //  }
+    //  else
+    //  {
+    //    ctx.font='20pt arial';
+    //    ctx.textAlign='center';
+    //    ctx.fillText(bot,
+    //                16+(scale&&bot.length===1?1:0),
+    //                24+(scale>1);
+    //  }
     //}}}
-
-};
-//}}}
-ml.circleIcon = function(imgs,d,offset)
-//{{{
-{
-  var canvas = document.createElement('canvas');
-  var ctx = canvas.getContext('2d');
-   var h=d;
-   canvas.height=h;
-   var w=d;
-   canvas.width=w;
-   /*
+  };
+  //}}}
+  ml.circleIcon = function (
+    imgs,
+    d,
+    offset //{{{
+  ) {
+    var canvas = document.createElement("canvas");
+    var ctx = canvas.getContext("2d");
+    var h = d;
+    canvas.height = h;
+    var w = d;
+    canvas.width = w;
+    /*
    ctx.clearRect(0,0,w,h);
    var lingrad=ctx.createLinearGradient(0,0,0,150);
    lingrad.addColorStop(0, '#333');
@@ -1242,180 +1348,172 @@ ml.circleIcon = function(imgs,d,offset)
   // ctx.fillRect(0,0,300,150);
    */
 
-  function makeIconCircle(dim,offset)
-  {
-    //determine center, radius, perimeter
-    var cX=(w-1)/2;
-    var cY=(h-1)/2;
-    var r=h/2-dim/2; //assume h==w
+    function makeIconCircle(dim, offset) {
+      //determine center, radius, perimeter
+      var cX = (w - 1) / 2;
+      var cY = (h - 1) / 2;
+      var r = h / 2 - dim / 2; //assume h==w
 
-    for(var i in imgs)
-    {
-      var angle = 2*Math.PI*i/imgs.length;
-      var X=Math.cos(angle)*r -dim/2 + cX + offset[0];
-      var Y=Math.sin(angle)*r -dim/2 + cY + offset[1];
-      ctx.drawImage(imgs[i],X,Y,dim,dim);
-    }
-  }
-
-  if(!offset)
-    offset=[-4,0];
-
-  var dim = imgs.length>4?d/3
-           :imgs.length==1?d
-           :d/2;
-  makeIconCircle(dim,offset);
-  var ret = canvas.toDataURL();
-  return ret;
-};
-//}}}
-ml.dooityRandColor = function(gray,n)
-//{{{
-{
-  function undim(color)
-  //{{{
-  //equivalent to 0.5 alpha with white background
-  {
-    function do_(n)
-    {
-      return parseInt(n+(255-n)/2,10);
-      //opposite operation: dim
-      //return parseInt(n/2,10);
-    }
-    return [do_(color[0]),do_(color[1]),do_(color[2])];
-  }
-  //}}}
-
-  function to_str(c)
-  //{{{
-  {
-    return 'rgb('+c[0]+','+c[1]+','+c[2]+')';
-  }
-  //}}}
-
-  var COLORS=
-  [
-    [[71,183,230],[181,226,245]],
-    [[43,171,51]],
-    //[[115,194,255]],
-    //[[163,36,36]],
-    //[[64,128,64]],
-    [[250, 27, 228]],
-    //[[31, 210, 255]],
-    [[29, 189, 207]],
-    [[191, 82, 255]],
-    [[174, 82, 255]],
-    [[223,45,0]],
-    [[237,85,85]] //trailing coma treated as fatal error for google closure
-  ]; 
-
-  if(gray)
-    COLORS = [[[100,100,100]]];
-
-  var candidates = COLORS.slice(); //one-level deep copy
-
-  function getOne()
-  {
-    var color1;
-    var color2;
-    if(candidates.length===0)
-      color1 = COLORS[0][0];
-    else
-    {
-      var i=Math.floor(Math.random()*candidates.length);
-      //i=3;
-      color1 = candidates[i][0];
-      color2 = candidates[i][1];
-      candidates.splice(i,1);
+      for (var i in imgs) {
+        var angle = (2 * Math.PI * i) / imgs.length;
+        var X = Math.cos(angle) * r - dim / 2 + cX + offset[0];
+        var Y = Math.sin(angle) * r - dim / 2 + cY + offset[1];
+        ctx.drawImage(imgs[i], X, Y, dim, dim);
+      }
     }
 
-    if(!color2)
-      color2 = undim(color1);
+    if (!offset) offset = [-4, 0];
 
-    return [to_str(color1),to_str(color2)];
-  }
-
-  if(!n)
-    return getOne();
-  else
-  {
-    var ret = [];
-    while(n--)
-      ret.push(getOne());
+    var dim = imgs.length > 4 ? d / 3 : imgs.length == 1 ? d : d / 2;
+    makeIconCircle(dim, offset);
+    var ret = canvas.toDataURL();
     return ret;
-  }
-}
-//}}}
+  };
+  //}}}
+  ml.dooityRandColor = function (
+    gray,
+    n //{{{
+  ) {
+    function undim(color) {
+      //{{{
+      //equivalent to 0.5 alpha with white background
+      function do_(n) {
+        return parseInt(n + (255 - n) / 2, 10);
+        //opposite operation: dim
+        //return parseInt(n/2,10);
+      }
+      return [do_(color[0]), do_(color[1]), do_(color[2])];
+    }
+    //}}}
 
-ml.getUrlVars=function(){ 
+    function to_str(c) {
+      //{{{
+      return "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")";
+    }
+    //}}}
+
+    var COLORS = [
+      [
+        [71, 183, 230],
+        [181, 226, 245],
+      ],
+      [[43, 171, 51]],
+      //[[115,194,255]],
+      //[[163,36,36]],
+      //[[64,128,64]],
+      [[250, 27, 228]],
+      //[[31, 210, 255]],
+      [[29, 189, 207]],
+      [[191, 82, 255]],
+      [[174, 82, 255]],
+      [[223, 45, 0]],
+      [[237, 85, 85]], //trailing coma treated as fatal error for google closure
+    ];
+
+    if (gray) COLORS = [[[100, 100, 100]]];
+
+    var candidates = COLORS.slice(); //one-level deep copy
+
+    function getOne() {
+      var color1;
+      var color2;
+      if (candidates.length === 0) color1 = COLORS[0][0];
+      else {
+        var i = Math.floor(Math.random() * candidates.length);
+        //i=3;
+        color1 = candidates[i][0];
+        color2 = candidates[i][1];
+        candidates.splice(i, 1);
+      }
+
+      if (!color2) color2 = undim(color1);
+
+      return [to_str(color1), to_str(color2)];
+    }
+
+    if (!n) return getOne();
+    else {
+      var ret = [];
+      while (n--) ret.push(getOne());
+      return ret;
+    }
+  };
+  //}}}
+
+  ml.getUrlVars = function () {
     // Read a page's GET URL variables and return them as an associative array.
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++)
-    {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        //vars[hash[0]] = hash[1];
-        // use of decodeURIComponent: http://stackoverflow.com/questions/747641/what-is-the-difference-between-decodeuricomponent-and-decodeuri
-        vars[hash[0]] = window['decodeURIComponent'](hash[1]);
+    var vars = [],
+      hash;
+    var hashes = window.location.href
+      .slice(window.location.href.indexOf("?") + 1)
+      .split("&");
+    for (var i = 0; i < hashes.length; i++) {
+      hash = hashes[i].split("=");
+      vars.push(hash[0]);
+      //vars[hash[0]] = hash[1];
+      // use of decodeURIComponent: http://stackoverflow.com/questions/747641/what-is-the-difference-between-decodeuricomponent-and-decodeuri
+      vars[hash[0]] = window["decodeURIComponent"](hash[1]);
     }
     return vars;
-}; 
+  };
 
-ml.deleteCookies=function()
-//{{{
-{
-  var c=document.cookie.split(";");
-  for(var i=0;i<c.length;i++)
+  ml.deleteCookies = function () //{{{
   {
-    var e=c[i].indexOf("=");
-    var n=e>-1?c[i].substr(0,e):c[i];
-    document.cookie=n+"=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-  }
-};
-//}}}
-
-//offline stuff
-ml.loadASAP=function(url,onsuccess){ 
-  var isCSS = /\.css$/.test(url);
-  var tagName = isCSS?'link':'script';
-  var srcName = isCSS?'href':'src';
-  var head = document.getElementsByTagName('head')[0];
-
-  var alreadyLoading = head.getElementsByTagName(tagName);
-  for(var i in alreadyLoading) if(alreadyLoading[i][srcName]===url){
-    if(onsuccess){
-      if(alreadyLoading[i].loadListeners) alreadyLoading[i].loadListeners.push(onsuccess);
-      //!alreadyLoading[i].loadListeners ~= not loaded with loadASAP ~= synchronously loaded => already loaded
-      if(alreadyLoading[i].loaded || !alreadyLoading[i].loadListeners) onsuccess();
+    var c = document.cookie.split(";");
+    for (var i = 0; i < c.length; i++) {
+      var e = c[i].indexOf("=");
+      var n = e > -1 ? c[i].substr(0, e) : c[i];
+      document.cookie = n + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
-    return;
-  }
-   
-  var attempts = 0;
-  function do_(){
-    //using same loader el => onerror doesn't get called again in chrome
-    var loader= document.createElement(tagName);
-        loader[srcName]= url;
-        loader['type'] = 'text/'+(isCSS?'css':'javascript');
-        if(isCSS) loader['rel'] = 'stylesheet';
-        loader.onerror = function(){
-          head.removeChild(loader);
-          setTimeout(do_,Math.min(Math.pow(2,attempts)*1000,60000));
-        };
-        //proxy redirects url => onload called but code not loaded
-        //-no way founded to catch this
-        loader.loadListeners = [];
-        loader.onload = function(){
-          loader.loaded=true;
-          loader.loadListeners.forEach(function(l){l()});
-          if(onsuccess) onsuccess();
-        };
-    attempts++;
-    head.appendChild(loader);
-  }
-  do_();
-  /* old code --  use loadASAP instead
+  };
+  //}}}
+
+  //offline stuff
+  ml.loadASAP = function (url, onsuccess) {
+    var isCSS = /\.css$/.test(url);
+    var tagName = isCSS ? "link" : "script";
+    var srcName = isCSS ? "href" : "src";
+    var head = document.getElementsByTagName("head")[0];
+
+    var alreadyLoading = head.getElementsByTagName(tagName);
+    for (var i in alreadyLoading)
+      if (alreadyLoading[i][srcName] === url) {
+        if (onsuccess) {
+          if (alreadyLoading[i].loadListeners)
+            alreadyLoading[i].loadListeners.push(onsuccess);
+          //!alreadyLoading[i].loadListeners ~= not loaded with loadASAP ~= synchronously loaded => already loaded
+          if (alreadyLoading[i].loaded || !alreadyLoading[i].loadListeners)
+            onsuccess();
+        }
+        return;
+      }
+
+    var attempts = 0;
+    function do_() {
+      //using same loader el => onerror doesn't get called again in chrome
+      var loader = document.createElement(tagName);
+      loader[srcName] = url;
+      loader["type"] = "text/" + (isCSS ? "css" : "javascript");
+      if (isCSS) loader["rel"] = "stylesheet";
+      loader.onerror = function () {
+        head.removeChild(loader);
+        setTimeout(do_, Math.min(Math.pow(2, attempts) * 1000, 60000));
+      };
+      //proxy redirects url => onload called but code not loaded
+      //-no way founded to catch this
+      loader.loadListeners = [];
+      loader.onload = function () {
+        loader.loaded = true;
+        loader.loadListeners.forEach(function (l) {
+          l();
+        });
+        if (onsuccess) onsuccess();
+      };
+      attempts++;
+      head.appendChild(loader);
+    }
+    do_();
+    /* old code --  use loadASAP instead
   ml.loadScript=function(url,onload)
   //{{{
   {
@@ -1437,53 +1535,54 @@ ml.loadASAP=function(url,onsuccess){
   };
   //}}}
   */
-}; 
-(function(){
-  var cssS={};
-  ml.addCss=function(content,useCache)
-  //{{{
-  {
-    if(!useCache || !cssS[content])
-    {
-      var fileref=document.createElement("style");
-      fileref.appendChild(document.createTextNode(content));
-      fileref.setAttribute("type", "text/css");
-      document.getElementsByTagName("head")[0].appendChild(fileref);
-      if(useCache) cssS[content]=true;
-    }
   };
-  //}}}
-})();
+  (function () {
+    var cssS = {};
+    ml.addCss = function (
+      content,
+      useCache //{{{
+    ) {
+      if (!useCache || !cssS[content]) {
+        var fileref = document.createElement("style");
+        fileref.appendChild(document.createTextNode(content));
+        fileref.setAttribute("type", "text/css");
+        document.getElementsByTagName("head")[0].appendChild(fileref);
+        if (useCache) cssS[content] = true;
+      }
+    };
+    //}}}
+  })();
 
-(function(){
-  var browser=null;
-  ml.browser=function(){ 
-    if(!browser)
-    {
-      browser={};
+  (function () {
+    var browser = null;
+    ml.browser = function () {
+      if (!browser) {
+        browser = {};
 
-      var vendor   = window.navigator.vendor   || "";
-      var platform = window.navigator.platform || "";
-      var UA       = window.navigator.userAgent.toLowerCase() || "";
+        var vendor = window.navigator.vendor || "";
+        var platform = window.navigator.platform || "";
+        var UA = window.navigator.userAgent.toLowerCase() || "";
 
-      if(UA.indexOf('googlebot')>-1 || UA.indexOf('msnbot')>-1 || UA.indexOf('slurp')>-1)
-        browser.isBot=true;
-      else if(UA.indexOf("webkit")>-1) //applewebkit instead of webkit?
-        browser.usesWebkit=true;
-      else if(UA.indexOf('gecko')>-1)
-        browser.usesGecko=true;
+        if (
+          UA.indexOf("googlebot") > -1 ||
+          UA.indexOf("msnbot") > -1 ||
+          UA.indexOf("slurp") > -1
+        )
+          browser.isBot = true;
+        else if (UA.indexOf("webkit") > -1)
+          //applewebkit instead of webkit?
+          browser.usesWebkit = true;
+        else if (UA.indexOf("gecko") > -1) browser.usesGecko = true;
 
-      if(!/\bchrome\b/.test(UA) && /safari/.test(UA))
-        browser.isSafari=true;
+        if (!/\bchrome\b/.test(UA) && /safari/.test(UA))
+          browser.isSafari = true;
 
-      if(/Win/.test(platform))
-        browser.isWindows=true;
-      else if(/Mac/.test(platform))
-        browser.isMac=true;
+        if (/Win/.test(platform)) browser.isWindows = true;
+        else if (/Mac/.test(platform)) browser.isMac = true;
 
-      if(window['opera']) browser.isOpera=true;
+        if (window["opera"]) browser.isOpera = true;
 
-      /* todel
+        /* todel
       //typeof window === "undefined" => metro background task
       var vendor   = typeof window !== "undefined" && window.navigator.vendor   || "";
       var platform = typeof window !== "undefined" && window.navigator.platform || "";
@@ -1506,587 +1605,664 @@ ml.loadASAP=function(url,onsuccess){
 
       if(typeof window !== "undefined" && window['opera']) browser.isOpera=true;
       */
-    }
-    return browser;
-  //ml.browser={};
-  //(function(){ 
-  //  var vendor = navigator.vendor || "";
-  //  var UA = navigator.userAgent.toLowerCase();
-  //
-  //  if(UA.indexOf('googlebot')>-1 || UA.indexOf('msnbot')>-1 || UA.indexOf('slurp')>-1)
-  //    ml.browser.isBot=true;
-  //  else if(UA.indexOf("webkit")>-1) //applewebkit instead of webkit?
-  //    ml.browser.usesWebkit=true;
-  //  else if(UA.indexOf('gecko')>-1)
-  //    ml.browser.usesGecko=true;
-  //})(); 
-  //(function(){ 
-  //  var vendor = navigator.vendor || "";
-  //  var UA = navigator.userAgent.toLowerCase();
+      }
+      return browser;
+      //ml.browser={};
+      //(function(){
+      //  var vendor = navigator.vendor || "";
+      //  var UA = navigator.userAgent.toLowerCase();
+      //
+      //  if(UA.indexOf('googlebot')>-1 || UA.indexOf('msnbot')>-1 || UA.indexOf('slurp')>-1)
+      //    ml.browser.isBot=true;
+      //  else if(UA.indexOf("webkit")>-1) //applewebkit instead of webkit?
+      //    ml.browser.usesWebkit=true;
+      //  else if(UA.indexOf('gecko')>-1)
+      //    ml.browser.usesGecko=true;
+      //})();
+      //(function(){
+      //  var vendor = navigator.vendor || "";
+      //  var UA = navigator.userAgent.toLowerCase();
 
-  //  if(UA.has('googlebot') || UA.has('msnbot') || UA.has('slurp'))
-  //    ml.browser.isBot=true;
-  //  else if(window.opera !==undefined)
-  //    ml.browser.name='opera';
-  //  else if(UA.has("webkit")) //applewebkit instead of webkit?
-  //  {
-  //    ml.browser.usesWebkit=true;
-  //    if(UA.has("chrome"))
-  //      ml.browser.name='chrome';
-  //    else if(vendor.has("Apple Computer, Inc."))
-  //      window.safari=true;
-  //  }
-  //  else if(UA.has('gecko'))
-  //  {
-  //    ml.browser.usesGecko=true;
-  //    //ml.browser.geckoVersion=;
-  //    if(UA.has("firefox"))
-  //      ml.browser.name='firefox';
-  //    else if(UA.has("iceweasel"))
-  //      ml.browser.name='iceweasel';
-  //  }
-  //})(); 
-  }; 
-})();
-
-ml.escapeHTML=function(html)
-//{{{
-{
-  //Shortest way to escape HTML (even works in non-HTML documents!): new Option(html).innerHTML
-  //alternativly create a text node
-  return html.replace(/((<)|(>)|(&))/g,function(matchStr,p1,p2,p3,p4){if(p2) return '&lt;'; if(p3) return '&gt;'; if(p4) return '&amp;'});
-};
-//}}}
-
-//DOM stuff
-ml.setLoader=function(canvas,color)
-//{{{
-{
-  ml.assert(canvas && canvas.getContext('2d'));
-
-  var h=parseInt(ml.element.getStyle(canvas,'height'),10) || parseInt(canvas.style.height,10) || canvas.height;
-  var w=parseInt(ml.element.getStyle(canvas,'width' ),10) || parseInt(canvas.style.width ,10) || canvas.width ;
-  ml.assert(w && h && w===h,'! width===height');
-  canvas.height=h;
-  canvas.width=w;
-  
-  var ctx = canvas.getContext('2d');
-
-  var lingrad=ctx.createLinearGradient(0,0,w,h);
-  lingrad.addColorStop(0, color?color:'#888');
-  lingrad.addColorStop(1, color?color:'#555');
-  ctx.strokeStyle = lingrad;
-
-  var lineWidth=w/8;
-  ctx.lineWidth=lineWidth;
-
-  function draw(delta)
-  {
-    ctx.clearRect(0,0,w,h);
-    ctx.beginPath();
-    delta = delta/(Math.PI*6);
-    var begin = 0-Math.PI/4;
-    var end   = Math.PI/2;
-    ctx.arc(w/2,h/2,w/2-lineWidth/2,begin+delta,end+delta,false);
-    ctx.stroke();
-  }
-
-  var delta=0;
-  function frame()
-  {
-    draw(delta++)
-    setTimeout(frame,10);
-  }
-  frame();
-};
-//}}}
-ml.getEventSource=function(ev)
-//{{{
-{
-  var ret=null;
-
-  if(ev.target)
-    ret=ev.target;
-  else if(ev.srcElement)
-    ret=ev.srcElement;
-
-  if(ret.nodeType==3)
-    ret=ret.parentNode;
-
-  return ret;
-};
-//}}}
-ml.isChildOf=function(child,parent_)
-//{{{
-{
-  ml.assert(child.parentElement!==undefined);
-  do{if(child===parent_)return true}while(child=child.parentElement)
-  return false;
-};
-//}}}
-ml.getChar=function(event)
-//{{{
-{
-  if(event.type === 'keypress')
-  //{{{
-  {
-    //charCode seem to correspond to ascii -- http://www.asciitable.com/
-    var map=
-    {
-      10 :'enter', //ctrl+enter
-      13 :'enter',
-
-      32 :' '    ,
-      37 :'left' , 
-      38 :'up'   , 
-      39 :'right', 
-      40 :'down' , 
-      43 :'+'    ,
-      45 :'-'    ,
-      47 :'/'    ,
-
-      48 :'0'    ,
-      49 :'1'    ,
-      50 :'2'    ,
-      51 :'3'    ,
-      52 :'4'    ,
-      53 :'5'    ,
-      54 :'6'    ,
-      55 :'7'    ,
-      56 :'8'    ,
-      57 :'9'    ,
-
-      63 :'?'    ,
-
-      65 :'A'    ,
-      66 :'B'    ,
-      67 :'C'    ,
-      68 :'D'    ,
-      69 :'E'    ,
-      70 :'F'    ,
-      71 :'G'    ,
-      72 :'H'    ,
-      73 :'I'    ,
-      74 :'J'    ,
-      75 :'K'    ,
-      76 :'L'    ,
-      77 :'M'    ,
-      78 :'N'    ,
-      79 :'O'    ,
-      80 :'P'    ,
-      81 :'Q'    ,
-      82 :'R'    ,
-      83 :'S'    ,
-      84 :'T'    ,
-      85 :'U'    ,
-      86 :'V'    ,
-      87 :'W'    ,
-      88 :'X'    ,
-      89 :'Y'    ,
-      90 :'Z'    ,
-
-      97 :'a'    ,
-      98 :'b'    ,
-      99 :'c'    ,
-      100:'d'    ,
-      101:'e'    ,
-      102:'f'    ,
-      103:'g'    ,
-      104:'h'    ,
-      105:'i'    ,
-      106:'j'    ,
-      107:'k'    ,
-      108:'l'    ,
-      109:'m'    ,
-      110:'n'    ,
-      111:'o'    ,
-      112:'p'    ,
-      113:'q'    ,
-      114:'r'    ,
-      115:'s'    ,
-      116:'t'    ,
-      117:'u'    ,
-      118:'v'    ,
-      119:'w'    ,
-      120:'x'    ,
-      121:'y'    ,
-      122:'z'    ,
-
-
-      666:'comma dummy'
+      //  if(UA.has('googlebot') || UA.has('msnbot') || UA.has('slurp'))
+      //    ml.browser.isBot=true;
+      //  else if(window.opera !==undefined)
+      //    ml.browser.name='opera';
+      //  else if(UA.has("webkit")) //applewebkit instead of webkit?
+      //  {
+      //    ml.browser.usesWebkit=true;
+      //    if(UA.has("chrome"))
+      //      ml.browser.name='chrome';
+      //    else if(vendor.has("Apple Computer, Inc."))
+      //      window.safari=true;
+      //  }
+      //  else if(UA.has('gecko'))
+      //  {
+      //    ml.browser.usesGecko=true;
+      //    //ml.browser.geckoVersion=;
+      //    if(UA.has("firefox"))
+      //      ml.browser.name='firefox';
+      //    else if(UA.has("iceweasel"))
+      //      ml.browser.name='iceweasel';
+      //  }
+      //})();
     };
-    if(event.mlKeyCode) return map[event.mlKeyCode];
-    if(event.charCode===0)
-    {
-      //firefox sets charCode===0 && keyCode===13 on enter press
-      //ml.assert(event.keyCode,event); uncomment this since windows keypress triggers an event with keyCode===0 && charCode===0
+  })();
+
+  ml.escapeHTML = function (
+    html //{{{
+  ) {
+    //Shortest way to escape HTML (even works in non-HTML documents!): new Option(html).innerHTML
+    //alternativly create a text node
+    return html.replace(/((<)|(>)|(&))/g, function (matchStr, p1, p2, p3, p4) {
+      if (p2) return "&lt;";
+      if (p3) return "&gt;";
+      if (p4) return "&amp;";
+    });
+  };
+  //}}}
+
+  //DOM stuff
+  ml.setLoader = function (
+    canvas,
+    color //{{{
+  ) {
+    ml.assert(canvas && canvas.getContext("2d"));
+
+    var h =
+      parseInt(ml.element.getStyle(canvas, "height"), 10) ||
+      parseInt(canvas.style.height, 10) ||
+      canvas.height;
+    var w =
+      parseInt(ml.element.getStyle(canvas, "width"), 10) ||
+      parseInt(canvas.style.width, 10) ||
+      canvas.width;
+    ml.assert(w && h && w === h, "! width===height");
+    canvas.height = h;
+    canvas.width = w;
+
+    var ctx = canvas.getContext("2d");
+
+    var lingrad = ctx.createLinearGradient(0, 0, w, h);
+    lingrad.addColorStop(0, color ? color : "#888");
+    lingrad.addColorStop(1, color ? color : "#555");
+    ctx.strokeStyle = lingrad;
+
+    var lineWidth = w / 8;
+    ctx.lineWidth = lineWidth;
+
+    function draw(delta) {
+      ctx.clearRect(0, 0, w, h);
+      ctx.beginPath();
+      delta = delta / (Math.PI * 6);
+      var begin = 0 - Math.PI / 4;
+      var end = Math.PI / 2;
+      ctx.arc(
+        w / 2,
+        h / 2,
+        w / 2 - lineWidth / 2,
+        begin + delta,
+        end + delta,
+        false
+      );
+      ctx.stroke();
+    }
+
+    var delta = 0;
+    function frame() {
+      draw(delta++);
+      setTimeout(frame, 10);
+    }
+    frame();
+  };
+  //}}}
+  ml.getEventSource = function (
+    ev //{{{
+  ) {
+    var ret = null;
+
+    if (ev.target) ret = ev.target;
+    else if (ev.srcElement) ret = ev.srcElement;
+
+    if (ret.nodeType == 3) ret = ret.parentNode;
+
+    return ret;
+  };
+  //}}}
+  ml.isChildOf = function (
+    child,
+    parent_ //{{{
+  ) {
+    ml.assert(child.parentElement !== undefined);
+    do {
+      if (child === parent_) return true;
+    } while ((child = child.parentElement));
+    return false;
+  };
+  //}}}
+  ml.getChar = function (
+    event //{{{
+  ) {
+    if (event.type === "keypress") {
+      //{{{
+      //charCode seem to correspond to ascii -- http://www.asciitable.com/
+      var map = {
+        10: "enter", //ctrl+enter
+        13: "enter",
+
+        32: " ",
+        37: "left",
+        38: "up",
+        39: "right",
+        40: "down",
+        43: "+",
+        45: "-",
+        47: "/",
+
+        48: "0",
+        49: "1",
+        50: "2",
+        51: "3",
+        52: "4",
+        53: "5",
+        54: "6",
+        55: "7",
+        56: "8",
+        57: "9",
+
+        63: "?",
+
+        65: "A",
+        66: "B",
+        67: "C",
+        68: "D",
+        69: "E",
+        70: "F",
+        71: "G",
+        72: "H",
+        73: "I",
+        74: "J",
+        75: "K",
+        76: "L",
+        77: "M",
+        78: "N",
+        79: "O",
+        80: "P",
+        81: "Q",
+        82: "R",
+        83: "S",
+        84: "T",
+        85: "U",
+        86: "V",
+        87: "W",
+        88: "X",
+        89: "Y",
+        90: "Z",
+
+        97: "a",
+        98: "b",
+        99: "c",
+        100: "d",
+        101: "e",
+        102: "f",
+        103: "g",
+        104: "h",
+        105: "i",
+        106: "j",
+        107: "k",
+        108: "l",
+        109: "m",
+        110: "n",
+        111: "o",
+        112: "p",
+        113: "q",
+        114: "r",
+        115: "s",
+        116: "t",
+        117: "u",
+        118: "v",
+        119: "w",
+        120: "x",
+        121: "y",
+        122: "z",
+
+        666: "comma dummy",
+      };
+      if (event.mlKeyCode) return map[event.mlKeyCode];
+      if (event.charCode === 0) {
+        //firefox sets charCode===0 && keyCode===13 on enter press
+        //ml.assert(event.keyCode,event); uncomment this since windows keypress triggers an event with keyCode===0 && charCode===0
+        return map[event.keyCode];
+      }
+      ml.assert(event.charCode);
+      return map[event.charCode];
+    }
+    //}}}
+    else if (
+      event.type === "keydown" ||
+      event.type === "keyup" ||
+      event.type === "change"
+    ) {
+      //{{{
+      //http://www.foreui.com/articles/Key_Code_Table.htm
+      //keyCode seem to correspond to http://www.mediaevent.de/javascript/Extras-Javascript-Keycodes.html
+      var map = {
+        13: "enter",
+        27: "esc",
+        32: " ",
+        37: "left",
+        38: "up",
+        39: "right",
+        40: "down",
+
+        48: "0",
+        49: "1",
+        50: "2",
+        51: "3",
+        52: "4",
+        53: "5",
+        54: "6",
+        55: "7",
+        56: "8",
+        57: "9",
+
+        65: "a",
+        66: "b",
+        67: "c",
+        68: "d",
+        69: "e",
+        70: "f",
+        71: "g",
+        72: "h",
+        73: "i",
+        74: "j",
+        75: "k",
+        76: "l",
+        77: "m",
+        78: "n",
+        79: "o",
+        80: "p",
+        81: "q",
+        82: "r",
+        83: "s",
+        84: "t",
+        85: "u",
+        86: "v",
+        87: "w",
+        88: "x",
+        89: "y",
+        90: "z",
+
+        //numpad numbers
+        96: "0",
+        97: "1",
+        98: "2",
+        99: "3",
+        100: "4",
+        101: "5",
+        102: "6",
+        103: "7",
+        104: "8",
+        105: "9",
+
+        187: "+",
+        189: "-",
+
+        666: "comma dummy",
+      };
+      if (event.mlKeyCode) return map[event.mlKeyCode];
       return map[event.keyCode];
     }
-    ml.assert(event.charCode);
-    return map[event.charCode];
-  }
-  //}}}
-  else if(event.type === 'keydown' || event.type === 'keyup' || event.type === 'change')
-  //{{{
-  {
-    //http://www.foreui.com/articles/Key_Code_Table.htm
-    //keyCode seem to correspond to http://www.mediaevent.de/javascript/Extras-Javascript-Keycodes.html
-    var map=
-    {
-      13 :'enter',
-      27 :'esc'  , 
-      32 :' '    , 
-      37 :'left' , 
-      38 :'up'   , 
-      39 :'right', 
-      40 :'down' , 
-
-      48 :'0'    ,
-      49 :'1'    ,
-      50 :'2'    ,
-      51 :'3'    ,
-      52 :'4'    ,
-      53 :'5'    ,
-      54 :'6'    ,
-      55 :'7'    ,
-      56 :'8'    ,
-      57 :'9'    ,
-
-      65 :'a'    ,
-      66 :'b'    ,
-      67 :'c'    ,
-      68 :'d'    ,
-      69 :'e'    ,
-      70 :'f'    ,
-      71 :'g'    ,
-      72 :'h'    ,
-      73 :'i'    ,
-      74 :'j'    ,
-      75 :'k'    ,
-      76 :'l'    ,
-      77 :'m'    ,
-      78 :'n'    ,
-      79 :'o'    ,
-      80 :'p'    ,
-      81 :'q'    ,
-      82 :'r'    ,
-      83 :'s'    ,
-      84 :'t'    ,
-      85 :'u'    ,
-      86 :'v'    ,
-      87 :'w'    ,
-      88 :'x'    ,
-      89 :'y'    ,
-      90 :'z'    ,
-
-      //numpad numbers
-      96 :'0'    ,
-      97 :'1'    ,
-      98 :'2'    ,
-      99 :'3'    ,
-      100:'4'    ,
-      101:'5'    ,
-      102:'6'    ,
-      103:'7'    ,
-      104:'8'    ,
-      105:'9'    ,
-
-      187:'+'    ,
-      189:'-'    ,
-
-      666:'comma dummy'
-    };
-    if(event.mlKeyCode) return map[event.mlKeyCode];
-    return map[event.keyCode];
-  }
-  //}}}
-  else ml.assert(false);
-};
-//}}}
-ml.reqFrame=(function(){ 
-  function f(fct){fct()}
-  if(typeof window === "undefined") return f;
-  var lastReq={};
-  var req    =       window['requestAnimationFrame'] ||       window['webkitRequestAnimationFrame'] ||       window['mozRequestAnimationFrame'] ||       window['msRequestAnimationFrame'];
-  var cancel = window['cancelRequestAnimationFrame'] || window['webkitCancelRequestAnimationFrame'] || window['mozCancelRequestAnimationFrame'] || window['msCancelRequestAnimationFrame'];
-//if(!req || !cancel) return function(fct){fct()};
-  if(!req || !cancel) return f;
-  return function(fct)
-  {
-    //lastReq[fct]===lastReq[fct.toString()]
-    if(lastReq[fct]) cancel(lastReq[fct]);
-    //cpu
-    lastReq[fct]=req(fct);
+    //}}}
+    else ml.assert(false);
   };
-})(); 
-ml.safe_call=safe_call;
-function safe_call(fct){ 
-  if(!fct) return;
-  if(fct.constructor===Array)
-  {
-    if(fct.filter) fct=fct.filter(function(f){return !!f});//V8 bugfix
-    for(var i=0;i<fct.length;i++)
-    {
-      var args = Array().slice.call(arguments);
-      Array().splice.call(args,0,1,fct[i]);
-      safe_call.apply(null,args);
-    }
-    return;
-  }
-  if(window.location.hostname==='localhost')
-    return fct.apply(null,Array().slice.call(arguments,1));
-  else try{
-    return fct.apply(null,Array().slice.call(arguments,1));
-  }catch(e){ml.assert(false,e,1)}
-}; 
-
-//features
-ml.asyncStore=(function(){ 
-  var ret = {};
-//var CS = window['chrome']&&window['chrome']['storage']&&window['chrome']['storage']['sync'];
-  var CS = window['chrome']&&window['chrome']['storage']&&window['chrome']['storage']['local'];
-  if(CS){
-    ret.set   = function(key,val){
-      ml.assert(key.constructor===String&&(val===undefined||val.constructor===String));
-      var o={};
-      o[key]=val;
-      CS['set'](o);
-    };
-    ret.get   = function(key,callback){ml.assert(key.constructor===String&&callback);CS['get'](key,function(o){callback(o[key])})};
-    ret.clear = function(callback){CS['clear'](function(){if(callback) callback()})};
-    window['chrome']&&window['chrome']['storage']['onChanged']['addListener'](function(changes){onChange(Object.keys(changes))});
-  }
-  else if(window['localStorage']){
-    ret.set   = function(key,val){
-      ml.assert(key.constructor===String&&(val===undefined||val.constructor===String));
-      if(val) window['localStorage'][key]=val;
-      else delete window['localStorage'][key];
-    };
-    ret.get   = function(key,callback){ml.assert(key.constructor===String&&callback);callback(window['localStorage'][key])};
-    ret.clear = function(callback){window['localStorage']['clear']();if(callback) callback()};
-    window.addEventListener('storage',function(ev){onChange([ev['key']])});
-  }
-  if(!ret.get) ml.assert(false);
-  var onChange;
-  (function(){
-    var changeListeners=[];
-    ret.addChangeListener=function(listener){changeListeners.push(listener)};
-    onChange=function(changedKeys){
-      changeListeners.forEach(function(listener){listener(changedKeys)});
-    };
-  })();
-  return ret;
-})(); 
-ml.getPersistedObject=function(key,callback)
-//{{{
-//put won't actualize other variables with same key -> use only one variable for each key
-{
-  function retrieve(callback){
-    ml.asyncStore.get(key,function(val){
-      callback(JSON.parse(val||"{}"));
-    });
-  }
-
-  retrieve(function(ret){
-    ml.assert(ret.constructor===Object);
-    //google closure trick works:
-    //-http://closure-compiler.appspot.com/home
-    //-var o={};Object.defineProperty(o,Object.keys({puthe:true})[0],{value:'hey'});alert(o.puthe);
-    Object.defineProperty(ret,Object.keys({put:true}),{value:function(){ml.asyncStore.set(key,JSON.stringify(ret))}});
-    (function(){
-      var changeListeners=[];
-      Object.defineProperty(ret,Object.keys({addChangeListener :true}),{value:function(listener){changeListeners.push(listener)}});
-      var timeout;
-      var changedKeys=[];
-      ml.asyncStore.addChangeListener(function(newChangedKeys){
-        ml.assert(newChangedKeys);
-        changedKeys=changedKeys.concat(newChangedKeys);
-        clearTimeout(timeout);
-        timeout=setTimeout(function(){
-          if(changedKeys.indexOf(key)>-1) retrieve(function(newRet){
-            for(var i in ret) if(newRet[i]===undefined) delete ret[i];
-            for(var i in newRet) ret[i]=newRet[i];
-            ml.safe_call(changeListeners.forEach(function(listener){ml.safe_call(listener)}));
-          });
-          changedKeys=[];
-        },300);//known issue: buggy if changes between tabs happens inbetween these 300ms
-      });
-    })();
-    callback(ret);
-  });
-
-   // function moveWithReferences(newObj,obj) {
-   // //doesn't keep Array references
-   //   ml.assert(obj instanceof Object && newObj instanceof Object);
-   //   for(var i in obj) if(newObj[i]===undefined) delete obj[i];
-   //   for(var i in newObj)
-   //   {
-   //     if(!(obj[i] instanceof Array) && !(newObj[i] instanceof Array) &&
-   //          obj[i] instanceof Object &&   newObj[i] instanceof Object) moveWithReferences(newObj[i],obj[i]);
-   //     else obj[i]=newObj[i];
-   //   }
-   // }
-};
-//}}}
-ml.optionInput=function(id,default_,listener,opts){ 
-  //opts: possibleValues,keyUpDelay,noFirstListenerCall,storageObject
-  ml.assert(default_!==undefined&&id!==undefined&&listener!==undefined);
-  if(!opts) opts={};
-  var isListInput,
-      isBinaryInput,
-      isColorInput,
-      isTextInput;
-  if(opts.possibleValues)
-    isListInput=true;
-  else if(default_===true||default_===false)
-    isBinaryInput =true;
-  else if(default_.constructor===String&&default_[0]==='#')
-    isColorInput  =true;
-  else if(default_.constructor===String)
-    isTextInput   =true;
-  else ml.assert(false);
-
-  var el = document.getElementById(id)||document.createElement(isListInput?'select':'input');
-  el.id=id;
-  if(isTextInput)   el.type='text';
-  if(isColorInput)  el.type='color';
-  if(isBinaryInput) el.type='checkbox';
-//if(opts.placeholder) el.setAttribute("placeholder",opts.placeholder);
-  el.setAttribute("tabindex",'-1');
-  var lastTimeout;
-  ['change','keyup'].forEach(function(evName){el.addEventListener(evName,function(){
-    window.clearTimeout(lastTimeout);
-    lastTimeout=window.setTimeout(function()
-    {
-      var newVal = isBinaryInput?(el['checked']?"true":""):el['value'];
-      ml.asyncStore.get(id,function(oldVal){
-        if(oldVal!==newVal) {
-          ml.asyncStore.set(id,newVal);
-          if(listener) listener(isBinaryInput?!!newVal:newVal);
-        }
-      });
-    },isTextInput?500:0);
-  },false)});
-
-  ml.asyncStore.get(id,function(val){
-    //var val = window.localStorage.getItem(id)!==null?window.localStorage[id]:default_;//opera's hasOwnProperty allways return true
-    if(!val) val = default_;
-    if(isBinaryInput) val=!!val;
-  //if(el.nodeName==='SELECT' && el.childNodes.length===0) el.innerHTML='<option>'+val+'</option>';
-    el[isBinaryInput?'checked':'value']=val;
-  //if(listener && !noFirstListenerCall) listener(val);
-    listener(val);
-  });
-
-  return el;
-}; 
-
-ml.htmlBackgroundListener=function(default_){ 
-//tricky bg images to test:
-//-http://static.panoramio.com/photos/original/3719338.jpg
-//-cover test: http://cdn.techpp.com/wp-content/uploads/2008/10/gmail_logo.jpg
-//black floor: http://img.wallpaperstock.net:81/black-floor-wallpapers_6854_1680x1050.jpg
-//http://lh6.googleusercontent.com/-AAQe-KJXX-w/TcRrpukjk6I/AAAAAAAACwE/-7gmjOI-ctQ/IMG_2649mod.jpg
-//http://www.a-better-tomorrow.com/blog/wp-content/wallpaper_abt1.jpg
-//http://www.gowallpaper.net/wp-content/uploads/2011/04/Windows-7-3d-wide-wallpaper-1280x800.jpg
-//http://vistawallpapers.files.wordpress.com/2007/03/vista-wallpapers-69.jpg
-  //TODO: replace with https://i.imgur.com/cvyOo.gif
-  var LOAD_IMG_URL = 'https://i.imgur.com/zqG5F.gif';
-
-  var BG_EL=document.documentElement;
-  var LOAD_IMG = 'url('+LOAD_IMG_URL+')';
-
-  //following 2 styles used for auto sized background for loading gif
-  BG_EL.style['backgroundRepeat'] = 'no-repeat';
-  BG_EL.style['backgroundPosition'] = 'center';
-  //fixed because no way found to set BG_EL's size to scroll size of window
-  //-http://stackoverflow.com/questions/7540418/css-setting-an-elements-size-to-the-scroll-size-of-the-page
-  BG_EL.style['backgroundAttachment'] = 'fixed';
-  //make sure size is at least size of window
-  BG_EL.style['min-height']='100%';
-  BG_EL.style['min-width']='100%';
-
-  var setBg;
-  (function(){
-  //{{{
-    var color;
-    var img;
-    function setCss()
-    {
-      BG_EL.style.backgroundColor=color; //style.background='' => Opera discareds fixed and cover style
-      BG_EL.style.backgroundImage=img;
-      BG_EL.style['backgroundSize'] = img===LOAD_IMG?'auto':'cover';
-    }
-
-    setBg=function(newUrl)
-    {
-      //to test: resize image to screen.width and screen.height using canvas and webworkers
-      //window.screen.width;
-      //window.screen.height;
-      if(newUrl.indexOf('.')!==-1 || /^data:image/.test(newUrl))
-      {
-        var imgEl=document.createElement('img');
-        var loaded;
-        imgEl.onload=function() {
-          var w=this.width;
-          var h=this.height;
-          if(w*h>4000000) alert('The provided image has a size of '+w+'*'+h+' pixels. Large images are likely to slow down your machine. Thus only images of maximal 4 000 000 pixels -- e.g. 2500*1600 pixels -- are allowed.');
-          else if(img==='url("'+newUrl+'")') setCss();
-          loaded=true;
-        };
-        imgEl.onerror=function()
-        {
-          if(img===LOAD_IMG && img==='url("'+newUrl+'")')
-          {
-            img='none';
-            setCss();
-          }
-        };
-        window.setTimeout(function()
-        {
-          if(!loaded && img==='url("'+newUrl+'")')
-          {
-            color='';
-            img=LOAD_IMG;
-            setCss();
-            color='';
-            img='url("'+newUrl+'")';
-          }
-        },50);
-        color='';
-        img='url("'+newUrl+'")';
-        imgEl.src=newUrl;
-      }
-      else
-      {
-        if(newUrl==='')
-        {
-          color='';
-          img='none';
-        }
-        else if(newUrl.indexOf('gradient')!==-1)
-        {
-          color='';
-          img=newUrl;
-        }
-        else
-        {
-          color=newUrl;
-          img='none';
-        }
-        setCss();
-      }
-    }
   //}}}
+  ml.reqFrame = (function () {
+    function f(fct) {
+      fct();
+    }
+    if (typeof window === "undefined") return f;
+    var lastReq = {};
+    var req =
+      window["requestAnimationFrame"] ||
+      window["webkitRequestAnimationFrame"] ||
+      window["mozRequestAnimationFrame"] ||
+      window["msRequestAnimationFrame"];
+    var cancel =
+      window["cancelRequestAnimationFrame"] ||
+      window["webkitCancelRequestAnimationFrame"] ||
+      window["mozCancelRequestAnimationFrame"] ||
+      window["msCancelRequestAnimationFrame"];
+    //if(!req || !cancel) return function(fct){fct()};
+    if (!req || !cancel) return f;
+    return function (fct) {
+      //lastReq[fct]===lastReq[fct.toString()]
+      if (lastReq[fct]) cancel(lastReq[fct]);
+      //cpu
+      lastReq[fct] = req(fct);
+    };
   })();
+  ml.safe_call = safe_call;
+  function safe_call(fct) {
+    if (!fct) return;
+    if (fct.constructor === Array) {
+      if (fct.filter)
+        fct = fct.filter(function (f) {
+          return !!f;
+        }); //V8 bugfix
+      for (var i = 0; i < fct.length; i++) {
+        var args = Array().slice.call(arguments);
+        Array().splice.call(args, 0, 1, fct[i]);
+        safe_call.apply(null, args);
+      }
+      return;
+    }
+    if (window.location.hostname === "localhost")
+      return fct.apply(null, Array().slice.call(arguments, 1));
+    else
+      try {
+        return fct.apply(null, Array().slice.call(arguments, 1));
+      } catch (e) {
+        ml.assert(false, e, 1);
+      }
+  }
 
-  return setBg;
+  //features
+  ml.asyncStore = (function () {
+    var ret = {};
+    //var CS = window['chrome']&&window['chrome']['storage']&&window['chrome']['storage']['sync'];
+    var CS =
+      window["chrome"] &&
+      window["chrome"]["storage"] &&
+      window["chrome"]["storage"]["local"];
+    if (CS) {
+      ret.set = function (key, val) {
+        ml.assert(
+          key.constructor === String &&
+            (val === undefined || val.constructor === String)
+        );
+        var o = {};
+        o[key] = val;
+        CS["set"](o);
+      };
+      ret.get = function (key, callback) {
+        ml.assert(key.constructor === String && callback);
+        CS["get"](key, function (o) {
+          callback(o[key]);
+        });
+      };
+      ret.clear = function (callback) {
+        CS["clear"](function () {
+          if (callback) callback();
+        });
+      };
+      window["chrome"] &&
+        window["chrome"]["storage"]["onChanged"]["addListener"](function (
+          changes
+        ) {
+          onChange(Object.keys(changes));
+        });
+    } else if (window["localStorage"]) {
+      ret.set = function (key, val) {
+        ml.assert(
+          key.constructor === String &&
+            (val === undefined || val.constructor === String)
+        );
+        if (val) window["localStorage"][key] = val;
+        else delete window["localStorage"][key];
+      };
+      ret.get = function (key, callback) {
+        ml.assert(key.constructor === String && callback);
+        callback(window["localStorage"][key]);
+      };
+      ret.clear = function (callback) {
+        window["localStorage"]["clear"]();
+        if (callback) callback();
+      };
+      window.addEventListener("storage", function (ev) {
+        onChange([ev["key"]]);
+      });
+    }
+    if (!ret.get) ml.assert(false);
+    var onChange;
+    (function () {
+      var changeListeners = [];
+      ret.addChangeListener = function (listener) {
+        changeListeners.push(listener);
+      };
+      onChange = function (changedKeys) {
+        changeListeners.forEach(function (listener) {
+          listener(changedKeys);
+        });
+      };
+    })();
+    return ret;
+  })();
+  ml.getPersistedObject = function (
+    key,
+    callback //{{{ //put won't actualize other variables with same key -> use only one variable for each key
+  ) {
+    function retrieve(callback) {
+      ml.asyncStore.get(key, function (val) {
+        callback(JSON.parse(val || "{}"));
+      });
+    }
 
-  //// not needed when backgroundAttachment == fixed
-  //BG_EL.style['minHeight']            = '100%';
-  //BG_EL.style['minWidth ']            = '100%';
+    retrieve(function (ret) {
+      ml.assert(ret.constructor === Object);
+      //google closure trick works:
+      //-http://closure-compiler.appspot.com/home
+      //-var o={};Object.defineProperty(o,Object.keys({puthe:true})[0],{value:'hey'});alert(o.puthe);
+      Object.defineProperty(ret, Object.keys({ put: true }), {
+        value: function () {
+          ml.asyncStore.set(key, JSON.stringify(ret));
+        },
+      });
+      (function () {
+        var changeListeners = [];
+        Object.defineProperty(ret, Object.keys({ addChangeListener: true }), {
+          value: function (listener) {
+            changeListeners.push(listener);
+          },
+        });
+        var timeout;
+        var changedKeys = [];
+        ml.asyncStore.addChangeListener(function (newChangedKeys) {
+          ml.assert(newChangedKeys);
+          changedKeys = changedKeys.concat(newChangedKeys);
+          clearTimeout(timeout);
+          timeout = setTimeout(function () {
+            if (changedKeys.indexOf(key) > -1)
+              retrieve(function (newRet) {
+                for (var i in ret) if (newRet[i] === undefined) delete ret[i];
+                for (var i in newRet) ret[i] = newRet[i];
+                ml.safe_call(
+                  changeListeners.forEach(function (listener) {
+                    ml.safe_call(listener);
+                  })
+                );
+              });
+            changedKeys = [];
+          }, 300); //known issue: buggy if changes between tabs happens inbetween these 300ms
+        });
+      })();
+      callback(ret);
+    });
 
-/*
+    // function moveWithReferences(newObj,obj) {
+    // //doesn't keep Array references
+    //   ml.assert(obj instanceof Object && newObj instanceof Object);
+    //   for(var i in obj) if(newObj[i]===undefined) delete obj[i];
+    //   for(var i in newObj)
+    //   {
+    //     if(!(obj[i] instanceof Array) && !(newObj[i] instanceof Array) &&
+    //          obj[i] instanceof Object &&   newObj[i] instanceof Object) moveWithReferences(newObj[i],obj[i]);
+    //     else obj[i]=newObj[i];
+    //   }
+    // }
+  };
+  //}}}
+  ml.optionInput = function (id, default_, listener, opts) {
+    //opts: possibleValues,keyUpDelay,noFirstListenerCall,storageObject
+    ml.assert(
+      default_ !== undefined && id !== undefined && listener !== undefined
+    );
+    if (!opts) opts = {};
+    var isListInput, isBinaryInput, isColorInput, isTextInput;
+    if (opts.possibleValues) isListInput = true;
+    else if (default_ === true || default_ === false) isBinaryInput = true;
+    else if (default_.constructor === String && default_[0] === "#")
+      isColorInput = true;
+    else if (default_.constructor === String) isTextInput = true;
+    else ml.assert(false);
+
+    var el =
+      document.getElementById(id) ||
+      document.createElement(isListInput ? "select" : "input");
+    el.id = id;
+    if (isTextInput) el.type = "text";
+    if (isColorInput) el.type = "color";
+    if (isBinaryInput) el.type = "checkbox";
+    //if(opts.placeholder) el.setAttribute("placeholder",opts.placeholder);
+    el.setAttribute("tabindex", "-1");
+    var lastTimeout;
+    ["change", "keyup"].forEach(function (evName) {
+      el.addEventListener(
+        evName,
+        function () {
+          window.clearTimeout(lastTimeout);
+          lastTimeout = window.setTimeout(
+            function () {
+              var newVal = isBinaryInput
+                ? el["checked"]
+                  ? "true"
+                  : ""
+                : el["value"];
+              ml.asyncStore.get(id, function (oldVal) {
+                if (oldVal !== newVal) {
+                  ml.asyncStore.set(id, newVal);
+                  if (listener) listener(isBinaryInput ? !!newVal : newVal);
+                }
+              });
+            },
+            isTextInput ? 500 : 0
+          );
+        },
+        false
+      );
+    });
+
+    ml.asyncStore.get(id, function (val) {
+      //var val = window.localStorage.getItem(id)!==null?window.localStorage[id]:default_;//opera's hasOwnProperty allways return true
+      if (!val) val = default_;
+      if (isBinaryInput) val = !!val;
+      //if(el.nodeName==='SELECT' && el.childNodes.length===0) el.innerHTML='<option>'+val+'</option>';
+      el[isBinaryInput ? "checked" : "value"] = val;
+      //if(listener && !noFirstListenerCall) listener(val);
+      listener(val);
+    });
+
+    return el;
+  };
+
+  ml.htmlBackgroundListener = function (default_) {
+    //tricky bg images to test:
+    //-http://static.panoramio.com/photos/original/3719338.jpg
+    //-cover test: http://cdn.techpp.com/wp-content/uploads/2008/10/gmail_logo.jpg
+    //black floor: http://img.wallpaperstock.net:81/black-floor-wallpapers_6854_1680x1050.jpg
+    //http://lh6.googleusercontent.com/-AAQe-KJXX-w/TcRrpukjk6I/AAAAAAAACwE/-7gmjOI-ctQ/IMG_2649mod.jpg
+    //http://www.a-better-tomorrow.com/blog/wp-content/wallpaper_abt1.jpg
+    //http://www.gowallpaper.net/wp-content/uploads/2011/04/Windows-7-3d-wide-wallpaper-1280x800.jpg
+    //http://vistawallpapers.files.wordpress.com/2007/03/vista-wallpapers-69.jpg
+    //TODO: replace with https://i.imgur.com/cvyOo.gif
+    var LOAD_IMG_URL = "https://i.imgur.com/zqG5F.gif";
+
+    var BG_EL = document.documentElement;
+    var LOAD_IMG = "url(" + LOAD_IMG_URL + ")";
+
+    //following 2 styles used for auto sized background for loading gif
+    BG_EL.style["backgroundRepeat"] = "no-repeat";
+    BG_EL.style["backgroundPosition"] = "center";
+    //fixed because no way found to set BG_EL's size to scroll size of window
+    //-http://stackoverflow.com/questions/7540418/css-setting-an-elements-size-to-the-scroll-size-of-the-page
+    BG_EL.style["backgroundAttachment"] = "fixed";
+    //make sure size is at least size of window
+    BG_EL.style["min-height"] = "100%";
+    BG_EL.style["min-width"] = "100%";
+
+    var setBg;
+    (function () {
+      //{{{
+      var color;
+      var img;
+      function setCss() {
+        BG_EL.style.backgroundColor = color; //style.background='' => Opera discareds fixed and cover style
+        BG_EL.style.backgroundImage = img;
+        BG_EL.style["backgroundSize"] = img === LOAD_IMG ? "auto" : "cover";
+      }
+
+      setBg = function (newUrl) {
+        //to test: resize image to screen.width and screen.height using canvas and webworkers
+        //window.screen.width;
+        //window.screen.height;
+        if (newUrl.indexOf(".") !== -1 || /^data:image/.test(newUrl)) {
+          var imgEl = document.createElement("img");
+          var loaded;
+          imgEl.onload = function () {
+            var w = this.width;
+            var h = this.height;
+            if (w * h > 4000000)
+              alert(
+                "The provided image has a size of " +
+                  w +
+                  "*" +
+                  h +
+                  " pixels. Large images are likely to slow down your machine. Thus only images of maximal 4 000 000 pixels -- e.g. 2500*1600 pixels -- are allowed."
+              );
+            else if (img === 'url("' + newUrl + '")') setCss();
+            loaded = true;
+          };
+          imgEl.onerror = function () {
+            if (img === LOAD_IMG && img === 'url("' + newUrl + '")') {
+              img = "none";
+              setCss();
+            }
+          };
+          window.setTimeout(function () {
+            if (!loaded && img === 'url("' + newUrl + '")') {
+              color = "";
+              img = LOAD_IMG;
+              setCss();
+              color = "";
+              img = 'url("' + newUrl + '")';
+            }
+          }, 50);
+          color = "";
+          img = 'url("' + newUrl + '")';
+          imgEl.src = newUrl;
+        } else {
+          if (newUrl === "") {
+            color = "";
+            img = "none";
+          } else if (newUrl.indexOf("gradient") !== -1) {
+            color = "";
+            img = newUrl;
+          } else {
+            color = newUrl;
+            img = "none";
+          }
+          setCss();
+        }
+      };
+      //}}}
+    })();
+
+    return setBg;
+
+    //// not needed when backgroundAttachment == fixed
+    //BG_EL.style['minHeight']            = '100%';
+    //BG_EL.style['minWidth ']            = '100%';
+
+    /*
 ml.htmlBackground=function(inputName,default_)
 //{{{
 //tricky bg images to test:
@@ -2197,234 +2373,334 @@ ml.htmlBackground=function(inputName,default_)
 };
 //}}}
 */
-}; 
-
-(function(){
-  var els={};
-  ml.getElementByIdStatic=function(id)
-  //{{{
-  {
-    if(!els[id]) els[id]=document.getElementById(id);
-    return els[id];
   };
-  //}}}
-//window['$']=ml.getElementByIdStatic;
-})();
 
-ml.isTouchDevice=function(){ 
-  //source: http://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
-  return !!('ontouchstart' in window);
-}; 
-
-ml.isExtensionBackground=function(){
-  try{//try block seems to solve a bug of chrome 25
-        return !!(window['chrome']&&window['chrome']['browserAction']&&window['chrome']['extension']&&window['chrome']['extension']['getBackgroundPage']&&window['chrome']['extension']['getBackgroundPage']()===window);
-    }catch(e){return false}
-};
-ml.isPackagedApp=function(){
-  try{//attempt to solve an unfound bug on old chrome versions
-      return !!(window['chrome']&&window['chrome']['app']&&window['chrome']['app']['window']);
-  }catch(e){return false}
-};
-ml.isPackagedBackground=function(){ 
-  try{//attempt to solve an unfound bug on old chrome versions
-      if(!window['chrome']||!window['chrome']['app']||!window['chrome']['app']['runtime'])
-        return false;
-      var hasWindow;
-      try{hasWindow=chrome.app.window.current()}catch(e){}
-      return !hasWindow;
-  }catch(e){return false}
-}; 
-ml.isExtension=function(){ 
-  try{//attempt to solve an unfound bug on old chrome versions
-      return !!(window['chrome']&&window['chrome']['browserAction']&&window['chrome']['extension']);
-  }catch(e){return false}
-}; 
-
-ml.addCloseEvent=function(listener){ 
-  if(window['chrome']&&window['chrome']['runtime']&&window['chrome']['runtime']['onSuspend']
-    && ml.isPackagedApp() //need for hosted app
-  )
-    window['chrome']['runtime']['onSuspend']['addListener'](listener);
-  else{
-    window.addEventListener("beforeunload",listener,false);
-    window.addEventListener(      "unload",listener,false);
-    window.addEventListener(    "pagehide",listener,false); //https://www.webkit.org/blog/516/webkit-page-cache-ii-the-unload-event/
-  }
-}; 
-
-(function(){
-  var listeners=[];
-  ml.addResizeTimeoutEvent=function(listener,delay,preListener){ 
-    if(listeners.indexOf(listener)!==-1)return;
-    listeners.push(listener);
-    var lastTimeout;
-    window.addEventListener('resize',function(){
-      if(preListener) preListener();
-      window.clearTimeout(lastTimeout);
-      lastTimeout=window.setTimeout(listener,delay);
-    });
-  }; 
-})();
-
-ml.replaceWebApp=function(newUrl) { 
-  if(window.parent!==window) return false;
-   document.body.innerHTML='';
-   var iframe_=document.createElement('iframe');
-   iframe_.src=newUrl;
-   iframe_.setAttribute('frameborder','0');
-   document.documentElement.style['overflow']=document.body.style['overflow']='hidden';
-   document.documentElement.style['margin']  =document.body.style['margin']  ='0';
-   document.documentElement.style['width']   =document.body.style['width']   =
-   document.documentElement.style['height']  =document.body.style['height']  =
-                    iframe_.style['height']  =      iframe_.style['width']   ='100%';
-   document.body.appendChild(iframe_);
-   return true;
-}; 
-
-ml.loadAnalytics=function(id,useSSL) { 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', id]);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  //ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    ga.src = ('https:' == document.location.protocol || useSSL ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+  (function () {
+    var els = {};
+    ml.getElementByIdStatic = function (
+      id //{{{
+    ) {
+      if (!els[id]) els[id] = document.getElementById(id);
+      return els[id];
+    };
+    //}}}
+    //window['$']=ml.getElementByIdStatic;
   })();
 
-  window['_gaq']=_gaq;//added by me
-}; 
+  ml.isTouchDevice = function () {
+    //source: http://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript
+    return !!("ontouchstart" in window);
+  };
 
-ml.i18n={};
-(function(){ 
-  var lang;
-  //__promo images:
-  //lang='fr';
-  function init(callback){ 
-    setTimeout(function(){//attempt to solve an unfound bug on old chrome versions
-        function fallback(){
-          lang = window.navigator.userLanguage || window.navigator.language || null;
+  ml.isExtensionBackground = function () {
+    try {
+      //try block seems to solve a bug of chrome 25
+      return !!(
+        window["chrome"] &&
+        window["chrome"]["browserAction"] &&
+        window["chrome"]["extension"] &&
+        window["chrome"]["extension"]["getBackgroundPage"] &&
+        window["chrome"]["extension"]["getBackgroundPage"]() === window
+      );
+    } catch (e) {
+      return false;
+    }
+  };
+  ml.isPackagedApp = function () {
+    try {
+      //attempt to solve an unfound bug on old chrome versions
+      return !!(
+        window["chrome"] &&
+        window["chrome"]["app"] &&
+        window["chrome"]["app"]["window"]
+      );
+    } catch (e) {
+      return false;
+    }
+  };
+  ml.isPackagedBackground = function () {
+    try {
+      //attempt to solve an unfound bug on old chrome versions
+      if (
+        !window["chrome"] ||
+        !window["chrome"]["app"] ||
+        !window["chrome"]["app"]["runtime"]
+      )
+        return false;
+      var hasWindow;
+      try {
+        hasWindow = chrome.app.window.current();
+      } catch (e) {}
+      return !hasWindow;
+    } catch (e) {
+      return false;
+    }
+  };
+  ml.isExtension = function () {
+    try {
+      //attempt to solve an unfound bug on old chrome versions
+      return !!(
+        window["chrome"] &&
+        window["chrome"]["browserAction"] &&
+        window["chrome"]["extension"]
+      );
+    } catch (e) {
+      return false;
+    }
+  };
+
+  ml.addCloseEvent = function (listener) {
+    if (
+      window["chrome"] &&
+      window["chrome"]["runtime"] &&
+      window["chrome"]["runtime"]["onSuspend"] &&
+      ml.isPackagedApp() //need for hosted app
+    )
+      window["chrome"]["runtime"]["onSuspend"]["addListener"](listener);
+    else {
+      window.addEventListener("beforeunload", listener, false);
+      window.addEventListener("unload", listener, false);
+      window.addEventListener("pagehide", listener, false); //https://www.webkit.org/blog/516/webkit-page-cache-ii-the-unload-event/
+    }
+  };
+
+  (function () {
+    var listeners = [];
+    ml.addResizeTimeoutEvent = function (listener, delay, preListener) {
+      if (listeners.indexOf(listener) !== -1) return;
+      listeners.push(listener);
+      var lastTimeout;
+      window.addEventListener("resize", function () {
+        if (preListener) preListener();
+        window.clearTimeout(lastTimeout);
+        lastTimeout = window.setTimeout(listener, delay);
+      });
+    };
+  })();
+
+  ml.replaceWebApp = function (newUrl) {
+    if (window.parent !== window) return false;
+    document.body.innerHTML = "";
+    var iframe_ = document.createElement("iframe");
+    iframe_.src = newUrl;
+    iframe_.setAttribute("frameborder", "0");
+    document.documentElement.style["overflow"] = document.body.style[
+      "overflow"
+    ] = "hidden";
+    document.documentElement.style["margin"] = document.body.style["margin"] =
+      "0";
+    document.documentElement.style["width"] = document.body.style[
+      "width"
+    ] = document.documentElement.style["height"] = document.body.style[
+      "height"
+    ] = iframe_.style["height"] = iframe_.style["width"] = "100%";
+    document.body.appendChild(iframe_);
+    return true;
+  };
+
+  ml.loadAnalytics = function (id, useSSL) {
+    var _gaq = _gaq || [];
+    _gaq.push(["_setAccount", id]);
+    _gaq.push(["_trackPageview"]);
+
+    (function () {
+      var ga = document.createElement("script");
+      ga.type = "text/javascript";
+      ga.async = true;
+      //ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      ga.src =
+        ("https:" == document.location.protocol || useSSL
+          ? "https://ssl"
+          : "http://www") + ".google-analytics.com/ga.js";
+      (
+        document.getElementsByTagName("head")[0] ||
+        document.getElementsByTagName("body")[0]
+      ).appendChild(ga);
+    })();
+
+    window["_gaq"] = _gaq; //added by me
+  };
+
+  ml.i18n = {};
+  (function () {
+    var lang;
+    //__promo images:
+    //lang='fr';
+    function init(callback) {
+      setTimeout(function () {
+        //attempt to solve an unfound bug on old chrome versions
+        function fallback() {
+          lang =
+            window.navigator.userLanguage || window.navigator.language || null;
           callback();
         }
-        try{
-          if(window['chrome']&&window['chrome']['i18n']&&window['chrome']['i18n']['getAcceptLanguages'])
-            window['chrome']['i18n']['getAcceptLanguages'](function(langs)
-            {
-              langs&&['en','de','fr'].some(function(l){if(langs.indexOf(l)>-1){
-                lang=l;
-                return true;
-              }});
-              if(lang===undefined) lang=null;
+        try {
+          if (
+            window["chrome"] &&
+            window["chrome"]["i18n"] &&
+            window["chrome"]["i18n"]["getAcceptLanguages"]
+          )
+            window["chrome"]["i18n"]["getAcceptLanguages"](function (langs) {
+              langs &&
+                ["en", "de", "fr"].some(function (l) {
+                  if (langs.indexOf(l) > -1) {
+                    lang = l;
+                    return true;
+                  }
+                });
+              if (lang === undefined) lang = null;
               callback();
             });
           else {
             fallback();
           }
-        }catch(e){
-        //ml.assert(false);
+        } catch (e) {
+          //ml.assert(false);
           fallback();
         }
-    },0);
-  } 
-  ml.i18n.get=function(callback){
-   if(lang===undefined) init(function(){callback(lang)});
-   else callback(lang);
-  };
-  ml.i18n.isAMPMTime=function(callback){
-    ml.i18n.get(function(lang){callback(lang!=='fr'&&lang!=='de')});
-  };
-})(); 
+      }, 0);
+    }
+    ml.i18n.get = function (callback) {
+      if (lang === undefined)
+        init(function () {
+          callback(lang);
+        });
+      else callback(lang);
+    };
+    ml.i18n.isAMPMTime = function (callback) {
+      ml.i18n.get(function (lang) {
+        callback(lang !== "fr" && lang !== "de");
+      });
+    };
+  })();
 
-ml.noti={};
-(function(){ 
-  var _noti;
-  function _init(){
-    _noti=(function(){
-      var ret=null;
-      if(!ml.browser().usesGecko && window.webkitNotifications && window.webkitNotifications.checkPermission){ 
-        //somehow webkitNotifications is defined in Firefox
-        //http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
-        //PERMISSION_ALLOWED (0) indicates that the user has granted permission to scripts with this origin to show notifications.
-        //PERMISSION_NOT_ALLOWED (1) indicates that the user has not taken an action regarding notifications for scripts from this origin.
-        //PERMISSION_DENIED (2) indicates that the user has explicitly blocked scripts with this origin from showing notifications.
-        ret = {};
-        ret.permission_notAllowed=function(){
-          return window.webkitNotifications.checkPermission()!=0;
-        };
-        ret.permission_denied=function(){
-          return window.webkitNotifications.checkPermission()==2;
-        };
-        var SETTINGS_URL = 'chrome://settings/contentExceptions#notifications';
-        var APP_NAME = 'Timer Tab';
-        //`window.open(settings_url);` doesn't work
-        ml.noti.manualUnblockMsg='you have previously blocked notifications for '+APP_NAME+' \n\ngo to the address:\n'+SETTINGS_URL+'\nor manually go to:\n"Settings -> Show advanced settings... -> Privacy -> Content Settings -> Notifications -> Manage exceptions..."\nand remove '+window.location.origin+' from the blocked Sites';
-        ret.permission_req=function(callback){
-          window.webkitNotifications.requestPermission(function(){if(callback) callback()});
-        };
-        ret.fire        = function(text1,text2,icon,onshow,onclick){
-          try{
-            var __noti=window.webkitNotifications.createNotification(
-              icon,
-              text1,
-              text2
-            );
-            __noti.ondisplay = onshow;
-            __noti.onclick   = onclick;
-            __noti.show();
-            return function(){__noti.cancel()};
-          }catch(e){}
-        };
-      } 
-      else if(window.Notification && window.Notification.requestPermission){ 
-        //http://jsfiddle.net/robnyman/TuJHx/
-        //http://www.w3.org/TR/notifications/
-        ret = {};
-        ret.permission_notAllowed=function(){
-          return window.Notification.permission!=="granted";
-        };
-        ret.permission_denied=function(){
-          return window.Notification.permission==="denied";
-        };
-        ret.permission_req=function(callback){
-          window.Notification.requestPermission(function(){if(callback) callback()});
-        };
-        ret.fire=function(text1,text2,icon,onshow,onclick){
-          try{
-            var __noti = new Notification(text1, {
-              dir: "auto",
-              lang: "",
-              body: text2,
-              iconUrl: icon
+  ml.noti = {};
+  (function () {
+    var _noti;
+    function _init() {
+      _noti = (function () {
+        var ret = null;
+        if (
+          !ml.browser().usesGecko &&
+          window.webkitNotifications &&
+          window.webkitNotifications.checkPermission
+        ) {
+          //somehow webkitNotifications is defined in Firefox
+          //http://www.chromium.org/developers/design-documents/desktop-notifications/api-specification
+          //PERMISSION_ALLOWED (0) indicates that the user has granted permission to scripts with this origin to show notifications.
+          //PERMISSION_NOT_ALLOWED (1) indicates that the user has not taken an action regarding notifications for scripts from this origin.
+          //PERMISSION_DENIED (2) indicates that the user has explicitly blocked scripts with this origin from showing notifications.
+          ret = {};
+          ret.permission_notAllowed = function () {
+            return window.webkitNotifications.checkPermission() != 0;
+          };
+          ret.permission_denied = function () {
+            return window.webkitNotifications.checkPermission() == 2;
+          };
+          var SETTINGS_URL =
+            "chrome://settings/contentExceptions#notifications";
+          var APP_NAME = "Timer Tab";
+          //`window.open(settings_url);` doesn't work
+          ml.noti.manualUnblockMsg =
+            "you have previously blocked notifications for " +
+            APP_NAME +
+            " \n\ngo to the address:\n" +
+            SETTINGS_URL +
+            '\nor manually go to:\n"Settings -> Show advanced settings... -> Privacy -> Content Settings -> Notifications -> Manage exceptions..."\nand remove ' +
+            window.location.origin +
+            " from the blocked Sites";
+          ret.permission_req = function (callback) {
+            window.webkitNotifications.requestPermission(function () {
+              if (callback) callback();
             });
-            __noti.onshow  = onshow;
-            __noti.onclick = onclick;
-            return function(){__noti.close()};
-          }catch(e){}
-        };
-      } 
-      return ret;
-    })();
-  };
-  ml.noti.isAvailable           = function(){if(!_noti) _init();return !!_noti};
-  ml.noti.permission_notAllowed = function(){if(!_noti) _init();return !_noti || _noti.permission_notAllowed()};
-  ml.noti.permission_denied     = function(){if(!_noti) _init();return !_noti || _noti.permission_denied    ()};
-  ml.noti.permission_req        = function(callback){
-    if(!_noti) _init();
-    if(!_noti) return;
-    if(_noti.permission_notAllowed()) _noti.permission_req(callback);
-    else if(callback) callback();
-  };
-  ml.noti.fire                  = function(txt1,txt2,icon,displayTime,onclick){
-    if(!_noti) _init();
-    if(!_noti) return function(){};
-    var _close=_noti.fire(txt1,txt2,icon,function(){setTimeout(_close,displayTime)},onclick);
-    return _close;
-  };
-})(); 
+          };
+          ret.fire = function (text1, text2, icon, onshow, onclick) {
+            try {
+              var __noti = window.webkitNotifications.createNotification(
+                icon,
+                text1,
+                text2
+              );
+              __noti.ondisplay = onshow;
+              __noti.onclick = onclick;
+              __noti.show();
+              return function () {
+                __noti.cancel();
+              };
+            } catch (e) {}
+          };
+        } else if (
+          window.Notification &&
+          window.Notification.requestPermission
+        ) {
+          //http://jsfiddle.net/robnyman/TuJHx/
+          //http://www.w3.org/TR/notifications/
+          ret = {};
+          ret.permission_notAllowed = function () {
+            return window.Notification.permission !== "granted";
+          };
+          ret.permission_denied = function () {
+            return window.Notification.permission === "denied";
+          };
+          ret.permission_req = function (callback) {
+            window.Notification.requestPermission(function () {
+              if (callback) callback();
+            });
+          };
+          ret.fire = function (text1, text2, icon, onshow, onclick) {
+            try {
+              var __noti = new Notification(text1, {
+                dir: "auto",
+                lang: "",
+                body: text2,
+                iconUrl: icon,
+              });
+              __noti.onshow = onshow;
+              __noti.onclick = onclick;
+              return function () {
+                __noti.close();
+              };
+            } catch (e) {}
+          };
+        }
+        return ret;
+      })();
+    }
+    ml.noti.isAvailable = function () {
+      if (!_noti) _init();
+      return !!_noti;
+    };
+    ml.noti.permission_notAllowed = function () {
+      if (!_noti) _init();
+      return !_noti || _noti.permission_notAllowed();
+    };
+    ml.noti.permission_denied = function () {
+      if (!_noti) _init();
+      return !_noti || _noti.permission_denied();
+    };
+    ml.noti.permission_req = function (callback) {
+      if (!_noti) _init();
+      if (!_noti) return;
+      if (_noti.permission_notAllowed()) _noti.permission_req(callback);
+      else if (callback) callback();
+    };
+    ml.noti.fire = function (txt1, txt2, icon, displayTime, onclick) {
+      if (!_noti) _init();
+      if (!_noti) return function () {};
+      var _close = _noti.fire(
+        txt1,
+        txt2,
+        icon,
+        function () {
+          setTimeout(_close, displayTime);
+        },
+        onclick
+      );
+      return _close;
+    };
+  })();
 
-/* unused code
+  /* unused code
 {{{
 //application cache
 //TODO
@@ -3173,7 +3449,7 @@ if (!Object.prototype.unwatch) {
 }}}
 */
 
-/* old code / todel
+  /* old code / todel
 {{{
 Element.prototype.old_insertBefore=Element.prototype.insertBefore;
 //inserBefore used by uservoice
@@ -3522,7 +3798,4 @@ ml.persistantInput=function(id,listener,default_,keyUpDelay,noFirstListenerCall)
 //}}}
 }}}
 */
-
-
-
 })();

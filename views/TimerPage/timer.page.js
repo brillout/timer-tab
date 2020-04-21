@@ -1,16 +1,16 @@
-import TimerView from './TimerView';
-import onPageLoad from './onPageLoad';
-import {config} from '../../tab-utils/views/FullViewWrapper';
+import TimerView from "./TimerView";
+import onPageLoad from "./onPageLoad";
+import { config } from "../../tab-utils/views/FullViewWrapper";
 
 export default config({
-  route: '/',
+  route: "/",
   view: TimerView,
 
   // <title>⌛ Online Timer</title>
-  title: 'Timer Tab',
+  title: "Timer Tab",
 
   head: [
- // '<meta name="keywords" content="timer, alarm, stopwatch, countdown, alarm clock, online, webapp"/>'
+    // '<meta name="keywords" content="timer, alarm, stopwatch, countdown, alarm clock, online, webapp"/>'
     '<meta name="keywords" content="online timer"/>',
 
     //  http://stackoverflow.com/questions/5437674/what-utf-8-symbol-is-a-good-mark-of-time
@@ -22,4 +22,3 @@ export default config({
   ],
   onPageLoad,
 });
-

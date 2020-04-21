@@ -11,7 +11,7 @@ button
 }
 */
 #timer_table * {
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   font-weight: 300;
 }
 /* }}} */
@@ -19,32 +19,28 @@ button
 /* colors */
 /* {{{ */
 #timer_table input,
-#timer_table button
-{
-  background: rgba(255,255,255,0.7);
+#timer_table button {
+  background: rgba(255, 255, 255, 0.7);
 }
 #timer_table input.s {
   color: #aaa;
 }
 /* button & input colors */
 #timer_table button,
-#timer_table input
-{
+#timer_table input {
   color: #666;
 }
 #timer_table button:hover,
 #timer_table button:focus,
 #timer_table input:hover,
-#timer_table input:focus
-{
-  background: rgba(255,255,255,0.95);
+#timer_table input:focus {
+  background: rgba(255, 255, 255, 0.95);
 }
 /*split in two to get rid of following bug: scroll broken in the youtube url input when cursor moves out of visible area*/
 #timer_table button:hover,
 #timer_table button:focus,
 #timer_table #inputs input:hover,
-#timer_table #inputs input:focus
-{
+#timer_table #inputs input:focus {
   color: #333;
 }
 /*
@@ -59,22 +55,20 @@ a,
 
 /* selection styling only works in firefox for now */
 #timer_table input::selection {
-  background-color: rgba(48,48,178,0.25);/* #33b ~= rgb(48,48,178) */
+  background-color: rgba(48, 48, 178, 0.25); /* #33b ~= rgb(48,48,178) */
 }
 #timer_table input::-webkit-selection {
-  background-color: rgba(48,48,178,0.25);
+  background-color: rgba(48, 48, 178, 0.25);
 }
-#timer_table input::-moz-selection /*firefox wants this selector to be alone*/
-{
-  background-color: rgba(48,48,178,0.25);
+#timer_table input::-moz-selection /*firefox wants this selector to be alone*/ {
+  background-color: rgba(48, 48, 178, 0.25);
 }
 /* }}} */
 
 /* details (cursor+selectable+button+..) */
 /* {{{ */
 #timer_table button,
-#timer_table input
-{
+#timer_table input {
   outline: 0;
   border: 0;
   border-radius: 4px;
@@ -85,34 +79,30 @@ a,
   font-weight: bold;
   font-size: 13px;
   max-width: 95%;
-  letter-spacing:1px;
+  letter-spacing: 1px;
   white-space: pre;
 }
 
-#timer_table #inputs input
-{
+#timer_table #inputs input {
   font-size: 100%;
-  padding:0;
-  border:0;
+  padding: 0;
+  border: 0;
 }
 #timer_table .inputSep.s,
-#timer_table #inputs input.s
-{
+#timer_table #inputs input.s {
   font-size: 70%;
   position: relative;
-  bottom:-2px;
+  bottom: -2px;
 }
-#counter{
-  line-height: .8em;
+#counter {
+  line-height: 0.8em;
 }
 /* }}} */
-
 
 #time {
   cursor: pointer;
   text-decoration: none;
 }
-
 
 /*
   Playground for box-shadow as layout-agnostic border:

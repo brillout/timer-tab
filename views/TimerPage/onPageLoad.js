@@ -1,14 +1,14 @@
-import load_timer from './js/load_timer';
-import {init_timer_settings} from './init_timer_settings';
-import youtube_alarm from './js/youtube_alarm';
-import auto_remove_hash from '../../tab-utils/auto_remove_hash';
-import {ad_slots} from './ad_slots';
-import {load_ad} from '../../tab-utils/load_ad';
+import load_timer from "./js/load_timer";
+import { init_timer_settings } from "./init_timer_settings";
+import youtube_alarm from "./js/youtube_alarm";
+import auto_remove_hash from "../../tab-utils/auto_remove_hash";
+import { ad_slots } from "./ad_slots";
+import { load_ad } from "../../tab-utils/load_ad";
 
 export default onPageLoad;
 
-async function onPageLoad (load_common){
-  const {get_option_value} = init_timer_settings();
+async function onPageLoad(load_common) {
+  const { get_option_value } = init_timer_settings();
 
   //load_clock({get_option_value});
   load_timer();

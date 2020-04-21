@@ -1,11 +1,17 @@
-@import '../../../tab-utils/ad_layout.css';
+@import "../../../tab-utils/ad_layout.css";
 
 /* layout */
-#timer_table { position: relative; }
-#timer_table > #primary-ad { position: absolute; }
+#timer_table {
+  position: relative;
+}
+#timer_table > #primary-ad {
+  position: absolute;
+}
 #primary-ad {
   transition: top 0.7s ease-out;
-  top: calc( -1 * ( var(--ad-height) + var(--ad-border-width) + var(--ad-remover-height) ) );
+  top: calc(
+    -1 * (var(--ad-height) + var(--ad-border-width) + var(--ad-remover-height))
+  );
   left: calc((100% - var(--ad-width)) / 2);
 }
 html.show_ad #primary-ad {
