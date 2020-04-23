@@ -9,7 +9,6 @@ export const tab_app_source_code = "https://github.com/brillout/timer-tab";
 export const tab_app_mail = compute_mail("timertab");
 export const tab_app_logo = logoUrl;
 export const tab_app_google_analytics_id = "UA-5263303-6";
-export const tab_subapp_ids = ["timer"];
 export const tab_app_header_links = [
   { link_url: "/history", link_name: "History" },
   {
