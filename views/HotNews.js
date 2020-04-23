@@ -21,7 +21,7 @@ function HotNews() {
         <li>Fallback alarm-sound when offline. </li>
       </ul>
       If you encounter any issue with these new features then{" "}
-      <a href="/bug-repair">let me know</a>.
+      <a href="/repair">let me know</a>.
     </div>
   );
 }
