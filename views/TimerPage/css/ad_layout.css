@@ -1,28 +1,15 @@
-@import "../../../tab-utils/ad_layout.css";
-
 /* layout */
-#timer_table {
+#bodypadding .a-wrap {
   position: relative;
+  z-index: 999990;
 }
-#timer_table > #primary-ad {
-  position: absolute;
+#bodypadding .a-wrap::after {
+  display: block;
+  content: "";
+  height: 20px;
+  width: 100px;
 }
-#primary-ad {
-  transition: top 0.7s ease-out;
-  top: calc(
-    -1 * (var(--ad-height) + var(--ad-border-width) + var(--ad-remover-height))
-  );
-  left: calc((100% - var(--ad-width)) / 2);
-}
-html.show_ad #primary-ad {
-  top: 0;
-}
-
-/* make space for the ad */
-#ad_padder {
-  transition: height 0.7s ease-out;
-  height: 130px;
-}
-html:not(.show_ad) #ad_padder {
-  height: 0px !important;
+.screen-button {
+  position: relative;
+  z-index: 999991;
 }

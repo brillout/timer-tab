@@ -2,19 +2,11 @@ export { ad_slots };
 
 const ad_slots = [
   {
-    slotID: "div-gpt-ad-1585591391090-0",
-    slotName: "/21951324297/TIMER-TAB_leaderboard_ATF_desktop_and_mobile",
-    slotSizes: [
-      [320, 50],
-      [728, 90],
-    ],
+    slot_id: "1234567",
+    slot_name: "ATF",
   },
   {
-    slotID: "div-gpt-ad-1585591467674-0",
-    slotName: "/21951324297/TIMER-TAB_leaderboard_BTF_desktop_and_mobile",
-    slotSizes: [
-      [728, 90],
-      [320, 50],
-    ],
+    slot_id: "12345678",
+    slot_name: "BTF",
   },
 ];

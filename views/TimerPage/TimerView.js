@@ -31,7 +31,7 @@ function FullViewContent() {
     <div id="timer_table_scroll_area">
       <div id="timer_table">
         <div id="bodypadding">
-          <div id="ad_padder"></div>
+          <Ad_ATF ad_slots={ad_slots} />
         </div>
         <div id="stripH"></div>
         <div id="middletable" style={{ width: "100%" }}>
@@ -198,7 +198,6 @@ function FullViewContent() {
           </div>
         </div>
         {/* END middletable */}
-        <Ad_ATF ad_slots={ad_slots} />
 
         {/* END of <div id='timer_table'> */}
       </div>
