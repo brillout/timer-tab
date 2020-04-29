@@ -270,7 +270,7 @@ function load_timer() {
           var char_ = ml.getChar(ev);
           if (char_ === " ") ev.preventDefault();
           if (char_ === " " || char_ === "p") PAUSE_ELEM.click();
-          else if (char_ === "esc") unfullscreen();
+          // else if (char_ === "esc") unfullscreen();
         };
         function filter(ev) {
           ev = ev || window.event;
