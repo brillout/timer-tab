@@ -8,7 +8,7 @@ function persist({
   isSingleton,
   clsName,
   data: dataSchema,
-  mapData,
+  dataType,
 }) {
   assert(isSingleton === false);
   assert(clsName.constructor === String);
@@ -40,7 +40,12 @@ function persist({
     }
     validate_schema_instance(data);
     assert(data.constructor === Object);
-    Object.assign(instance, mapData(data));
+
+    if (dataType) {
+      data = apply_data_type(data, dataType);
+    }
+
+    Object.assign(instance, data);
   }
 
   function store_has(instance): boolean {
@@ -91,6 +96,22 @@ function persist({
       assert(val.constructor === propType);
     });
   }
+}
+
+function apply_data_type(data: object, dataType: object) {
+  Object.entries(dataType).forEach(([key, val]) => {
+    if (val.constructor === Array) {
+      assert(val.length === 1);
+      const entryType = val[0];
+      assert(entryType.constructor === Function);
+      const current = data[key];
+      assert(current.constructor === Array);
+      data[key] = current.map((entryData: any) => new entryType(entryData));
+    } else {
+      assert_todo(false);
+    }
+  });
+  return data;
 }
 
 function assert_todo(...args: any[]) {

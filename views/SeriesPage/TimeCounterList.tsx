@@ -5,6 +5,29 @@ import { reactiveView } from "./reactiveView";
 
 export { TimeCounterList };
 
+class TimeCounter {
+  counter_target: Date;
+  counter_id: number;
+  constructor({ counter_target, counter_id }) {
+    assert(counter_target);
+    assert(counter_id);
+    this.counter_target = counter_target;
+    this.counter_id = counter_id;
+  }
+  render_data({ time }) {
+    const ms = this.counter_target.getTime() - time.getTime();
+    return (ms / 1000) | 0;
+  }
+  view({ time }) {
+    return (
+      <div className="time-counter glass-background" key={this.counter_id}>
+        <div>{this.counter_id}</div>
+        <div>{this.render_data({ time })}</div>
+      </div>
+    );
+  }
+}
+
 @persist({
   isSingleton: false,
   clsName: "TimeCounterList",
@@ -18,12 +41,9 @@ export { TimeCounterList };
       },
     ],
   },
-  mapData: (data: any) => ({
-    counter_list: data.counter_list.map(
-      ({ counter_target, counter_id }) =>
-        new TimeCounter({ counter_target, counter_id })
-    ),
-  }),
+  dataType: {
+    counter_list: [TimeCounter],
+  },
 })
 @reactiveView
 class TimeCounterList {
@@ -55,29 +75,6 @@ class TimeCounterList {
           <this.time_counter_creator.view />
         </div>
       </Center>
-    );
-  }
-}
-
-class TimeCounter {
-  counter_target: Date;
-  counter_id: number;
-  constructor({ counter_target, counter_id }) {
-    assert(counter_target);
-    assert(counter_id);
-    this.counter_target = counter_target;
-    this.counter_id = counter_id;
-  }
-  render_data({ time }) {
-    const ms = this.counter_target.getTime() - time.getTime();
-    return (ms / 1000) | 0;
-  }
-  view({ time }) {
-    return (
-      <div className="time-counter glass-background" key={this.counter_id}>
-        <div>{this.counter_id}</div>
-        <div>{this.render_data({ time })}</div>
-      </div>
     );
   }
 }
