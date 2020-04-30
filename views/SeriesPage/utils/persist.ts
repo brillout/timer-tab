@@ -6,13 +6,16 @@ export { persist };
 
 const idFieldSymbol = Symbol();
 
-function persist({ isSingleton, clsName, fields: schema, idField }) {
-  assert_todo(isSingleton === false);
+function persist({ fields: schema, idField }) {
   assert.usage(idField in schema);
   assert.usage(schema[idField] === String);
-  assert.usage(clsName.constructor === String);
+
+  let clsName;
 
   return function <T extends { new (...args: any[]): {} }>(cls: T) {
+    clsName = cls.name;
+    assert(clsName);
+
     return class extends cls {
       constructor(...args: any[]) {
         super(...args);

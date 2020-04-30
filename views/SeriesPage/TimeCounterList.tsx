@@ -6,8 +6,6 @@ import { reactiveView } from "./reactiveView";
 export { TimeCounterList };
 
 @persist({
-  isSingleton: false,
-  clsName: "TimeCounter",
   idField: "counter_id",
   fields: {
     counter_target: Date,
@@ -35,8 +33,6 @@ class TimeCounter {
 }
 
 @persist({
-  isSingleton: false,
-  clsName: "TimeCounterList",
   idField: "id",
   fields: {
     id: String,
