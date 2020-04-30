@@ -1,119 +1,200 @@
 import assert from "@brillout/assert";
 import { store } from "../../../tab-utils/store";
+import { customAlphabet } from "nanoid";
 
 export { persist };
 
-function persist({
-  storageKey,
-  isSingleton,
-  clsName,
-  data: dataSchema,
-  dataType,
-}) {
-  assert(isSingleton === false);
-  assert(clsName.constructor === String);
+const idFieldSymbol = Symbol();
+
+function persist({ isSingleton, clsName, fields: schema, idField }) {
+  assert_todo(isSingleton === false);
+  assert.usage(idField in schema);
+  assert.usage(schema[idField] === String);
+  assert.usage(clsName.constructor === String);
 
   return function <T extends { new (...args: any[]): {} }>(cls: T) {
     return class extends cls {
       constructor(...args: any[]) {
         super(...args);
-        deserialize(this);
+        load(this, args);
       }
       save() {
-        serialize(this);
+        save(this);
       }
+      static [idFieldSymbol] = idField;
     };
   };
 
-  function serialize(instance) {
+  function save(instance) {
     const data: object = extract_schema_data(instance);
-    validate_schema_instance(data);
+    validate_save_data({ data });
     store_set(instance, data);
   }
 
-  function deserialize(instance) {
-    let data: object;
-    if (!store_has(instance)) {
-      data = get_schema_default_instance();
-    } else {
-      data = store_get(instance);
-    }
-    validate_schema_instance(data);
-    assert(data.constructor === Object);
+  function load(instance, args) {
+    const data = {};
 
-    if (dataType) {
-      data = apply_data_type(data, dataType);
+    const instance_id = instance[idField] || args[0][idField];
+    if (instance_id) data[idField] = instance_id;
+
+    if (instance_id && store_has(instance_id)) {
+      const data__from_store: object = store_get(instance_id);
+      assert(data__from_store.constructor === Object);
+      assert(data__from_store[idField] === data[idField]);
+      construct_relations(data__from_store);
+      Object.assign(data, data__from_store);
     }
 
+    const data__defaults = compute_defaults(data, instance);
+    Object.assign(data, data__defaults);
+
+    validate_load_data({ data, instance });
     Object.assign(instance, data);
-  }
-
-  function store_has(instance): boolean {
-    const key: string = construct_storage_key(instance);
-    return store.has_val(key);
-  }
-
-  function store_set(instance, data) {
-    const key: string = construct_storage_key(instance);
-    store.set_val(key, data);
-  }
-
-  function store_get(instance) {
-    const key: string = construct_storage_key(instance);
-    const data: object = store.get_val(key);
-    return data;
-  }
-
-  function construct_storage_key(instance) {
-    const storage_key: string = clsName + "_" + storageKey(instance);
-    return storage_key;
   }
 
   function extract_schema_data(instance) {
     const data = {};
-    Object.keys(dataSchema).forEach((key) => {
-      data[key] = instance[key];
+    Object.keys(schema).forEach((key) => {
+      const val = instance[key];
+      assert_todo(val);
+      if (val.constructor === Array) {
+        data[key] = val.map((entry) => {
+          return retrieve_val(entry);
+        });
+      } else {
+        data[key] = retrieve_val(val);
+      }
     });
     return data;
-  }
-  function get_schema_default_instance(): object {
-    const data = {};
-    Object.entries(dataSchema).forEach(([key, val]) => {
-      assert_todo(val.constructor === Array);
-      data[key] = [];
-    });
-    return data;
-  }
-  function validate_schema_instance(data: object) {
-    Object.keys(dataSchema).forEach((key) => {
-      assert(key in data);
-    });
-    Object.entries(data).forEach(([key, val]) => {
-      const propSchema = dataSchema[key];
-      assert(propSchema);
-      const propType = propSchema.constructor;
-      assert_todo(propType === Array);
-      assert(val.constructor === propType);
-    });
-  }
-}
 
-function apply_data_type(data: object, dataType: object) {
-  Object.entries(dataType).forEach(([key, val]) => {
-    if (val.constructor === Array) {
-      assert(val.length === 1);
-      const entryType = val[0];
-      assert(entryType.constructor === Function);
-      const current = data[key];
-      assert(current.constructor === Array);
-      data[key] = current.map((entryData: any) => new entryType(entryData));
-    } else {
-      assert_todo(false);
+    function retrieve_val(thing) {
+      const idField = thing.constructor[idFieldSymbol];
+      if (!idField) {
+        return thing;
+      }
+      thing.save();
+      return { [idField]: thing[idField] };
     }
-  });
-  return data;
+  }
+
+  function construct_relations(data: object) {
+    Object.entries(schema).forEach(([field, field_type]: [string, any]) => {
+      if ([String, Number, Date].includes(field_type)) {
+        return;
+      } else if (field_type.constructor === Array) {
+        assert(field_type.length === 1);
+        const entry_type = field_type[0];
+        assert(entry_type.constructor === Function);
+        const entries = data[field];
+        assert(entries.constructor === Array);
+        data[field] = entries.map(
+          (entry_data: any) => new entry_type(entry_data)
+        );
+      } else {
+        assert_todo(false);
+      }
+    });
+  }
+
+  function compute_defaults(data: object, instance): object {
+    const data__defaults = {};
+    Object.entries(schema)
+      .filter(([field]) => instance[field] === undefined)
+      .filter(([field]) => data[field] === undefined)
+      .forEach(([field, field_type]) => {
+        if (field === idField) {
+          data__defaults[field] = generate_id();
+        } else if (field_type.constructor === Array) {
+          data__defaults[field] = [];
+        } else {
+          assert_todo(false);
+        }
+      });
+    return data__defaults;
+  }
+
+  function validate_save_data({ data }) {
+    validate({ data, will_be_saved: true });
+  }
+  function validate_load_data({ data, instance }) {
+    validate({ data, instance });
+  }
+  function validate({ data, instance = null, will_be_saved = false }) {
+    assert(will_be_saved || instance);
+    Object.keys(schema).forEach((field) => {
+      assert(
+        field in data || (instance && field in instance),
+        field,
+        data,
+        schema
+      );
+    });
+    Object.entries(data).forEach(([field, val]: [string, any]) => {
+      const field_type = schema[field];
+      assert(field_type);
+      if ([String, Number, Date].includes(field_type)) {
+        assert.usage(val.constructor === field_type, field, field_type, val);
+      } else if (field_type.constructor === Array) {
+        assert(val.constructor === Array);
+        assert(field_type.length === 1);
+        const entry_type = field_type[0];
+        val.forEach((entry: any) => {
+          if (will_be_saved) {
+            const entry_keys = Object.keys(entry);
+            const entry_idField = entry_keys[0];
+            assert(entry_idField === entry_type[idFieldSymbol]);
+            assert(entry_keys.length === 1);
+            assert(entry[entry_idField]);
+          } else {
+            assert(entry.constructor === entry_type, field, entry);
+          }
+        });
+      } else {
+        assert_todo(false, field_type, field);
+      }
+    });
+  }
+
+  function store_has(instance_id): boolean {
+    const key: string = construct_storage_key({ instance_id });
+    return store.has_val(key);
+  }
+
+  function store_set(instance, data) {
+    const key: string = construct_storage_key({ instance });
+    store.set_val(key, data);
+  }
+
+  function store_get(instance_id): object {
+    const key: string = construct_storage_key({ instance_id });
+    const data: object = store.get_val(key);
+    return data;
+  }
+
+  function construct_storage_key({ instance = null, instance_id = null }) {
+    instance_id = instance_id || get_id(instance);
+    assert(instance_id);
+    assert(clsName);
+    const storage_key: string = clsName + "_" + instance_id;
+    return storage_key;
+  }
+
+  function get_id(instance) {
+    const instance_id = instance[idField];
+    assert(instance_id);
+    return instance_id;
+  }
 }
 
 function assert_todo(...args: any[]) {
   assert(...args);
+}
+
+function generate_id() {
+  const nanoid = customAlphabet(
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+    8
+  );
+  const uid = nanoid(); //=> "FwGcLB7e"
+  return uid;
 }

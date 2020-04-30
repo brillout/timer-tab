@@ -5,14 +5,20 @@ import { reactiveView } from "./reactiveView";
 
 export { TimeCounterList };
 
+@persist({
+  isSingleton: false,
+  clsName: "TimeCounter",
+  idField: "counter_id",
+  fields: {
+    counter_target: Date,
+    counter_id: String,
+  },
+})
 class TimeCounter {
   counter_target: Date;
   counter_id: number;
-  constructor({ counter_target, counter_id }) {
-    assert(counter_target);
-    assert(counter_id);
+  constructor({ counter_target }) {
     this.counter_target = counter_target;
-    this.counter_id = counter_id;
   }
   render_data({ time }) {
     const ms = this.counter_target.getTime() - time.getTime();
@@ -31,34 +37,22 @@ class TimeCounter {
 @persist({
   isSingleton: false,
   clsName: "TimeCounterList",
-  storageKey: (time_counter_list: TimeCounterList) =>
-    time_counter_list.instanceKey,
-  data: {
-    counter_list: [
-      {
-        counter_id: String,
-        counter_target: Date,
-      },
-    ],
-  },
-  dataType: {
+  idField: "id",
+  fields: {
+    id: String,
     counter_list: [TimeCounter],
   },
 })
 @reactiveView
 class TimeCounterList {
-  instanceKey: String;
+  id: string;
   time_counter_creator: TimeCounterCreator = new TimeCounterCreator(this);
   counter_list: TimeCounter[];
-  constructor({ instanceKey }: { instanceKey: String }) {
-    this.instanceKey = instanceKey;
-  }
   set_counter_list(counters: TimeCounter[]) {
     this.counter_list = counters;
   }
   add_new_time_counter(time_counter: TimeCounter) {
     this.counter_list.push(time_counter);
-    console.log("ll", this.counter_list);
     // @ts-ignore
     this.save();
   }
@@ -108,9 +102,9 @@ class TimeCounterCreator {
     );
   }
   create_new_stopwatch() {
-    const counter_id = (Math.random() * 1000000) | 0;
     const counter_target = new Date();
-    const time_counter = new TimeCounter({ counter_target, counter_id });
+    const time_counter = new TimeCounter({ counter_target });
+    assert(time_counter.counter_id);
     this.#time_counter_list.add_new_time_counter(time_counter);
   }
 }
