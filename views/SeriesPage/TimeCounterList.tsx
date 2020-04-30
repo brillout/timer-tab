@@ -1,42 +1,48 @@
+import assert from "@brillout/assert";
 import React, { useState, useEffect } from "react";
 import { persist } from "./utils/persist";
-import assert from "@brillout/assert";
 import { reactiveView } from "./reactiveView";
 
 export { TimeCounterList };
 
 @persist({
-  key: "timer_tab-time_counter_list",
-  deserializer: function (data) {
-    const counters = data.map((time_counter_data) => {
-      let { counter_target, counter_id } = time_counter_data;
-      counter_target = new Date(counter_target);
-      const counter = new TimeCounter({ counter_target, counter_id });
-      return counter;
-    });
-    this.set_counter_list(counters);
+  isSingleton: false,
+  clsName: "TimeCounterList",
+  storageKey: (time_counter_list: TimeCounterList) =>
+    time_counter_list.instanceKey,
+  data: {
+    counter_list: [
+      {
+        counter_id: String,
+        counter_target: Date,
+      },
+    ],
   },
-  serializer: function () {
-    const data = this.counter_list.map((counter: TimeCounter) => ({
-      counter_id: counter.counter_id,
-      counter_target: counter.counter_target,
-    }));
-    return data;
-  },
+  mapData: (data: any) => ({
+    counter_list: data.counter_list.map(
+      ({ counter_target, counter_id }) =>
+        new TimeCounter({ counter_target, counter_id })
+    ),
+  }),
 })
 @reactiveView
 class TimeCounterList {
+  instanceKey: String;
   time_counter_creator: TimeCounterCreator = new TimeCounterCreator(this);
   counter_list: TimeCounter[];
+  constructor({ instanceKey }: { instanceKey: String }) {
+    this.instanceKey = instanceKey;
+  }
   set_counter_list(counters: TimeCounter[]) {
     this.counter_list = counters;
   }
   add_new_time_counter(time_counter: TimeCounter) {
     this.counter_list.push(time_counter);
+    console.log("ll", this.counter_list);
     // @ts-ignore
     this.save();
   }
-  view(props) {
+  view(props: any) {
     const getTime = () => new Date();
     const [time, updateView] = useState(getTime());
     useEffect(() => {
