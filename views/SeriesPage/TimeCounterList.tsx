@@ -30,22 +30,84 @@ class TimeCounter {
 }
 
 @persist({
+  minutes: Number,
+  title: String,
+  id: ID,
+  is_playing: Boolean,
+  start_time: Date,
+})
+class Countdown {
+  id: number;
+  title: string = "";
+  minutes: number;
+  is_playing: boolean = false;
+  start_time: Date = null;
+  constructor({ title, minutes }) {
+    this.title = title;
+    this.minutes = minutes;
+  }
+  view({ time }) {
+    const header = <div>{this.title + " " + this.id}</div>;
+
+    let content: JSX.Element;
+    if (!this.is_playing) {
+      content = (
+        <button type="button" onClick={this.onStart.bind(this)}>
+          Start
+        </button>
+      );
+    } else {
+      const ms =
+        this.start_time.getTime() + this.minutes * 60 * 1000 - time.getTime();
+      const seconds = (ms / 1000) | 0;
+      content = (
+        <>
+          <div>{seconds}</div>
+          <button type="button" onClick={this.onStop.bind(this)}>
+            Stop
+          </button>
+        </>
+      );
+    }
+    return (
+      <div className="time-counter glass-background">
+        {header}
+        {content}
+      </div>
+    );
+  }
+  onStart() {
+    this.is_playing = true;
+    this.start_time = new Date();
+  }
+  onStop() {
+    this.is_playing = false;
+  }
+}
+
+@persist({
   id: ID,
   counter_list: [TimeCounter],
 })
 @reactiveView
 class TimeCounterList {
   id: string;
-  time_counter_creator: TimeCounterCreator = new TimeCounterCreator(this);
+  time_counter_creator: MultiCreator = new MultiCreator(this);
   counter_list: TimeCounter[];
   set_counter_list(counters: TimeCounter[]) {
     this.counter_list = counters;
   }
-  add_new_time_counter(time_counter: TimeCounter) {
+  add_time_counter(time_counter: TimeCounter) {
     this.counter_list.push(time_counter);
     // @ts-ignore
     this.save();
   }
+  /*
+  add_new_countdown({minutes, title}: {minutes: number, title: string}) {
+	  const time_counter = new Countdown({minutes, title});
+	  this.add_time_counter(time_counter);
+  }
+   */
   view(props: any) {
     const getTime = () => new Date();
     const [time, updateView] = useState(getTime());
@@ -64,7 +126,41 @@ class TimeCounterList {
 }
 
 @reactiveView
-class TimeCounterCreator {
+class SeriesCreator {
+  minutes: number;
+  title: string = null;
+  #time_counter_list: TimeCounterList;
+  constructor(time_counter_list: TimeCounterList) {
+    this.#time_counter_list = time_counter_list;
+  }
+  view() {
+    return (
+      <form onSubmit={() => this.onSubmit()}>
+        <Input stateProp="minutes" stateObject={this} />
+        <button type="submit">Add Timer</button>
+      </form>
+    );
+  }
+  onSubmit() {
+    const { minutes, title } = this;
+    this.#time_counter_list.add_new_countdown({ minutes, title });
+  }
+}
+
+function Input({ stateProp, stateObject }) {
+  return (
+    <input
+      type="text"
+      value={stateObject[stateProp]}
+      onChange={(ev) => {
+        stateObject[stateProp] = ev.target.value;
+      }}
+    ></input>
+  );
+}
+
+@reactiveView
+class MultiCreator {
   selected_timer_type = null;
   #time_counter_list: TimeCounterList;
   constructor(time_counter_list: TimeCounterList) {
@@ -95,7 +191,7 @@ class TimeCounterCreator {
     const counter_target = new Date();
     const time_counter = new TimeCounter({ counter_target });
     assert(time_counter.counter_id);
-    this.#time_counter_list.add_new_time_counter(time_counter);
+    this.#time_counter_list.add_time_counter(time_counter);
   }
 }
 
