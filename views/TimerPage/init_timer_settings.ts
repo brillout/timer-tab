@@ -67,7 +67,7 @@ function get_option_list() {
       option_id: "timer_youtube_alarm",
       option_type: "text-input",
       option_description: "YouTube Alarm",
-      option_default: "https://youtu.be/PS5KAEgrtMA",
+      option_default: "",
       option_placeholder: "Image URL",
       is_creator_option: true,
     },
