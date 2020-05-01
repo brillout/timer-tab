@@ -5,14 +5,37 @@ import { reactiveView } from "./reactiveView";
 
 export { TimeCounterList };
 
+class TimeCounter {
+  constructor(args?: any) {
+    if (this.constructor !== TimeCounter) {
+      return;
+    }
+    assert(args);
+    const { type } = args;
+    if (type === "stopwatch-type") {
+      return new Stopwatch(args);
+    } else if (type === "countdown-type") {
+      return new Countdown(args);
+    } else {
+      assert(false, { type });
+    }
+  }
+  view({ time }: { time: Date }): JSX.Element {
+    return <div>{time}I'm asbtract</div>;
+  }
+}
+
 @persist({
   counter_target: Date,
   counter_id: ID,
+  type: String,
 })
-class TimeCounter {
+class Stopwatch extends TimeCounter {
   counter_target: Date;
   counter_id: number;
+  type: string = "stopwatch-type";
   constructor({ counter_target }) {
+    super();
     this.counter_target = counter_target;
   }
   render_data({ time }) {
@@ -102,12 +125,10 @@ class TimeCounterList {
     // @ts-ignore
     this.save();
   }
-  /*
-  add_new_countdown({minutes, title}: {minutes: number, title: string}) {
-	  const time_counter = new Countdown({minutes, title});
-	  this.add_time_counter(time_counter);
+  add_new_countdown({ minutes, title }: { minutes: number; title: string }) {
+    const time_counter = new Countdown({ minutes, title });
+    this.add_time_counter(time_counter);
   }
-   */
   view(props: any) {
     const getTime = () => new Date();
     const [time, updateView] = useState(getTime());
@@ -189,7 +210,7 @@ class MultiCreator {
   }
   create_new_stopwatch() {
     const counter_target = new Date();
-    const time_counter = new TimeCounter({ counter_target });
+    const time_counter = new Stopwatch({ counter_target });
     assert(time_counter.counter_id);
     this.#time_counter_list.add_time_counter(time_counter);
   }

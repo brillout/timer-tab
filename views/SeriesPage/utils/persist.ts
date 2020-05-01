@@ -110,7 +110,10 @@ function persist(schema) {
         } else if (field_type.constructor === Array) {
           data__defaults[field] = [];
         } else {
-          assert_todo(false);
+          assert_todo(false, "Couldn't compute default for " + field, {
+            data,
+            instance,
+          });
         }
       });
     return data__defaults;
@@ -147,11 +150,13 @@ function persist(schema) {
           if (will_be_saved) {
             const entry_keys = Object.keys(entry);
             const entry_idField = entry_keys[0];
+            /* Doesn't work when entry is a subtype of entry_type
             assert(entry_idField === entry_type[idFieldSymbol]);
+	    */
             assert(entry_keys.length === 1);
             assert(entry[entry_idField]);
           } else {
-            assert(entry.constructor === entry_type, field, entry);
+            assert(entry instanceof entry_type, field, entry);
           }
         });
       } else {
