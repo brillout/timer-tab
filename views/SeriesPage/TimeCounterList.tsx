@@ -1,16 +1,13 @@
 import assert from "@brillout/assert";
 import React, { useState, useEffect } from "react";
-import { persist } from "./utils/persist";
+import { persist, ID } from "./utils/persist";
 import { reactiveView } from "./reactiveView";
 
 export { TimeCounterList };
 
 @persist({
-  idField: "counter_id",
-  fields: {
-    counter_target: Date,
-    counter_id: String,
-  },
+  counter_target: Date,
+  counter_id: ID,
 })
 class TimeCounter {
   counter_target: Date;
@@ -33,11 +30,8 @@ class TimeCounter {
 }
 
 @persist({
-  idField: "id",
-  fields: {
-    id: String,
-    counter_list: [TimeCounter],
-  },
+  id: ID,
+  counter_list: [TimeCounter],
 })
 @reactiveView
 class TimeCounterList {

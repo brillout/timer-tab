@@ -2,13 +2,13 @@ import assert from "@brillout/assert";
 import { store } from "../../../tab-utils/store";
 import { customAlphabet } from "nanoid";
 
-export { persist };
-
 const idFieldSymbol = Symbol();
+const ID = Symbol("ID");
 
-function persist({ fields: schema, idField }) {
-  assert.usage(idField in schema);
-  assert.usage(schema[idField] === String);
+export { persist, ID };
+
+function persist(schema) {
+  const idField = retrieve_id_field(schema);
 
   let clsName;
 
@@ -82,7 +82,7 @@ function persist({ fields: schema, idField }) {
 
   function construct_relations(data: object) {
     Object.entries(schema).forEach(([field, field_type]: [string, any]) => {
-      if ([String, Number, Date].includes(field_type)) {
+      if ([ID, String, Number, Date].includes(field_type)) {
         return;
       } else if (field_type.constructor === Array) {
         assert(field_type.length === 1);
@@ -135,7 +135,9 @@ function persist({ fields: schema, idField }) {
     Object.entries(data).forEach(([field, val]: [string, any]) => {
       const field_type = schema[field];
       assert(field_type);
-      if ([String, Number, Date].includes(field_type)) {
+      if (field_type === ID) {
+        assert.usage([String, Number].includes(val.constructor));
+      } else if ([String, Number, Date].includes(field_type)) {
         assert.usage(val.constructor === field_type, field, field_type, val);
       } else if (field_type.constructor === Array) {
         assert(val.constructor === Array);
@@ -200,4 +202,12 @@ function generate_id() {
   );
   const uid = nanoid(); //=> "FwGcLB7e"
   return uid;
+}
+
+function retrieve_id_field(schema): string {
+  const id_fields = Object.entries(schema)
+    .map(([key, val]) => (val === ID ? key : null))
+    .filter(Boolean);
+  assert.usage(id_fields.length === 1);
+  return id_fields[0];
 }
