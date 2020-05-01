@@ -1,6 +1,7 @@
 import assert from "@brillout/assert";
+import glockenklang from "./glockenklang.ogg";
 
-export { play_youtube_alarm, stop_youtube_alarm, set_youtube_url };
+export { play_alarm, stop_alarm, set_youtube_url };
 
 export default youtube_alarm;
 
@@ -18,14 +19,28 @@ async function youtube_alarm() {
   enable_prefetch();
 }
 
-let state;
+let alarm_is_playing = false;
 
-async function play_youtube_alarm() {
-  if (state === "STARTED") return;
-  const player = await load_player();
-  if (no_youtube_alarm()) {
-    return play_fallback();
+function play_alarm() {
+  if (alarm_is_playing) return;
+  if (no_youtube()) {
+    stop_youtube();
+    play_fallback();
+  } else {
+    stop_fallback();
+    play_youtube();
   }
+  alarm_is_playing = true;
+}
+function stop_alarm() {
+  if (!alarm_is_playing) return;
+  stop_fallback();
+  stop_youtube();
+  alarm_is_playing = false;
+}
+
+async function play_youtube() {
+  const player = await load_player();
   player.seekTo(video_spec.video_start);
   player.unMute();
   player.playVideo();
@@ -33,25 +48,20 @@ async function play_youtube_alarm() {
   document
     .querySelector("#" + youtube_wrapper)
     .classList.add("youtube_alarm_show");
-  state = "STARTED";
 }
-
-async function stop_youtube_alarm() {
-  if (state === "STOPED") return;
+async function stop_youtube() {
   const player = await load_player();
   document
     .querySelector("#" + youtube_wrapper)
     .classList.remove("youtube_alarm_show");
   player.mute();
   player.setLoop(false);
-  state = "STOPED";
 }
 
 async function prefetch() {
   const player = await load_player();
-  if (state !== "STARTED") {
-    player.mute();
-  }
+  assert(!no_youtube());
+  player.mute();
   player.loadVideoById({
     videoId: video_spec.video_id,
     startSeconds: video_spec.video_start,
@@ -80,11 +90,16 @@ async function set_youtube_url(youtube_url) {
   video_spec = parse_youtube_url(youtube_url);
   resolve__video_spec();
 
-  await wait_for_prefetch_enable;
+  if (!no_youtube()) {
+    prefetch();
+  }
 
-  prefetch();
+  if (alarm_is_playing) {
+    stop_alarm();
+    play_alarm();
+  }
 }
-function no_youtube_alarm() {
+function no_youtube() {
   const { video_id } = video_spec;
   assert(video_id || video_id === null);
   return video_id === null;
@@ -222,6 +237,29 @@ function add_css(content) {
   document.getElementsByTagName("head")[0].appendChild(el);
 }
 
+function play_fallback() {
+  install_audio_tag();
+  audio_tag.currentTime = 0;
+  audio_tag.play();
+}
+function stop_fallback() {
+  if (!audio_tag) return;
+  audio_tag.pause();
+}
+let audio_tag;
+function install_audio_tag() {
+  if (audio_tag) return;
+  audio_tag = document.createElement("audio");
+  audio_tag.id = "notify_sound";
+  audio_tag.style.display = "none";
+  const source_tag = audio_tag.appendChild(document.createElement("source"));
+  //source_tag.type="audio/mpeg"; // for .mp3 files
+  source_tag.type = "audio/ogg";
+  source_tag.src = glockenklang;
+  document.body.appendChild(audio_tag);
+}
+
+/*
 let node, ctx, timeout;
 function play_fallback() {
   if (!node) {
@@ -256,9 +294,10 @@ function play_fallback() {
   node["con" + "nect"](ctx["destination"]);
   if (timeout) clearTimeout(timeout);
   timeout = setTimeout(function () {
-    stop();
+    stop_fallback();
   }, 10 * 1000);
 }
-function stop() {
+function stop_fallback() {
   if (node) node["disconnect"]();
 }
+*/

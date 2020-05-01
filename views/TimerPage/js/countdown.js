@@ -1,5 +1,5 @@
 import ml from "./ml";
-import { play_youtube_alarm, stop_youtube_alarm } from "./youtube_alarm";
+import { play_alarm, stop_alarm } from "./youtube_alarm";
 
 const ctObj = {};
 
@@ -722,10 +722,10 @@ export default ctObj;
           //{{{
           feature_fcts.push(function () {
             notis.ring.play_ = function () {
-              play_youtube_alarm();
+              play_alarm();
             };
             notis.ring.stop = function () {
-              stop_youtube_alarm();
+              stop_alarm();
             };
           });
           //}}}
