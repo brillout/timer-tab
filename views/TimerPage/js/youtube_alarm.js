@@ -23,6 +23,9 @@ let state;
 async function play_youtube_alarm() {
   if (state === "STARTED") return;
   const player = await load_player();
+  if (no_youtube_alarm()) {
+    return play_fallback();
+  }
   player.seekTo(video_spec.video_start);
   player.unMute();
   player.playVideo();
@@ -68,7 +71,7 @@ let resolve__video_spec;
 let wait_for_video_spec = new Promise((r) => (resolve__video_spec = r));
 let last_youtube_url;
 async function set_youtube_url(youtube_url) {
-  assert(youtube_url);
+  assert(youtube_url.constructor === String);
   if (last_youtube_url === youtube_url) {
     return;
   }
@@ -80,6 +83,11 @@ async function set_youtube_url(youtube_url) {
   await wait_for_prefetch_enable;
 
   prefetch();
+}
+function no_youtube_alarm() {
+  const { video_id } = video_spec;
+  assert(video_id || video_id === null);
+  return video_id === null;
 }
 
 let player__loaded;
@@ -145,6 +153,7 @@ function parse_youtube_url(url) {
 
   //retrieve ID
   video_spec.video_id = url_to_id(url);
+  assert(video_spec.video_id || video_spec.video_id === null);
 
   //retrieve start & repeat
   const matches = /(?:\?|&)(?:start|t)=([^&#]*)/.exec(url);
@@ -213,38 +222,43 @@ function add_css(content) {
   document.getElementsByTagName("head")[0].appendChild(el);
 }
 
-/*
-let node,ctx,timeout;
-function play_web_audio_fallback() {
-  console.log(11);
-  if(!node)
-  {
-    function fadeOut(i,length) { return 1-i/length }
-    function fadeIn (i,length) { return i/length }
-    function fade   (i,length) { var limit = length/100;return i>limit?fadeOut(i-limit,length):fadeIn(i,limit)}
+let node, ctx, timeout;
+function play_fallback() {
+  if (!node) {
+    function fadeOut(i, length) {
+      return 1 - i / length;
+    }
+    function fadeIn(i, length) {
+      return i / length;
+    }
+    function fade(i, length) {
+      var limit = length / 100;
+      return i > limit ? fadeOut(i - limit, length) : fadeIn(i, limit);
+    }
 
     ctx = new AudioContext();
 
-    var SAMPLE_RATE = ctx['sampleRate'];
-    var buf_size=1.35*512*128;
+    var SAMPLE_RATE = ctx["sampleRate"];
+    var buf_size = 1.35 * 512 * 128;
     var freq = 440;
     var PI_2 = Math.PI * 2;
 
-    var buffer = ctx['createBuffer'](1, buf_size, SAMPLE_RATE);
-      var buf = buffer['getChannelData'](0);
-      for (let i = 0; i < buf_size; ++i) buf[i] = fade(i,buf_size)*Math.sin(freq * PI_2 * i / SAMPLE_RATE);
-    node = ctx['createBufferSource'](0);
-      node['buffer']  = buffer;
-      node['loop']    = true;
-      node['looping'] = true;
-    node['start'](ctx['currentTime']);
+    var buffer = ctx["createBuffer"](1, buf_size, SAMPLE_RATE);
+    var buf = buffer["getChannelData"](0);
+    for (let i = 0; i < buf_size; ++i)
+      buf[i] = fade(i, buf_size) * Math.sin((freq * PI_2 * i) / SAMPLE_RATE);
+    node = ctx["createBufferSource"](0);
+    node["buffer"] = buffer;
+    node["loop"] = true;
+    node["looping"] = true;
+    node["start"](ctx["currentTime"]);
   }
-  node['con'+'nect'](ctx['destination']);
-  if(timeout) clearTimeout(timeout);
-  if(!ctYt.repeat_) timeout=setTimeout(function(){node['disconnect']()},120*1000);
-  console.log(22);
+  node["con" + "nect"](ctx["destination"]);
+  if (timeout) clearTimeout(timeout);
+  timeout = setTimeout(function () {
+    stop();
+  }, 10 * 1000);
 }
 function stop() {
-  if(node) node['disconnect']();
+  if (node) node["disconnect"]();
 }
-*/

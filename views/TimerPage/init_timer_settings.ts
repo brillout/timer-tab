@@ -35,7 +35,7 @@ function init_timer_settings() {
 
   function update_youtube_url() {
     const youtube_url = get_option_value("timer_youtube_alarm");
-    assert(youtube_url, { youtube_url });
+    assert(youtube_url.constructor === String, { youtube_url });
     set_youtube_url(youtube_url);
   }
 }
