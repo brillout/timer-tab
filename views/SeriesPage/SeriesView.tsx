@@ -22,7 +22,7 @@ function Content() {
   if (typeof window === "undefined") {
     return null;
   }
-  const time_counter_list = new TimeCounterList({ id: "series-page" });
+  const time_counter_list = new TimeCounterList({ list_id: "series-page" });
   return (
     <time_counter_list.view style={{ width: "100vw", minHeight: "100vh" }} />
   );

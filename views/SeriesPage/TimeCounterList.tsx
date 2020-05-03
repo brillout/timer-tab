@@ -11,13 +11,13 @@ class TimeCounter {
       return;
     }
     assert(args);
-    const { type } = args;
-    if (type === "stopwatch-type") {
+    const { counter_id } = args;
+    if (Stopwatch.isInstanceId(counter_id)) {
       return new Stopwatch(args);
-    } else if (type === "countdown-type") {
+    } else if (Countdown.isInstanceId(counter_id)) {
       return new Countdown(args);
     } else {
-      assert(false, { type });
+      assert(false, { counter_id });
     }
   }
   view({ time }: { time: Date }): JSX.Element {
@@ -28,12 +28,10 @@ class TimeCounter {
 @persist({
   counter_target: Date,
   counter_id: ID,
-  type: String,
 })
 class Stopwatch extends TimeCounter {
   counter_target: Date;
-  counter_id: number;
-  type: string = "stopwatch-type";
+  counter_id: string;
   constructor({ counter_target }) {
     super();
     this.counter_target = counter_target;
@@ -55,12 +53,12 @@ class Stopwatch extends TimeCounter {
 @persist({
   minutes: Number,
   title: String,
-  id: ID,
+  counter_id: ID,
   is_playing: Boolean,
   start_time: Date,
 })
 class Countdown {
-  id: number;
+  counter_id: string;
   title: string = "";
   minutes: number;
   is_playing: boolean = false;
@@ -70,7 +68,7 @@ class Countdown {
     this.minutes = minutes;
   }
   view({ time }) {
-    const header = <div>{this.title + " " + this.id}</div>;
+    const header = <div>{this.title + " " + this.counter_id}</div>;
 
     let content: JSX.Element;
     if (!this.is_playing) {
@@ -109,12 +107,12 @@ class Countdown {
 }
 
 @persist({
-  id: ID,
+  list_id: ID,
   counter_list: [TimeCounter],
 })
 @reactiveView
 class TimeCounterList {
-  id: string;
+  list_id: string;
   time_counter_creator: MultiCreator = new MultiCreator(this);
   counter_list: TimeCounter[];
   set_counter_list(counters: TimeCounter[]) {
