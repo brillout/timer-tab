@@ -101,7 +101,7 @@ class TimeCounterList {
   list_id: string;
   time_counter_creator: MultiCreator = new MultiCreator(this);
   countdown_creator: CountdownCreator = new CountdownCreator(this);
-  counter_list: TimeCounter[];
+  counter_list: TimeCounter[] = [];
   set_counter_list(counters: TimeCounter[]) {
     this.counter_list = counters;
   }

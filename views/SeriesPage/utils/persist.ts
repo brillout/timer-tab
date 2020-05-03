@@ -6,23 +6,29 @@ const idFieldSymbol = Symbol("idField");
 const clsNameSymbol = Symbol("clsName");
 const isPersistedClass = Symbol("isPersistedClass");
 const ID = Symbol("ID");
+const get_pointer = Symbol("get_pointer");
 
 type ClassName = string;
 type PersistedProps = object;
 type IdField = string;
 type Schema = object;
+type IdVal = string;
 
 export { persist, ID };
 
 const persisted_classes = [];
 
+interface InstancePointer {
+  instance_id: IdVal;
+  instance_type: ClassName;
+}
 interface StorageData {
   instance_props: PersistedProps;
   instance_type: ClassName;
 }
 
 function persist(schema: Schema) {
-  const idField: IdField = retrieve_id_field(schema);
+  const id_field: IdField = retrieve_id_field(schema);
 
   let clsName: ClassName;
 
@@ -38,9 +44,19 @@ function persist(schema: Schema) {
       save() {
         save(this);
       }
-      static [idFieldSymbol]: IdField = idField;
+      static [idFieldSymbol]: IdField = id_field;
       static [clsNameSymbol]: ClassName = clsName;
       static [isPersistedClass] = true;
+
+      [get_pointer](): InstancePointer {
+        const instance_id = this[id_field];
+        assert(instance_id.constructor === String);
+        const pointer_data: InstancePointer = {
+          instance_id,
+          instance_type: clsName,
+        };
+        return pointer_data;
+      }
     }
 
     persisted_classes.push(cls_extended);
@@ -56,17 +72,16 @@ function persist(schema: Schema) {
   function load(instance, args) {
     const persisted_props: PersistedProps = {};
 
-    const instance_id = instance[idField] || args[0][idField];
-    if (instance_id) persisted_props[idField] = instance_id;
+    const instance_id = instance[id_field] || args[0][id_field];
+    if (instance_id) persisted_props[id_field] = instance_id;
 
     if (instance_id && store_has(instance_id)) {
       const data: StorageData = store_get(instance_id);
-      assert(data.instance_props[idField] === persisted_props[idField]);
+      assert(data.instance_props[id_field] === persisted_props[id_field]);
       construct_relations(data);
       Object.assign(persisted_props, data.instance_props);
     }
 
-    // TODO remove
     const data__defaults = compute_defaults(persisted_props, instance);
     Object.assign(persisted_props, data__defaults);
 
@@ -92,7 +107,7 @@ function persist(schema: Schema) {
     };
     return data;
 
-    function retrieve_prop_data<T>(thing: T): T | StorageData {
+    function retrieve_prop_data<T>(thing: T): T | InstancePointer {
       if (
         !thing ||
         thing.constructor === String ||
@@ -103,17 +118,9 @@ function persist(schema: Schema) {
         return thing;
       }
       if (thing && thing.constructor[isPersistedClass]) {
-        const idField = thing.constructor[idFieldSymbol];
         // @ts-ignore
         thing.save();
-        const data: StorageData = {
-          instance_props: {
-            [idField]: thing[idField],
-          },
-          instance_type: thing.constructor[clsNameSymbol],
-        };
-        validate_storage_data(data);
-        return data;
+        return thing[get_pointer]();
       }
       assert_todo(false, thing.constructor);
     }
@@ -130,10 +137,10 @@ function persist(schema: Schema) {
         assert(entry_type__todo.constructor === Function);
         const entries = instance_props[field];
         assert(entries.constructor === Array);
-        instance_props[field] = entries.map((entry_data: StorageData) => {
+        instance_props[field] = entries.map((entry_data: InstancePointer) => {
           const entry_cls = find_class(entry_data.instance_type);
           assert(entry_cls[isPersistedClass]);
-          const entry_instance = new entry_cls(entry_data.instance_props);
+          const entry_instance = new entry_cls(entry_data.instance_id);
           return entry_instance;
         });
       } else {
@@ -158,9 +165,10 @@ function persist(schema: Schema) {
       .filter(([field]) => instance[field] === undefined)
       .filter(([field]) => data[field] === undefined)
       .forEach(([field, field_type]) => {
-        if (field === idField) {
+        if (field === id_field) {
           data__defaults[field] = generate_id();
-        } else if (field_type.constructor === Array) {
+        }
+        /* else if (field_type.constructor === Array) {
           data__defaults[field] = [];
         } else {
           assert_todo(false, "Couldn't compute default for " + field, {
@@ -168,6 +176,7 @@ function persist(schema: Schema) {
             instance,
           });
         }
+	*/
       });
     return data__defaults;
   }
@@ -179,20 +188,20 @@ function persist(schema: Schema) {
     validate(persisted_props, { instance });
   }
   function validate(
-    props: PersistedProps,
+    instance_props: object,
     { instance = null, is_storage_data = false }
   ) {
-    assert(props);
+    assert(instance_props);
     assert(!!is_storage_data !== !!instance);
     Object.keys(schema).forEach((field) => {
-      assert(field in props || (instance && field in instance), {
+      assert(field in instance_props || (instance && field in instance), {
         field,
         is_storage_data,
-        props,
+        instance_props,
         schema,
       });
     });
-    Object.entries(props).forEach(([field, val]: [string, any]) => {
+    Object.entries(instance_props).forEach(([field, val]: [string, any]) => {
       const field_type = schema[field];
       assert(field_type);
       if (field_type === ID) {
@@ -203,34 +212,38 @@ function persist(schema: Schema) {
             (!isNaN(val) &&
               val !== undefined &&
               val.constructor === field_type),
-          field,
-          field_type,
-          val
+          {
+            field,
+            field_type,
+            val,
+          }
         );
       } else if (field_type.constructor === Array) {
         assert(val.constructor === Array);
         assert(field_type.length === 1);
         const entry_type = field_type[0];
         val.forEach((entry) => {
-          if (is_storage_data) {
-            const entry_keys = Object.keys(entry);
-            assert(entry_keys.length === 2, { entry });
-            const { instance_props, instance_type } = entry;
-            assert(instance_props, { entry });
-            assert(instance_type);
+          if (!is_storage_data) {
+            assert(entry instanceof entry_type, field, entry);
+          } else {
+            const instance_pointer: InstancePointer = entry;
+            const entry_keys = Object.keys(instance_pointer);
+            const { instance_id, instance_type } = instance_pointer;
+            assert(
+              entry_keys.length === 2 &&
+                instance_id.constructor === String &&
+                instance_type.constructor === String,
+              { instance_pointer, instance_props }
+            );
             const entry_cls = find_class(instance_type);
             assert(entry_cls);
-            assert(instance_props[entry_cls[idFieldSymbol]]);
-            assert(Object.keys(instance_props).length === 1);
             /*
             const entry_idField = entry_keys[0];
-            assert(entry[entry_idField]);
+            assert(instance_pointer[entry_idField]);
 	    */
-            /* Doesn't work when entry is a subtype of entry_type
+            /* Doesn't work when instance_pointer is a subtype of entry_type
             assert(entry_idField === entry_type[idFieldSymbol]);
 	    */
-          } else {
-            assert(entry instanceof entry_type, field, entry);
           }
         });
       } else {
@@ -266,7 +279,7 @@ function persist(schema: Schema) {
   }
 
   function get_id(instance) {
-    const instance_id = instance[idField];
+    const instance_id = instance[id_field];
     assert(instance_id);
     return instance_id;
   }
