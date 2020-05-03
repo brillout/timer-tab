@@ -140,7 +140,9 @@ function persist(schema: Schema) {
         instance_props[field] = entries.map((entry_data: InstancePointer) => {
           const entry_cls = find_class(entry_data.instance_type);
           assert(entry_cls[isPersistedClass]);
-          const entry_instance = new entry_cls(entry_data.instance_id);
+          const entry_instance = new entry_cls({
+            [entry_cls[idFieldSymbol]]: entry_data.instance_id,
+          });
           return entry_instance;
         });
       } else {
@@ -194,12 +196,23 @@ function persist(schema: Schema) {
     assert(instance_props);
     assert(!!is_storage_data !== !!instance);
     Object.keys(schema).forEach((field) => {
-      assert(field in instance_props || (instance && field in instance), {
-        field,
-        is_storage_data,
-        instance_props,
-        schema,
-      });
+      /*
+      const isOptionalField = false;
+      if( isOptionalField ){
+        return;
+      }
+      */
+      assert(
+        field in instance_props ||
+          (!is_storage_data && instance && field in instance),
+        "Field `" + field + "` is missing.",
+        {
+          is_storage_data,
+          clsName,
+          instance_props,
+          schema,
+        }
+      );
     });
     Object.entries(instance_props).forEach(([field, val]: [string, any]) => {
       const field_type = schema[field];
@@ -208,10 +221,7 @@ function persist(schema: Schema) {
         assert.usage([String, Number].includes(val.constructor));
       } else if ([String, Number, Date, Boolean].includes(field_type)) {
         assert.usage(
-          val === null ||
-            (!isNaN(val) &&
-              val !== undefined &&
-              val.constructor === field_type),
+          val === null || (val !== undefined && val.constructor === field_type),
           {
             field,
             field_type,
@@ -219,12 +229,18 @@ function persist(schema: Schema) {
           }
         );
       } else if (field_type.constructor === Array) {
-        assert(val.constructor === Array);
         assert(field_type.length === 1);
         const entry_type = field_type[0];
-        val.forEach((entry) => {
+        assert(val.constructor === Array);
+        val.forEach((entry: any) => {
           if (!is_storage_data) {
-            assert(entry instanceof entry_type, field, entry);
+            const entry_constructor = entry.constructor;
+            assert(entry instanceof entry_type, {
+              field,
+              entry_type,
+              entry,
+              entry_constructor,
+            });
           } else {
             const instance_pointer: InstancePointer = entry;
             const entry_keys = Object.keys(instance_pointer);
@@ -252,26 +268,26 @@ function persist(schema: Schema) {
     });
   }
 
-  function store_has(instance_id): boolean {
-    const key: string = construct_storage_key({ instance_id });
+  function store_has(instance_id: IdVal): boolean {
+    const key: string = construct_storage_key(instance_id);
     return store.has_val(key);
   }
 
   function store_set(instance, data: StorageData) {
-    const key: string = construct_storage_key({ instance });
+    const instance_id = get_id(instance);
+    const key: string = construct_storage_key(instance_id);
     validate_storage_data(data);
     store.set_val(key, data);
   }
 
-  function store_get(instance_id: string): StorageData {
-    const key: string = construct_storage_key({ instance_id });
+  function store_get(instance_id: IdVal): StorageData {
+    const key: string = construct_storage_key(instance_id);
     const data: StorageData = store.get_val(key);
     validate_storage_data(data);
     return data;
   }
 
-  function construct_storage_key({ instance = null, instance_id = null }) {
-    instance_id = instance_id || get_id(instance);
+  function construct_storage_key(instance_id: IdVal) {
     assert(instance_id);
     assert(clsName);
     const storage_key: string = clsName + "_" + instance_id;

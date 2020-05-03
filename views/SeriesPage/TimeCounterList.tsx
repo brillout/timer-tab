@@ -43,13 +43,14 @@ class Stopwatch extends TimeCounter {
   is_playing: Boolean,
   start_time: Date,
 })
-class Countdown {
+class Countdown extends TimeCounter {
   counter_id: string;
   title: string = "";
   minutes: number;
   is_playing: boolean = false;
   start_time: Date = null;
   constructor({ title, minutes }) {
+    super();
     this.title = title;
     this.minutes = minutes;
   }
@@ -164,7 +165,7 @@ function Input({ type, stateProp, stateObject }) {
       type="text"
       value={stateObject[stateProp]}
       onChange={(ev) => {
-        let val = ev.target.value;
+        let val: any = ev.target.value;
         if (type === Number) {
           val = parseInt(val, 10);
         }
