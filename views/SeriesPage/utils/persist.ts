@@ -38,9 +38,6 @@ function persist(schema: Schema) {
       save() {
         save(this);
       }
-      static isInstanceId(id: string) {
-        return id.startsWith(clsName);
-      }
       static [idFieldSymbol]: IdField = idField;
       static [clsNameSymbol]: ClassName = clsName;
       static [isPersistedClass] = true;

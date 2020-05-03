@@ -5,21 +5,7 @@ import { reactiveView } from "./reactiveView";
 
 export { TimeCounterList };
 
-class TimeCounter {
-  constructor(args?: any) {
-    if (this.constructor !== TimeCounter) {
-      return;
-    }
-    assert(args);
-    const { counter_id } = args;
-    if (Stopwatch.isInstanceId(counter_id)) {
-      return new Stopwatch(args);
-    } else if (Countdown.isInstanceId(counter_id)) {
-      return new Countdown(args);
-    } else {
-      assert(false, { counter_id });
-    }
-  }
+abstract class TimeCounter {
   view({ time }: { time: Date }): JSX.Element {
     return <div>{time}I'm asbtract</div>;
   }
