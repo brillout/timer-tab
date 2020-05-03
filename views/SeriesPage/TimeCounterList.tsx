@@ -77,7 +77,7 @@ class Countdown {
       );
     }
     return (
-      <div className="time-counter glass-background">
+      <div className="time-counter glass-background" key={this.counter_id}>
         {header}
         {content}
       </div>
@@ -100,6 +100,7 @@ class Countdown {
 class TimeCounterList {
   list_id: string;
   time_counter_creator: MultiCreator = new MultiCreator(this);
+  countdown_creator: CountdownCreator = new CountdownCreator(this);
   counter_list: TimeCounter[];
   set_counter_list(counters: TimeCounter[]) {
     this.counter_list = counters;
@@ -124,6 +125,7 @@ class TimeCounterList {
         <div id="time-counter-list">
           {this.counter_list.map((time_counter) => time_counter.view({ time }))}
           <this.time_counter_creator.view />
+          <this.countdown_creator.view />
         </div>
       </Center>
     );
@@ -131,7 +133,7 @@ class TimeCounterList {
 }
 
 @reactiveView
-class SeriesCreator {
+class CountdownCreator {
   minutes: number;
   title: string = null;
   #time_counter_list: TimeCounterList;
@@ -140,25 +142,33 @@ class SeriesCreator {
   }
   view() {
     return (
-      <form onSubmit={() => this.onSubmit()}>
-        <Input stateProp="minutes" stateObject={this} />
+      <form
+        onSubmit={this.onSubmit.bind(this)}
+        className="time-counter glass-background"
+      >
+        <Input type={Number} stateProp="minutes" stateObject={this} />
         <button type="submit">Add Timer</button>
       </form>
     );
   }
-  onSubmit() {
+  onSubmit(ev) {
+    ev.preventDefault();
     const { minutes, title } = this;
     this.#time_counter_list.add_new_countdown({ minutes, title });
   }
 }
 
-function Input({ stateProp, stateObject }) {
+function Input({ type, stateProp, stateObject }) {
   return (
     <input
       type="text"
       value={stateObject[stateProp]}
       onChange={(ev) => {
-        stateObject[stateProp] = ev.target.value;
+        let val = ev.target.value;
+        if (type === Number) {
+          val = parseInt(val, 10);
+        }
+        stateObject[stateProp] = val;
       }}
     ></input>
   );
@@ -186,11 +196,7 @@ class MultiCreator {
       (this.selected_timer_type === "countdown" && <div>New CT</div>) || (
         <div>New AC</div>
       );
-    return (
-      <div id="time-counter-creator" className="time-counter glass-background">
-        {content}
-      </div>
-    );
+    return <div className="time-counter glass-background">{content}</div>;
   }
   create_new_stopwatch() {
     const counter_target = new Date();
