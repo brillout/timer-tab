@@ -543,3 +543,9 @@ body.paused #counter {
   width: 100vw;
   overflow-x: auto;
 }
+
+#background-area-wrapper {
+  /* I'm not sure why the following is needed */
+  /* And why this is necessary for TT but not CT */
+  z-index: -2;
+}
