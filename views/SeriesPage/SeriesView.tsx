@@ -1,5 +1,10 @@
 import React from "react";
-import { FullView, MorePanel } from "../../tab-utils/views/FullViewWrapper";
+import {
+  FullViewLayout,
+  FullView,
+  MorePanel,
+  RightSide,
+} from "../../tab-utils/views/FullViewWrapper";
 import "./time-counter.css";
 import { TimeCounterList } from "./TimeCounterList";
 
@@ -7,14 +12,16 @@ export { SeriesView };
 
 function SeriesView() {
   return (
-    <>
-      <FullView>
-        <Content />
-      </FullView>
-      <MorePanel>
-        <div>Hello</div>
-      </MorePanel>
-    </>
+    <FullViewLayout>
+      <RightSide>
+        <FullView>
+          <Content />
+        </FullView>
+        <MorePanel>
+          <div>Hello</div>
+        </MorePanel>
+      </RightSide>
+    </FullViewLayout>
   );
 }
 

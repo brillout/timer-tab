@@ -1,28 +1,37 @@
 import "./css/index.css";
 import React from "react";
-import { FullView, MorePanel } from "../../tab-utils/views/FullViewWrapper";
+import {
+  FullViewLayout,
+  FullView,
+  MorePanel,
+  RightSide,
+} from "../../tab-utils/views/FullViewWrapper";
 import { SettingsView } from "../../tab-utils/TabSettings/SettingsView";
 import { preset_concept_name } from "./js/preset_concept_name";
 import { ad_slots } from "./ad_slots";
 import assert from "@brillout/assert";
-import { Ad_BTF, Ad_ATF } from "../../tab-utils/load_ad";
+import { Ad_BTF, Ad_ATF, Ad_left } from "../../tab-utils/load_ad";
 import { HotNews } from "../HotNews";
 
 export default TimerView;
 
 function TimerView() {
   return (
-    <>
-      <FullView>
-        <FullViewContent />
-      </FullView>
+    <FullViewLayout>
+      <Ad_left ad_slots={ad_slots} />
 
-      <MorePanel>
-        <Ad_BTF ad_slots={ad_slots} />
-        <SettingsView preset_concept_name={preset_concept_name} />
-        <HotNews />
-      </MorePanel>
-    </>
+      <RightSide>
+        <FullView>
+          <FullViewContent />
+        </FullView>
+
+        <MorePanel>
+          <Ad_BTF ad_slots={ad_slots} />
+          <SettingsView preset_concept_name={preset_concept_name} />
+          <HotNews />
+        </MorePanel>
+      </RightSide>
+    </FullViewLayout>
   );
 }
 
