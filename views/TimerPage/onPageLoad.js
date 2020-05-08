@@ -19,7 +19,7 @@ async function onPageLoad(load_common) {
 
   youtube_alarm();
 
-  //load_ads(ad_slots);
+  // load_ads(ad_slots);
   remove_ads(ad_slots);
 }
 

@@ -540,7 +540,7 @@ body.paused #counter {
 }
 
 #timer_table_scroll_area {
-  width: 100vw;
+  width: 100%;
   overflow-x: auto;
 }
 
@@ -548,4 +548,10 @@ body.paused #counter {
   /* I'm not sure why the following is needed */
   /* And why this is necessary for TT but not CT */
   z-index: -2;
+}
+
+@media (max-width: 1099px) {
+  html {
+    --hide-left-ad: 1 !important;
+  }
 }
