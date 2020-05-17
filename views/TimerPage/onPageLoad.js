@@ -3,14 +3,13 @@ import { init_timer_settings } from "./init_timer_settings";
 import youtube_alarm from "./js/youtube_alarm";
 import auto_remove_hash from "../../tab-utils/auto_remove_hash";
 import { ad_slots } from "./ad_slots";
-import { load_ads, remove_ads } from "../../tab-utils/load_ad";
+import { load_ads } from "../../tab-utils/load_ad";
 
 export default onPageLoad;
 
 async function onPageLoad(load_common) {
-  const { get_option_value } = init_timer_settings();
+  init_timer_settings();
 
-  //load_clock({get_option_value});
   load_timer();
 
   auto_remove_hash();
@@ -19,8 +18,7 @@ async function onPageLoad(load_common) {
 
   youtube_alarm();
 
-  // load_ads(ad_slots);
-  remove_ads(ad_slots);
+  load_ads(ad_slots);
 }
 
 /* TODO

@@ -5,6 +5,7 @@ import {
   FullView,
   MorePanel,
   RightSide,
+  LeftSide,
 } from "../../tab-utils/views/FullViewWrapper";
 import { SettingsView } from "../../tab-utils/TabSettings/SettingsView";
 import { preset_concept_name } from "./js/preset_concept_name";
@@ -18,7 +19,9 @@ export default TimerView;
 function TimerView() {
   return (
     <FullViewLayout>
-      <Ad_left ad_slots={ad_slots} />
+      <LeftSide style={{ backgroundColor: "#3e3e3e" }}>
+        <Ad_left ad_slots={ad_slots} />
+      </LeftSide>
 
       <RightSide>
         <FullView>
