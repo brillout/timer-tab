@@ -1,4 +1,4 @@
-import monitor_banner_img from "../../tab-utils/ads/Products/monitor-banner.png";
+import monitor_banner_img from "./monitor-banner-tt.png";
 import React from "react";
 
 export { ad_slots };

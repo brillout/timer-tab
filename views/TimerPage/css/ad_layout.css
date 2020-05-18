@@ -13,3 +13,9 @@
   position: relative;
   z-index: 999991;
 }
+
+/* custom banner overrides */
+.custom-banner .vertical-slot-wrapper,
+.custom-banner #custom-banner {
+  height: 394px !important;
+}
