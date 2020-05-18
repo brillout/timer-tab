@@ -1,6 +1,7 @@
 import ml from "./ml";
 import ctObj from "./countdown";
-import { getScroll, setScroll } from "../../../tab-utils/pretty_scroll_area";
+import { get_current_time } from "../../../tab-utils/utils/datetime";
+// import { getScroll, setScroll } from "../../../tab-utils/pretty_scroll_area";
 import {
   make_element_zoomable,
   on_zoom_end,
@@ -236,10 +237,10 @@ function load_timer() {
       var lastTime;
       function setTime() {
         ml.reqFrame(function () {
-          var time = ml.date.readable.getTime(
-            +new Date(),
-            displayTimeWithPeriod()
-          );
+          const military_format = !displayTimeWithPeriod();
+          const time = get_current_time({
+            military_format,
+          });
           if (!(lastTime === time)) {
             lastTime = time;
             TIME_EL.innerHTML = time;
