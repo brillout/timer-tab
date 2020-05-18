@@ -1,0 +1,7 @@
+html {
+  --common-shadow: 0px 0px 7px -3px rgba(0, 0, 0, 0.65);
+}
+#more_panel,
+#header-container {
+  box-shadow: var(--common-shadow);
+}

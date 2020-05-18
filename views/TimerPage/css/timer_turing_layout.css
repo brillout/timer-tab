@@ -555,3 +555,7 @@ body.paused #counter {
     --hide-left-ad: 1 !important;
   }
 }
+
+#screen-buttons-wrapper {
+  z-index: 99999999;
+}
