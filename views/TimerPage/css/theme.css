@@ -103,24 +103,3 @@ a,
   cursor: pointer;
   text-decoration: none;
 }
-
-/*
-  Playground for box-shadow as layout-agnostic border:
-   - http://jsfiddle.net/q1v2mdhu/
-   - https://simonschlueter.com/boxshadow-editor/
-*/
-.zoomed-state #header-container {
-  box-shadow: inset 0 -2px #cecece;
-}
-.zoomed-state #more_panel #more_panel_background.glass-background {
-  box-shadow: inset 0 2px #cecece;
-}
-/*
-#header-container {
-  box-shadow: inset 0 -3px 16px #cecece;
-  box-shadow: inset 0 0px 21px #cecece;
-}
-#more_panel #more_panel_background.glass-background {
-  box-shadow: inset 0 3px 16px #cecece;
-}
-*/
