@@ -22,8 +22,7 @@ const ad_slots = [
   },
   {
     product_name: "product-egg-timer",
-    product_text:
-      "Best Egg Timer out there: no BPA, reliable, simple, and cute.",
+    product_text: "Best Egg Timer out there: no BPA, reliable, simple, cute.",
     amazon_banner: `
       <a href="https://www.amazon.com/NobleEgg-Timer-Boiled-Changes-Certified/dp/B07V7XG4Q9/ref=as_li_ss_il?ie=UTF8&linkCode=li3&tag=brilloutamazo-20&linkId=6e24e00e1bdaa734294caf51f11dfd48" target="_blank"><img border="0" src="//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07V7XG4Q9&Format=_SL250_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=brilloutamazo-20" ></a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=brilloutamazo-20&l=li3&o=1&a=B07V7XG4Q9" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
     `,

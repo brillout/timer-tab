@@ -237,13 +237,16 @@ function add_css(content) {
   document.getElementsByTagName("head")[0].appendChild(el);
 }
 
+let play_promise;
 function play_fallback() {
   install_audio_tag();
   audio_tag.currentTime = 0;
-  audio_tag.play();
+  play_promise = audio_tag.play();
 }
-function stop_fallback() {
+async function stop_fallback() {
   if (!audio_tag) return;
+  // See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
+  await play_promise;
   audio_tag.pause();
 }
 let audio_tag;

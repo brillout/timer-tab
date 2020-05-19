@@ -333,8 +333,12 @@ function load_timer() {
             //  }
             //},1000);
             if (this.selectionStart !== undefined) {
-              this.selectionStart = 0;
-              this.selectionEnd = this.value.length;
+              try {
+                this.selectionStart = 0;
+                this.selectionEnd = this.value.length;
+              } catch (err) {
+                console.error(err);
+              }
             }
             if (do_) return false;
           }

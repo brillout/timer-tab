@@ -863,7 +863,7 @@ export default ml;
     };
     //}}}
   }
-  ml.assert = function (bool, msg, skipCallFcts, api_error) {
+  ml.assert = function (bool, msg, skipCallFcts /*, api_error*/) {
     //works properly in webkit only
     if (typeof window === "undefined") return;
     if (!bool) {
@@ -892,18 +892,8 @@ export default ml;
       })();
       if (msg !== undefined)
         errorStr += " (" + ((msg.join && msg.join(",")) || msg) + ")";
-      if (api_error) {
-        throw errorStr;
-        //return;//returns anyways since throw
-      }
 
-      //*
-      var HARD = false;
-      /*/
-    var HARD=window.location.hostname==='localhost';
-    //*/
-
-      if (window["co" + "nsole"] && window["co" + "nsole"].log && !HARD) {
+      if (window["co" + "nsole"] && window["co" + "nsole"].log) {
         window["co" + "nsole"].log(errorStr);
         //if(cwindow['co'+'nsole']onsole['assert']) window['co'+'nsole']['assert'](false);
       }
@@ -912,9 +902,12 @@ export default ml;
           window["co" + "nsole"].log(arguments[i]);
         else errorStr += arguments[i] + "\n";
       }
-      if (HARD) window.alert(errorStr + "\n" + errorStack);
+      if (window.location.hostname === "localhost")
+        window.alert(errorStr + "\n" + errorStack);
       window["co" + "nsole"].log(errorStr + "\n" + errorStack);
-      if (HARD) throw errorStr;
+      setTimeout(() => {
+        throw errorStr;
+      }, 0);
     }
     /*
 var scriptSource =

@@ -73,6 +73,10 @@ a,
   border: 0;
   border-radius: 4px;
 }
+/* Remove button outline in Firefox, https://stackoverflow.com/questions/71074/how-to-remove-firefoxs-dotted-outline-on-buttons-as-well-as-links */
+button::-moz-focus-inner {
+  border: 0;
+}
 #timer_table button {
   /* font-size: 12px; */
   /* font-size: 4vw; */

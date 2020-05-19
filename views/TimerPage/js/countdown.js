@@ -282,13 +282,13 @@ export default ctObj;
 
         _setInputs = function (h, m, s, noOnChange) {
           ml.assert(
-            (h === undefined || h.constructor === Number) &&
-              (m === undefined || m.constructor === Number) &&
-              (s === undefined || s.constructor === Number)
+            (h === undefined || (h && h.constructor === Number)) &&
+              (m === undefined || (m && m.constructor === Number)) &&
+              (s === undefined || (s && s.constructor === Number))
           );
-          if (h === undefined) h = "";
-          if (m === undefined) m = "";
-          if (s === undefined) s = "";
+          h = h || "";
+          m = m || "";
+          s = s || "";
           var isPm;
           if (__isAMPM && parseInt(h, 10) >= 12) {
             h -= 12;
