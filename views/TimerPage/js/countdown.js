@@ -1,5 +1,6 @@
 import ml from "./ml";
 import { play_alarm, stop_alarm } from "./youtube_alarm";
+import { display_time } from "../../../tab-utils/utils/datetime";
 
 const ctObj = {};
 
@@ -932,10 +933,9 @@ export default ctObj;
       function setAlarmTime(_end) {
         if (__type === ctObj.TYPES.ALARM && _end && thisTimer.dom.alarmTime)
           ml.i18n.isAMPMTime(function (isAMPM) {
-            thisTimer.dom.alarmTime.innerHTML = ml.date.readable.getTime(
-              _end,
-              isAMPM
-            );
+            const military_format = !isAMPM;
+            const time = display_time(_end, { military_format });
+            thisTimer.dom.alarmTime.innerHTML = time;
           });
       }
 
