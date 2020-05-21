@@ -282,11 +282,20 @@ export default ctObj;
         })();
 
         _setInputs = function (h, m, s, noOnChange) {
+          //*
           ml.assert(
-            (h === undefined || (h && h.constructor === Number)) &&
-              (m === undefined || (m && m.constructor === Number)) &&
-              (s === undefined || (s && s.constructor === Number))
+            (h === undefined || h === 0 || (h && h.constructor === Number)) &&
+              (m === undefined || m === 0 || (m && m.constructor === Number)) &&
+              (s === undefined || s === 0 || (s && s.constructor === Number))
           );
+          //*/
+          /*
+          ml.assert(
+            (!h || h.constructor === Number) &&
+              (!m || m.constructor === Number) &&
+              (!s || s.constructor === Number)
+          );
+          */
           h = h || "";
           m = m || "";
           s = s || "";
