@@ -906,7 +906,7 @@ export default ml;
         window.alert(errorStr + "\n" + errorStack);
       window["co" + "nsole"].log(errorStr + "\n" + errorStack);
       setTimeout(() => {
-        throw errorStr;
+        throw new Error(errorStr);
       }, 0);
     }
     /*
