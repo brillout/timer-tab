@@ -15,6 +15,11 @@ const ad_slots = [
   },
   */
   {
+    is_ezoic: true,
+    slot_id: "ezoic-pub-ad-placeholder-101",
+    slot_name: "LEFT_AD",
+  },
+  {
     img_src: monitor_banner_img,
     click_name: "monitor_banner",
     slot_name: "LEFT_AD",
