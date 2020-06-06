@@ -10,6 +10,7 @@ export const tab_app_mail = compute_mail("timertab");
 export const tab_app_logo = logoUrl;
 export const tab_app_google_analytics_id = "UA-5263303-6";
 export const tab_app_google_analytics_id_2 = "a5263303w24659437p23108626";
+export const tab_app_google_adsense = "ca-pub-9219370515525286";
 export const tab_app_header_links = [
   /*
   { link_url: "/history", link_name: "History" },
