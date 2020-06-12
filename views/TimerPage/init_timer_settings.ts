@@ -4,6 +4,7 @@ import { TabSettings } from "../../tab-utils/TabSettings";
 import { PRESETS } from "./PRESETS";
 import { preset_concept_name } from "./js/preset_concept_name";
 import { set_youtube_url } from "./js/youtube_alarm";
+import { is_dark_mode } from "../../tab-utils/utils/system-preferences";
 
 export { init_timer_settings };
 
@@ -46,7 +47,7 @@ function get_option_list() {
       option_id: "timer_theme",
       option_type: "preset-input",
       option_description: preset_concept_name,
-      option_default: "classic",
+      option_default: get_default_theme(),
     },
     {
       option_id: "timer_background_image",
@@ -72,4 +73,8 @@ function get_option_list() {
       is_creator_option: true,
     },
   ];
+}
+
+function get_default_theme() {
+  return is_dark_mode() ? "dark" : "classic";
 }
