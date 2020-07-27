@@ -15,14 +15,21 @@ const ad_slots = [
   },
   */
   {
+    // Ezoic - TT Left-Side ATF - sidebar
     is_ezoic: true,
     slot_id: "ezoic-pub-ad-placeholder-101",
-    slot_name: "LEFT_AD",
+    slot_name: "LEFT_AD_ATF",
+  },
+  {
+    // Ezoic - TT Left-Side Floating - sidebar_floating_1
+    is_ezoic: true,
+    slot_id: "ezoic-pub-ad-placeholder-104",
+    slot_name: "LEFT_AD_BTF",
   },
   {
     img_src: monitor_banner_img,
     click_name: "monitor_banner",
-    slot_name: "LEFT_AD",
+    slot_name: "LEFT_AD_ATF",
     is_custom: true,
   },
   {
