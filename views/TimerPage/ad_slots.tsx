@@ -25,6 +25,7 @@ const ad_slots = [
     is_ezoic: true,
     slot_id: "ezoic-pub-ad-placeholder-104",
     slot_name: "LEFT_AD_BTF",
+    is_floating: true,
   },
   {
     img_src: monitor_banner_img,
