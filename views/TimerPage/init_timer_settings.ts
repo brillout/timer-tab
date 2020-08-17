@@ -47,7 +47,7 @@ function get_option_list() {
       option_id: "timer_theme",
       option_type: "preset-input",
       option_description: preset_concept_name,
-      option_default: get_default_theme(),
+      option_default: "_creator" /*get_default_theme()*/,
     },
     {
       option_id: "timer_background_image",
@@ -68,13 +68,15 @@ function get_option_list() {
       option_id: "timer_youtube_alarm",
       option_type: "text-input",
       option_description: "YouTube Alarm",
-      option_default: "",
-      option_placeholder: "Image URL",
+      option_default: "https://youtu.be/PS5KAEgrtMA",
+      option_placeholder: "Youtube URL Address",
       is_creator_option: true,
     },
   ];
 }
 
+/*
 function get_default_theme() {
   return is_dark_mode() ? "dark" : "classic";
 }
+*/
