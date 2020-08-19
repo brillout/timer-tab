@@ -28,6 +28,12 @@ const ad_slots = [
     is_floating: true,
   },
   {
+    // Ezoic - TT BTF - Settings Top - mid_content
+    is_ezoic: true,
+    slot_id: "ezoic-pub-ad-placeholder-105",
+    slot_name: "BTF_2",
+  },
+  {
     img_src: monitor_banner_img,
     click_name: "monitor_banner",
     slot_name: "LEFT_AD_ATF",
