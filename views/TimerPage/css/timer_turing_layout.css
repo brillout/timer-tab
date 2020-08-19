@@ -28,26 +28,28 @@
 .timerInput {
   width: 300px;
   min-width: 300px;
-} /*idk why but min-width needed*/
-#head > div:first-child {
-  min-width: 300px;
+}
+#counter_wrapper {
+  width: 300px;
+  padding-top: 10px;
+  margin-top: 30px;
+  padding-bottom: 10px;
 }
 #counter {
   width: 270px;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 10px;
 }
-#head > div:first-child:after {
-  height: 150px;
+#pause {
+  margin: auto;
+  display: block;
 }
-#head > div:first-child {
-  min-height: 150px;
+#alarmTime {
+  text-align: center;
+  margin-bottom: 5px;
 }
-#counter {
-  padding-top: 8px;
-}
-/*
-#counter { padding-top: 27px; }
-#head > div:first-child { padding-top: 5px; }
-*/
+
 #middletable,
 #middletable > div {
   height: 100%;
@@ -186,9 +188,6 @@ html.alarm body:not(.ringing) #pause {
 #vertical td {
   padding: 0;
 }
-#counter {
-  margin-bottom: 5px;
-}
 #inputOverlap {
   height: 150px;
 }
@@ -196,15 +195,6 @@ html.alarm body:not(.ringing) #pause {
   line-height: 0px;
   font-size: 0px;
   width: 100%;
-}
-#head > div:first-child > *,
-#head > div:first-child:after {
-  vertical-align: middle;
-  display: inline-block;
-}
-#head > div:first-child:after {
-  content: "";
-  width: 0px;
 }
 /* }}} */
 /* horizontal strip */
@@ -405,8 +395,7 @@ http://developer.apple.com/library/safari/#documentation/appleapplications/refer
 html {
   -webkit-overflow-scrolling: touch;
 }
-#inputs form,
-#head > div:first-child {
+#inputs form {
   text-align: center;
 }
 #pause:before {
@@ -415,6 +404,7 @@ html {
 #timer_table button:before {
   background-repeat: no-repeat;
   background-position: 0px;
+  background-size: 13px;
   padding-left: 20px;
 }
 #time:before {
@@ -451,8 +441,13 @@ html.noIcons #time:before {
   padding-left: 0!important;
 }
 */
-#timer_table button {
+#timer_table button::before,
+#timer_table button::after {
   text-transform: uppercase;
+  display: inline-block;
+  height: 16px;
+  line-height: 19px;
+  vertical-align: middle;
 }
 #timer_table * {
   -webkit-user-select: none;
@@ -478,10 +473,6 @@ html.noIcons #time:before {
   /*make sure pause button is above counter*/
   position: relative;
   z-index: 9;
-  /*
- margin-top: 8px;
- margin-bottom: 12px;
- */
 }
 html:not(.stopw):not(.alarm):not(.timer) #vertical {
   visibility: hidden;

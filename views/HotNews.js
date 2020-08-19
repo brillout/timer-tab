@@ -9,6 +9,7 @@ function HotNews() {
       <Date>August, 19th</Date>
       <ul>
         <li>Improve centering algorithm.</li>
+        <li>Improve couple of visual details.</li>
       </ul>
       <Date>July, 27th</Date>
       <ul>

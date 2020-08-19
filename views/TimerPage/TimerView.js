@@ -172,17 +172,9 @@ function FullViewContent() {
                   <div id="stripV"></div>
                   <div id="head" style={{ width: "100%", height: "100%" }}>
                     <div id="counter_wrapper">
-                      <div>
-                        <div id="counter"></div>
-                        <div>
-                          <div id="alarmTime"></div>
-                          <button
-                            type="button"
-                            tabIndex="-1"
-                            id="pause"
-                          ></button>
-                        </div>
-                      </div>
+                      <div id="counter"></div>
+                      <div id="alarmTime"></div>
+                      <button type="button" tabIndex="-1" id="pause"></button>
                     </div>
                     <div id="youtube_wrapper">
                       <div id="youtube_iframe"></div>
