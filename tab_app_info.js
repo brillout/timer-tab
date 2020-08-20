@@ -18,7 +18,6 @@ export const tab_app_header_links = [
   {
     link_url: "https://www.clocktab.com",
     link_name: "Clock Tab",
-    link_target: "_blank",
   },
 ];
 export const TabAppRoadmap = () => (
