@@ -14,12 +14,14 @@ const ad_slots = [
     slot_name: "BTF",
   },
   */
+  /*
   {
     // Ezoic - TT Left-Side ATF - sidebar
     is_ezoic: true,
     slot_id: "ezoic-pub-ad-placeholder-101",
     slot_name: "LEFT_AD_ATF",
   },
+  */
   {
     // Ezoic - TT Left-Side Floating - sidebar_floating_1
     is_ezoic: true,
