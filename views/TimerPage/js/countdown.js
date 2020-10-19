@@ -1,14 +1,8 @@
 import ml from "./ml";
-import { play_alarm, stop_alarm } from "./youtube_alarm";
+import { notifyStart, notifyStop } from "./notify/index";
 import { display_time } from "../../../tab-utils/utils/datetime";
 
 const ctObj = {};
-
-/*
-const DEBUG_AUDIO = true;
-/*/
-const DEBUG_AUDIO = false;
-//*/
 
 export default ctObj;
 
@@ -732,10 +726,10 @@ export default ctObj;
           //{{{
           feature_fcts.push(function () {
             notis.ring.play_ = function () {
-              play_alarm();
+              notifyStart();
             };
             notis.ring.stop = function () {
-              stop_alarm();
+              notifyStop();
             };
           });
           //}}}

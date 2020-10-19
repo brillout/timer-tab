@@ -1,9 +1,9 @@
 import load_timer from "./js/load_timer";
 import { init_timer_settings } from "./init_timer_settings";
-import youtube_alarm from "./js/youtube_alarm";
 import auto_remove_hash from "../../tab-utils/auto_remove_hash";
 import { ad_slots } from "./ad_slots";
 import { load_ads } from "../../tab-utils/load_ad";
+import { audioPrefetch } from "./js/notify/audioAlarm";
 
 export default onPageLoad;
 
@@ -16,7 +16,8 @@ async function onPageLoad(load_common) {
 
   load_common();
 
-  youtube_alarm();
+  audioPrefetch();
+  // YouTube prefetches when `youtubeSetUrl` is run
 
   load_ads(ad_slots);
 }

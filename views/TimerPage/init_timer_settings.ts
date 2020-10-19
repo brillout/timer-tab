@@ -3,7 +3,7 @@ import assert from "@brillout/assert";
 import { TabSettings } from "../../tab-utils/TabSettings";
 import { PRESETS } from "./PRESETS";
 import { preset_concept_name } from "./js/preset_concept_name";
-import { set_youtube_url } from "./js/youtube_alarm";
+import { youtubeSetUrl } from "./js/notify/youtubeAlarm";
 import { is_dark_mode } from "../../tab-utils/utils/system-preferences";
 
 export { init_timer_settings };
@@ -37,7 +37,7 @@ function init_timer_settings() {
   function update_youtube_url() {
     const youtube_url = get_option_value("timer_youtube_alarm");
     assert(youtube_url.constructor === String, { youtube_url });
-    set_youtube_url(youtube_url);
+    youtubeSetUrl(youtube_url);
   }
 }
 

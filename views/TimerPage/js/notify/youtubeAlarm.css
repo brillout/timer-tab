@@ -1,0 +1,26 @@
+#youtube_wrapper:not(.youtube_alarm_show) {
+  position: absolute;
+  z-index: -999999;
+  visibility: hidden;
+  height: 0px;
+}
+#youtube_wrapper {
+  height: 150px;
+  overflow: hidden;
+  transition: height 0.7s;
+}
+
+/* transparent click-protecting cover */
+#youtube_wrapper {
+  position: relative;
+}
+#youtube_wrapper:before {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  content: "";
+  display: block;
+}
