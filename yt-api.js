@@ -1878,6 +1878,7 @@
         this.port1 = {};
         this.port2 = {
           postMessage: function () {
+            console.log("123", g, h);
             f.postMessage(g, h);
           },
         };
@@ -1897,6 +1898,7 @@
       return function (e) {
         d.next = { W: e };
         d = d.next;
+        console.log("000");
         b.port2.postMessage(0);
       };
     }
@@ -5230,7 +5232,14 @@
         this.i = new M();
         Bi(this);
         b = Q(this.g, "events");
-        for (var d in b) b.hasOwnProperty(d) && this.addEventListener(d, b[d]);
+        for (var d in b) {
+          //b.hasOwnProperty(d) && this.addEventListener(d, b[d]);
+          b.hasOwnProperty(d) &&
+            this.addEventListener(d, function (arg1, arg2, arg3, arg4) {
+              console.log("on", d, arg1, arg2, arg3, arg4);
+              b[d].call(this, arg1, arg2, arg3, arg4);
+            });
+        }
         for (var e in ng) Ci(this, e);
       }
   }
@@ -5387,6 +5396,7 @@
     if (this.f.contentWindow)
       for (var f = 0; f < e.length; f++)
         try {
+          console.log("pmm", b, e[f]);
           this.f.contentWindow.postMessage(b, e[f]);
         } catch (Ka) {
           if (Ka.name && "SyntaxError" == Ka.name) {
