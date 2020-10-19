@@ -5236,7 +5236,7 @@
           //b.hasOwnProperty(d) && this.addEventListener(d, b[d]);
           b.hasOwnProperty(d) &&
             this.addEventListener(d, function (arg1, arg2, arg3, arg4) {
-              console.log("on", d, arg1, arg2, arg3, arg4);
+              console.log("on", d, arg1 /*, arguments*/);
               b[d].call(this, arg1, arg2, arg3, arg4);
             });
         }
@@ -5396,7 +5396,9 @@
     if (this.f.contentWindow)
       for (var f = 0; f < e.length; f++)
         try {
-          console.log("pmm", b, e[f]);
+          if (b !== '{"event":"listening","id":1,"channel":"widget"}') {
+            console.log("[post-message]", b);
+          }
           this.f.contentWindow.postMessage(b, e[f]);
         } catch (Ka) {
           if (Ka.name && "SyntaxError" == Ka.name) {
