@@ -1,53 +1,49 @@
 // @ts-ignore
 import glockenklang from "./glockenklang.ogg";
 
+import { AsyncState, IsLastUpdate } from "../../../../tab-utils/AsyncState";
+
+import { debugLog } from "./index";
+
 export { audioStart, audioStop, audioPrefetch };
-
-var isStarted: true | undefined;
-
-function audioStart() {
-  isStarted = true;
-  update();
-}
-function audioStop() {
-  isStarted = undefined;
-  update();
-}
 
 // ** Synchronization **
 // We need to ensure that `pause` is always waiting on the `play` promise.
 // See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
-var currentUpdate: Promise<void>;
-var updateNumber: number;
+type State = { isStarted: true | undefined };
+const { state } = new AsyncState<State>(update);
+
+function audioStart() {
+  state.isStarted = true;
+}
+function audioStop() {
+  state.isStarted = undefined;
+}
 async function update() {
-  const _updateNumber = (updateNumber = (updateNumber || 0) + 1);
-
-  await currentUpdate;
-
-  // Make sure only the last call becomes the next currentUpdate
-  // Ensuring that there is always only one `currentUpdate`
-  if (_updateNumber !== updateNumber) {
-    return;
-  }
-
-  if (isStarted) {
-    currentUpdate = start();
-  } else {
+  if (state.isStarted === undefined) {
     stop();
+  }
+  if (state.isStarted === true) {
+    await start();
   }
 }
 
 async function start() {
-  console.log("start audio - begin");
+  debugLog("start audio - begin");
   install_audio_tag();
   prefetchModeUnset();
   audio_tag.currentTime = 0;
-  await audio_tag.play();
-  console.log("start audio - finish");
+  try {
+    await audio_tag.play();
+  } catch (err) {
+    // May fail when user hasn't interacted with Timer Tab:
+    //   Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
+  }
+  debugLog("start audio - finish");
 }
 
 function stop() {
-  console.log("stop audio");
+  debugLog("stop audio");
   if (!audio_tag) return;
   audio_tag.pause();
 }
@@ -65,22 +61,19 @@ function play() {
   const playPromiseOld = playPromise;
   playPromise = Promise.all([playPromiseOld, playPromiseNew]).then(() => {});
 }
+function prefetchModeSet() {
+  audio_tag.muted = true;
+  audio_tag.loop = false;
+}
 */
 function prefetchModeUnset() {
   audio_tag.muted = false;
   audio_tag.loop = true;
 }
-function prefetchModeSet() {
-  audio_tag.muted = true;
-  audio_tag.loop = false;
-}
 function audioPrefetch() {
-  return;
   install_audio_tag();
   audio_tag.preload = "auto";
   audio_tag.load();
-  prefetchModeSet();
-  play();
 }
 
 var audio_tag: HTMLAudioElement;

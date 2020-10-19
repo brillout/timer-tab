@@ -1,7 +1,9 @@
 // @ts-ignore
 import assert from "@brillout/assert";
 import "./youtubeAlarm.css";
-import { notifyUpdate } from "./index";
+import { notifyUpdate, debugLog } from "./index";
+import { AsyncState, IsLastUpdate } from "../../../../tab-utils/AsyncState";
+
 export {
   youtubeStart,
   youtubeStop,
@@ -13,47 +15,65 @@ export {
 const youtube_wrapper = "youtube_wrapper";
 const youtube_iframe = "youtube_iframe";
 
-var startNumber: number;
-async function youtubeStart() {
-  const _startNumber = (startNumber = (startNumber || 0) + 1);
+type State = { isStarted: true | undefined };
+const { state } = new AsyncState<State>(update);
+
+function youtubeStart() {
+  state.isStarted = true;
+}
+function youtubeStop() {
+  state.isStarted = undefined;
+}
+function update(isLastUpdate: IsLastUpdate) {
+  if (state.isStarted === undefined) {
+    stop(isLastUpdate);
+  }
+  if (state.isStarted === true) {
+    start(isLastUpdate);
+  }
+}
+
+async function start(isLastUpdate: IsLastUpdate) {
+  debugLog("start youtube");
 
   const player = await load_player();
   // Abort if `youtubeStart` was called again in the meantime
-  if (startNumber !== _startNumber) return;
+  if (!isLastUpdate()) return;
 
   if (youtubeNoUrl()) {
     youtubeStop();
     return;
   }
 
-  start(player);
+  playerStart(player);
 
   document
     .querySelector("#" + youtube_wrapper)
     .classList.add("youtube_alarm_show");
-  await waitForVideoStart();
+
+  debugLog("start youtube - finish");
 }
-function start(player: Player) {
+function playerStart(player: Player) {
   player.unMute();
   loadVideo(player, video_spec.video_id);
   player.setLoop(true);
 }
 
-var stopNumber: number;
-async function youtubeStop() {
-  const _stopNumber = (stopNumber = (stopNumber || 0) + 1);
+async function stop(isLastUpdate: IsLastUpdate) {
+  debugLog("stop youtube");
 
   const player = await load_player();
-  // Abort if `youtubeStop` was called again in the meantime
-  if (stopNumber !== _stopNumber) return;
+  if (!isLastUpdate()) return;
 
   document
     .querySelector("#" + youtube_wrapper)
     .classList.remove("youtube_alarm_show");
 
-  stop(player);
+  playerStop(player);
+
+  debugLog("stop youtube - finish");
 }
-function stop(player: Player) {
+function playerStop(player: Player) {
   player.mute();
   player.setLoop(false);
 }
@@ -93,7 +113,7 @@ let wait_for_video_spec = new Promise<VideoSpec>(
   (r) => (resolve__video_spec = r)
 );
 let last_youtube_url: string;
-async function youtubeSetUrl(youtube_url: string) {
+function youtubeSetUrl(youtube_url: string) {
   assert(youtube_url.constructor === String);
   if (last_youtube_url === youtube_url) {
     return;
@@ -103,8 +123,8 @@ async function youtubeSetUrl(youtube_url: string) {
   video_spec = parse_youtube_url(youtube_url);
   resolve__video_spec(video_spec);
 
-  const restarted = await notifyUpdate();
-  if (!youtubeNoUrl() && !restarted) {
+  const isStarted = notifyUpdate();
+  if (!youtubeNoUrl() && !isStarted) {
     prefetch();
   }
 }
@@ -194,7 +214,6 @@ async function load_player() {
 }
 
 var stateChanges: number[];
-var awaitVideoStart__resolve: () => void;
 function onStateChange(event: { data: number }) {
   // `event.data` possible values:
   // -1 – unstarted
@@ -208,12 +227,6 @@ function onStateChange(event: { data: number }) {
 
   stateChanges = stateChanges || [];
   stateChanges.push(state);
-
-  if (state === 1) {
-    if (awaitVideoStart__resolve) {
-      awaitVideoStart__resolve();
-    }
-  }
 
   /*
   const time = new Date().toTimeString().split(" ")[0];
@@ -244,20 +257,6 @@ function neverPlayedBefore() {
   return stateChanges.includes(1);
 }
 */
-function waitForVideoStart() {
-  // Indefinitely hang any previous awaiting
-  awaitVideoStart__resolve = undefined;
-
-  if (youtubeIsPlaying()) {
-    return;
-  }
-
-  const awaitVideoStart = new Promise<void>(
-    (r) => (awaitVideoStart__resolve = r)
-  );
-
-  return awaitVideoStart;
-}
 
 function parse_youtube_url(url: string) {
   assert(url.constructor === String);
