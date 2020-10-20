@@ -20,23 +20,23 @@ const DEBUG_NOTIFY = false;
 const DEBUG_NOTIFY = true;
 //*/
 
-type State = { isStarted: true | undefined };
-const { state, runUpdate } = new AsyncState<State>(update);
+const { state, runUpdate } = new AsyncState<{ isStarted: true | undefined }>(
+  update
+);
 
 function notifyStop() {
-  console.log("notifyStop");
+  debugLog("notifyStop");
   state.isStarted = undefined;
 }
 function notifyStart() {
-  console.log("notifyStart");
+  debugLog("notifyStart");
   state.isStarted = true;
 }
 // For when the user:
 //  - changes themes, or
 //  - change the YouTube URL
-function notifyUpdate(): boolean {
+function notifyUpdate() {
   runUpdate();
-  return state.isStarted;
 }
 
 function update(isLastUpdate: IsLastUpdate) {
@@ -50,17 +50,17 @@ function update(isLastUpdate: IsLastUpdate) {
 }
 
 function stop() {
-  console.log("notify[stop]");
+  debugLog("notify[stop]");
   youtubeStop();
   audioStop();
 }
 
 async function start(isLastUpdate: IsLastUpdate) {
-  console.log("notify[start]");
+  debugLog("notify[start]");
   assert(state.isStarted === true);
 
   const noYoutube = youtubeNoUrl();
-  console.log("notify[start] youtubeNoUrl:", noYoutube);
+  debugLog("notify[start] youtubeNoUrl:", noYoutube);
 
   if (noYoutube) {
     audioStart();
@@ -80,7 +80,7 @@ async function start(isLastUpdate: IsLastUpdate) {
   assert(isStarted === true, { isStarted });
 
   const ytIsPlaying = youtubeIsPlaying();
-  console.log("notify[start] youtubeIsPlaying:", ytIsPlaying);
+  debugLog("notify[start] youtubeIsPlaying:", ytIsPlaying);
   if (!ytIsPlaying) {
     youtubeStop();
     audioStart();

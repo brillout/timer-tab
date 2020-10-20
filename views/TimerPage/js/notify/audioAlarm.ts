@@ -1,7 +1,7 @@
 // @ts-ignore
 import glockenklang from "./glockenklang.ogg";
 
-import { AsyncState, IsLastUpdate } from "../../../../tab-utils/AsyncState";
+import { AsyncState } from "../../../../tab-utils/AsyncState";
 
 import { debugLog } from "./index";
 
@@ -10,8 +10,7 @@ export { audioStart, audioStop, audioPrefetch };
 // ** Synchronization **
 // We need to ensure that `pause` is always waiting on the `play` promise.
 // See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
-type State = { isStarted: true | undefined };
-const { state } = new AsyncState<State>(update);
+const { state } = new AsyncState<{ isStarted: true | undefined }>(update);
 
 function audioStart() {
   state.isStarted = true;
@@ -31,13 +30,17 @@ async function update() {
 async function start() {
   debugLog("start audio - begin");
   install_audio_tag();
-  prefetchModeUnset();
+
+  audio_tag.muted = false;
+  audio_tag.loop = true;
   audio_tag.currentTime = 0;
+
   try {
     await audio_tag.play();
   } catch (err) {
     // May fail when user hasn't interacted with Timer Tab:
     //   Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
+    console.warn(err);
   }
   debugLog("start audio - finish");
 }
@@ -48,28 +51,6 @@ function stop() {
   audio_tag.pause();
 }
 
-/*
-var playPromise: Promise<void>;
-function play() {
-  let playPromiseNew: Promise<void>;
-  try {
-    playPromiseNew = audio_tag.play();
-  } catch (err) {
-    // May fail when user hasn't interacted with Timer Tab:
-    //   Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
-  }
-  const playPromiseOld = playPromise;
-  playPromise = Promise.all([playPromiseOld, playPromiseNew]).then(() => {});
-}
-function prefetchModeSet() {
-  audio_tag.muted = true;
-  audio_tag.loop = false;
-}
-*/
-function prefetchModeUnset() {
-  audio_tag.muted = false;
-  audio_tag.loop = true;
-}
 function audioPrefetch() {
   install_audio_tag();
   audio_tag.preload = "auto";

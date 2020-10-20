@@ -15,8 +15,7 @@ export {
 const youtube_wrapper = "youtube_wrapper";
 const youtube_iframe = "youtube_iframe";
 
-type State = { isStarted: true | undefined };
-const { state } = new AsyncState<State>(update);
+const { state } = new AsyncState<{ isStarted: true | undefined }>(update);
 
 function youtubeStart() {
   state.isStarted = true;
@@ -55,7 +54,7 @@ async function start(isLastUpdate: IsLastUpdate) {
 }
 function playerStart(player: Player) {
   player.unMute();
-  loadVideo(player, video_spec.video_id);
+  loadVideo(player);
   player.setLoop(true);
 }
 
@@ -83,21 +82,21 @@ async function prefetch() {
   assert(!youtubeNoUrl());
   player.mute();
   player.setLoop(false);
-  loadVideo(player, video_spec.video_id);
+  loadVideo(player);
 }
 
 var loadedVideoId: VideoId;
-function loadVideo(player: Player, videoId: VideoId) {
-  const startSeconds = video_spec.video_start;
-  if (videoId !== loadedVideoId) {
-    loadedVideoId = videoId;
+function loadVideo(player: Player) {
+  const { video_id, video_start } = video_spec;
+  if (video_id !== loadedVideoId) {
+    loadedVideoId = video_id;
     player.loadVideoById({
-      videoId: video_spec.video_id,
-      startSeconds,
+      videoId: video_id,
+      startSeconds: video_start,
     });
   } else {
     player.playVideo();
-    player.seekTo(startSeconds);
+    player.seekTo(video_start);
   }
 }
 
@@ -123,10 +122,13 @@ function youtubeSetUrl(youtube_url: string) {
   video_spec = parse_youtube_url(youtube_url);
   resolve__video_spec(video_spec);
 
-  const isStarted = notifyUpdate();
-  if (!youtubeNoUrl() && !isStarted) {
+  if (!youtubeNoUrl()) {
     prefetch();
   }
+
+  // User has changed the theme or the youtube alarm
+  // Update the whole notification logic
+  notifyUpdate();
 }
 function youtubeNoUrl() {
   const { video_id } = video_spec;
