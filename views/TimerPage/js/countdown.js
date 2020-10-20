@@ -531,6 +531,17 @@ export default ctObj;
           triggerStateChangeEvent(STATE_CODES.STOPED, "st" + "op");
         };
         //}}}
+        that.trigger.ensurePause = function () {
+          // Already paused
+          if (__paused) {
+            return;
+          }
+          // Is a stopwatch - no need to pause it
+          if (!__end) {
+            return;
+          }
+          that.trigger.togglePause();
+        };
         that.trigger.togglePause = function () //{{{
         {
           ml.assert(__paused === undefined || __paused.constructor === Number);
@@ -903,6 +914,7 @@ export default ctObj;
         interface_.start_ = ct__.trigger.start__;
         interface_.stop_ = ct__.trigger.stop__;
         interface_.togglePause = ct__.trigger.togglePause;
+        interface_.ensurePause = ct__.trigger.ensurePause;
         interface_.toggleStop = ct__.trigger.toggleStop;
         interface_.kill = ct__.kill;
       })();
@@ -979,8 +991,8 @@ export default ctObj;
         }
         if (thisTimer.dom.pauseBtn) {
           thisTimer.dom.pauseBtn.onclick = function () {
-            if (__type !== ctObj.TYPES.ALARM || __isRinging)
-              interface_.togglePause();
+            // if (__type !== ctObj.TYPES.ALARM || __isRinging)
+            interface_.togglePause();
           };
         }
         /*
@@ -1011,6 +1023,7 @@ export default ctObj;
       thisTimer.toggleStop = interface_.toggleStop;
       thisTimer.kill = interface_.kill;
       //thisTimer.togglePause = interface_.togglePause;
+      thisTimer.ensurePause = interface_.ensurePause;
 
       return thisTimer;
     };

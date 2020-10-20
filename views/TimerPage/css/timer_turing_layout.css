@@ -182,7 +182,7 @@ table td {
 /* vertical strip */
 /* {{{ */
 html:not(.alarm) #alarmTime,
-html.alarm body:not(.ringing) #pause {
+html.alarm body:not(.ringing):not(.paused) #pause {
   display: none;
 }
 #vertical td {
