@@ -8,11 +8,11 @@ import {
 } from "./youtubeAlarm";
 import { audioStart, audioStop } from "./audioAlarm";
 import { sleep } from "../../../../tab-utils/sleep";
-import { AsyncState, IsLastUpdate } from "../../../../tab-utils/AsyncState";
+import { AsyncState, IsNotLastUpdate } from "../../../../tab-utils/AsyncState";
 
 export { notifyStart, notifyStop, notifyUpdate, debugLog };
 
-const YOUTUBE_TIMEOUT = 4;
+const YOUTUBE_TIMEOUT = 5;
 
 /*
 const DEBUG_NOTIFY = false;
@@ -20,16 +20,17 @@ const DEBUG_NOTIFY = false;
 const DEBUG_NOTIFY = true;
 //*/
 
-const { state, runUpdate } = new AsyncState<{ isStarted: true | undefined }>(
+const { state, runUpdate } = new AsyncState<{ isStarted: boolean }>(
+  { isStarted: false },
   update
 );
 
 function notifyStop() {
-  debugLog("notifyStop");
-  state.isStarted = undefined;
+  debugLog("[notify] notifyStop");
+  state.isStarted = false;
 }
 function notifyStart() {
-  debugLog("notifyStart");
+  debugLog("[notify] notifyStart");
   state.isStarted = true;
 }
 // For when the user:
@@ -39,29 +40,28 @@ function notifyUpdate() {
   runUpdate();
 }
 
-function update(isLastUpdate: IsLastUpdate) {
-  if (state.isStarted === undefined) {
+function update(isNotLastUpdate: IsNotLastUpdate) {
+  if (!state.isStarted) {
     stop();
   }
-  if (state.isStarted === true) {
+  if (state.isStarted) {
     stop();
-    start(isLastUpdate);
+    start(isNotLastUpdate);
   }
 }
 
 function stop() {
-  debugLog("notify[stop]");
+  debugLog("[notify] stop");
   youtubeStop();
   audioStop();
 }
 
-async function start(isLastUpdate: IsLastUpdate) {
-  debugLog("notify[start]");
+async function start(isNotLastUpdate: IsNotLastUpdate) {
+  debugLog("[notify] start");
   assert(state.isStarted === true);
 
   const noYoutube = youtubeNoUrl();
-  debugLog("notify[start] youtubeNoUrl:", noYoutube);
-
+  debugLog("[notify] youtubeNoUrl():", noYoutube);
   if (noYoutube) {
     audioStart();
     return;
@@ -71,16 +71,15 @@ async function start(isLastUpdate: IsLastUpdate) {
 
   await sleep({ seconds: YOUTUBE_TIMEOUT });
 
-  if (!isLastUpdate()) {
-    // A more recent call takes over
-    return;
-  }
+  // A more recent call takes over
+  if (isNotLastUpdate()) return;
+
   // Since it is the last call, `isStarted` is left untouched.
   const { isStarted } = state;
   assert(isStarted === true, { isStarted });
 
   const ytIsPlaying = youtubeIsPlaying();
-  debugLog("notify[start] youtubeIsPlaying:", ytIsPlaying);
+  debugLog("[notify] youtubeIsPlaying:", ytIsPlaying);
   if (!ytIsPlaying) {
     youtubeStop();
     audioStart();

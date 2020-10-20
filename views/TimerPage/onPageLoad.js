@@ -4,6 +4,7 @@ import auto_remove_hash from "../../tab-utils/auto_remove_hash";
 import { ad_slots } from "./ad_slots";
 import { load_ads } from "../../tab-utils/load_ad";
 import { audioPrefetch } from "./js/notify/audioAlarm";
+import { youtubePrefetch } from "./js/notify/youtubeAlarm";
 
 export default onPageLoad;
 
@@ -16,8 +17,9 @@ async function onPageLoad(load_common) {
 
   load_common();
 
+  youtubePrefetch();
+
   audioPrefetch();
-  // YouTube prefetches when `youtubeSetUrl` is run
 
   load_ads(ad_slots);
 }

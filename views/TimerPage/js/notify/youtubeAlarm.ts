@@ -2,7 +2,7 @@
 import assert from "@brillout/assert";
 import "./youtubeAlarm.css";
 import { notifyUpdate, debugLog } from "./index";
-import { AsyncState, IsLastUpdate } from "../../../../tab-utils/AsyncState";
+import { AsyncState, IsNotLastUpdate } from "../../../../tab-utils/AsyncState";
 
 export {
   youtubeStart,
@@ -10,84 +10,125 @@ export {
   youtubeIsPlaying,
   youtubeSetUrl,
   youtubeNoUrl,
+  youtubePrefetch,
+  //youtubeDisabled,
 };
 
-const youtube_wrapper = "youtube_wrapper";
-const youtube_iframe = "youtube_iframe";
+const YOUTUBE_WRAPPER_ID = "youtube_wrapper";
+const YOUTUBE_IFRAME_ID = "youtube_iframe";
 
-const { state } = new AsyncState<{ isStarted: true | undefined }>(update);
+const { state } = new AsyncState<{
+  isStarted: boolean;
+  youtubeUrl: string;
+  prefetchEnabled: boolean;
+}>({ isStarted: false, youtubeUrl: "", prefetchEnabled: false }, update);
 
 function youtubeStart() {
   state.isStarted = true;
 }
 function youtubeStop() {
-  state.isStarted = undefined;
+  state.isStarted = false;
 }
-function update(isLastUpdate: IsLastUpdate) {
-  if (state.isStarted === undefined) {
-    stop(isLastUpdate);
+function youtubeNoUrl() {
+  return state.youtubeUrl === "";
+}
+function youtubeSetUrl(youtubeUrl: string) {
+  state.youtubeUrl = youtubeUrl;
+
+  // User has changed the theme or the youtube alarm
+  // Update the whole notification logic
+  notifyUpdate();
+}
+function youtubePrefetch() {
+  state.prefetchEnabled = true;
+}
+/*
+youtubeDisabled
+function neverPlayedBefore() {
+  // Was the playing state was ever achieved?
+  // If not, the prefetching didn't work (/happened yet)
+  return stateChanges.includes(1);
+}
+*/
+
+function update(isNotLastUpdate: IsNotLastUpdate) {
+  assert(state.youtubeUrl.constructor === String);
+
+  if (!state.isStarted) {
+    stop(isNotLastUpdate);
+    if (state.youtubeUrl && state.prefetchEnabled) {
+      prefetch(isNotLastUpdate);
+    }
   }
-  if (state.isStarted === true) {
-    start(isLastUpdate);
+
+  if (state.youtubeUrl !== "" && state.isStarted) {
+    start(isNotLastUpdate);
   }
 }
 
-async function start(isLastUpdate: IsLastUpdate) {
-  debugLog("start youtube");
+async function start(isNotLastUpdate: IsNotLastUpdate) {
+  debugLog("[youtube] start youtube alarm (attempt)");
 
   const player = await load_player();
-  // Abort if `youtubeStart` was called again in the meantime
-  if (!isLastUpdate()) return;
-
-  if (youtubeNoUrl()) {
-    youtubeStop();
-    return;
-  }
+  if (isNotLastUpdate()) return;
 
   playerStart(player);
 
   document
-    .querySelector("#" + youtube_wrapper)
+    .querySelector("#" + YOUTUBE_WRAPPER_ID)
     .classList.add("youtube_alarm_show");
 
-  debugLog("start youtube - finish");
+  debugLog("[youtube] start youtube alarm (success)");
 }
 function playerStart(player: Player) {
-  player.unMute();
   loadVideo(player);
+  player.unMute();
   player.setLoop(true);
 }
 
-async function stop(isLastUpdate: IsLastUpdate) {
-  debugLog("stop youtube");
+async function stop(isNotLastUpdate: IsNotLastUpdate) {
+  debugLog("[youtube] stop youtube alarm (attempt)");
 
   const player = await load_player();
-  if (!isLastUpdate()) return;
+  if (isNotLastUpdate()) return;
 
   document
-    .querySelector("#" + youtube_wrapper)
+    .querySelector("#" + YOUTUBE_WRAPPER_ID)
     .classList.remove("youtube_alarm_show");
 
   playerStop(player);
 
-  debugLog("stop youtube - finish");
+  debugLog("[youtube] stop youtube alarm (success)");
 }
 function playerStop(player: Player) {
   player.mute();
   player.setLoop(false);
 }
 
-async function prefetch() {
+var lastPrefetch: string;
+async function prefetch(isNotLastUpdate: IsNotLastUpdate) {
+  debugLog("[youtube] prefetching (attempt)");
+
   const player = await load_player();
-  assert(!youtubeNoUrl());
+  if (isNotLastUpdate()) return;
+
+  // Once we load a Youtube video we never stop it
+  // `stop` only mutes the video, it doesn't actually stop it
+  if (lastPrefetch === state.youtubeUrl) return;
+
   player.mute();
   player.setLoop(false);
   loadVideo(player);
+
+  lastPrefetch = state.youtubeUrl;
+
+  debugLog("[youtube] prefetching (success)");
 }
 
 var loadedVideoId: VideoId;
 function loadVideo(player: Player) {
-  const { video_id, video_start } = video_spec;
+  const { video_id, video_start } = parse_youtube_url(state.youtubeUrl);
+
   if (video_id !== loadedVideoId) {
     loadedVideoId = video_id;
     player.loadVideoById({
@@ -95,75 +136,9 @@ function loadVideo(player: Player) {
       startSeconds: video_start,
     });
   } else {
-    player.playVideo();
     player.seekTo(video_start);
+    player.playVideo();
   }
-}
-
-type VideoSpec = {
-  video_id: VideoId;
-  video_start: VideoStart;
-  video_repeat: boolean;
-};
-
-let video_spec: VideoSpec;
-let resolve__video_spec: (video_spec: VideoSpec) => void;
-let wait_for_video_spec = new Promise<VideoSpec>(
-  (r) => (resolve__video_spec = r)
-);
-let last_youtube_url: string;
-function youtubeSetUrl(youtube_url: string) {
-  assert(youtube_url.constructor === String);
-  if (last_youtube_url === youtube_url) {
-    return;
-  }
-  last_youtube_url = youtube_url;
-
-  video_spec = parse_youtube_url(youtube_url);
-  resolve__video_spec(video_spec);
-
-  if (!youtubeNoUrl()) {
-    prefetch();
-  }
-
-  // User has changed the theme or the youtube alarm
-  // Update the whole notification logic
-  notifyUpdate();
-}
-function youtubeNoUrl() {
-  const { video_id } = video_spec;
-  assert(video_id || video_id === null);
-  return video_id === null;
-}
-
-type VideoId = string & { _brand?: "VideoId" };
-type PlayerOptions = {
-  // videoId: VideoId;
-  events: {
-    onReady: () => void;
-    onStateChange: ({ data: number }) => void;
-  };
-  height: string;
-  width: string;
-  playerVars: {
-    controls: number;
-    modestbranding: number;
-    rel: number;
-    color: string;
-  };
-};
-type VideoStart = number & { _brand?: "VideoId" };
-declare class Player {
-  public constructor(elementId: string, opts: PlayerOptions);
-  playVideo: () => void;
-  seekTo: (time: number) => void;
-
-  loadVideoById: (args: { videoId: VideoId; startSeconds: VideoStart }) => void;
-
-  mute: () => void;
-  unMute: () => void;
-
-  setLoop: (val: boolean) => void;
 }
 
 declare global {
@@ -189,10 +164,7 @@ async function load_player() {
   player__promise = new Promise<Player>((r) => (resolve = r));
 
   window.onYouTubeIframeAPIReady = async () => {
-    await wait_for_video_spec;
-
-    const player = new window.YT.Player(youtube_iframe, {
-      // videoId: video_spec.video_id,
+    const player = new window.YT.Player(YOUTUBE_IFRAME_ID, {
       events: {
         onReady: () => {
           player__loaded = player;
@@ -230,10 +202,8 @@ function onStateChange(event: { data: number }) {
   stateChanges = stateChanges || [];
   stateChanges.push(state);
 
-  /*
   const time = new Date().toTimeString().split(" ")[0];
-  console.log("[YOUTUBE][" + time + "] event.data", event.data);
-  //*/
+  debugLog(`[youtube] player state: ${state} (${time})`);
 }
 function youtubeIsPlaying(): boolean {
   // Ignoring buffering state, is the last state is playing, then `return true`
@@ -252,15 +222,42 @@ function youtubeIsPlaying(): boolean {
 
   return false;
 }
-/*
-function neverPlayedBefore() {
-  // Was the playing state was ever achieved?
-  // If not, the prefetching didn't work (/happened yet)
-  return stateChanges.includes(1);
-}
-*/
 
-function parse_youtube_url(url: string) {
+type VideoSpec = {
+  video_id: VideoId;
+  video_start: VideoStart;
+  video_repeat: boolean;
+};
+
+type VideoId = string & { _brand?: "VideoId" };
+type PlayerOptions = {
+  events: {
+    onReady: () => void;
+    onStateChange: ({ data: number }) => void;
+  };
+  height: string;
+  width: string;
+  playerVars: {
+    controls: number;
+    modestbranding: number;
+    rel: number;
+    color: string;
+  };
+};
+type VideoStart = number & { _brand?: "VideoId" };
+declare class Player {
+  public constructor(elementId: string, opts: PlayerOptions);
+  playVideo: () => void;
+  seekTo: (time: number) => void;
+
+  loadVideoById: (args: { videoId: VideoId; startSeconds: VideoStart }) => void;
+
+  mute: () => void;
+  unMute: () => void;
+
+  setLoop: (val: boolean) => void;
+}
+function parse_youtube_url(url: string): VideoSpec {
   assert(url.constructor === String);
 
   //sanetize URL
@@ -276,13 +273,11 @@ function parse_youtube_url(url: string) {
   //video_repeat_=/(?:\?|&)(repeat|loop)/.test(url);
   const video_repeat: boolean = /repeat|replay|loop/.test(url);
 
-  const video_spec = {
+  return {
     video_start,
     video_id,
     video_repeat,
   };
-
-  return video_spec;
 }
 function url_to_id(url: string): string | null {
   //ID chars: /[a-zA-Z0-9-_]+/ --http://stackoverflow.com/questions/830596/what-type-of-id-does-youtube-use-for-their-videos

@@ -10,43 +10,48 @@ export { audioStart, audioStop, audioPrefetch };
 // ** Synchronization **
 // We need to ensure that `pause` is always waiting on the `play` promise.
 // See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
-const { state } = new AsyncState<{ isStarted: true | undefined }>(update);
+const { state } = new AsyncState<{ isStarted: boolean }>(
+  { isStarted: false },
+  update
+);
 
 function audioStart() {
   state.isStarted = true;
 }
 function audioStop() {
-  state.isStarted = undefined;
+  state.isStarted = false;
 }
 async function update() {
-  if (state.isStarted === undefined) {
+  if (!state.isStarted) {
     stop();
   }
-  if (state.isStarted === true) {
+  if (state.isStarted) {
     await start();
   }
 }
 
 async function start() {
-  debugLog("start audio - begin");
+  debugLog("[audio] start (attempt)");
   install_audio_tag();
 
   audio_tag.muted = false;
   audio_tag.loop = true;
   audio_tag.currentTime = 0;
 
+  let failed = true;
   try {
     await audio_tag.play();
+    failed = false;
   } catch (err) {
     // May fail when user hasn't interacted with Timer Tab:
     //   Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
     console.warn(err);
   }
-  debugLog("start audio - finish");
+  debugLog(`[audio] start (${failed ? "failed" : "success"})`);
 }
 
 function stop() {
-  debugLog("stop audio");
+  debugLog("[audio] stop");
   if (!audio_tag) return;
   audio_tag.pause();
 }
