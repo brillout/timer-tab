@@ -674,6 +674,7 @@ function load_timer() {
           })[0]
           .onsubmit();
       if (firstInit) {
+        // TODO: if PWA => don't ensure pause
         timer_.ensurePause();
         ml.safe_call(postInitListeners);
         firstInit = false;
