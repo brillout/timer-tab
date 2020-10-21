@@ -12,7 +12,7 @@ import { preset_concept_name } from "./js/preset_concept_name";
 import { ad_slots } from "./ad_slots";
 import assert from "@brillout/assert";
 import { Ad_btf_2, Ad_ATF, Ad_left } from "../../tab-utils/load_ad";
-import { HotNews } from "../HotNews";
+//import { HotNews } from "../HotNews";
 import { ProductsView } from "../../tab-utils/ads/Products/ProductsView";
 
 export default TimerView;
@@ -33,7 +33,7 @@ function TimerView() {
           <Ad_btf_2 ad_slots={ad_slots} />
           <SettingsView preset_concept_name={preset_concept_name} />
           <ProductsView ad_slots={ad_slots} />
-          <HotNews />
+          {/* <HotNews /> */}
         </MorePanel>
       </RightSide>
     </FullViewLayout>

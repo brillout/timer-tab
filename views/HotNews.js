@@ -1,3 +1,4 @@
+/*
 import React from "react";
 
 export { HotNews };
@@ -42,3 +43,4 @@ function HotNews() {
 function Date({ children }) {
   return <div style={{ marginTop: 11, marginBottom: -11 }}>{children}</div>;
 }
+*/
