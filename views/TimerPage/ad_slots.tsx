@@ -1,9 +1,10 @@
 import monitor_banner_img from "./monitor-banner-tt.png";
 import React from "react";
+import { AdSlots } from "../../tab-utils/ads/adSlots";
 
 export { ad_slots };
 
-const ad_slots = [
+const ad_slots: AdSlots = [
   /*
   {
     slot_id: "1234567",
@@ -35,6 +36,7 @@ const ad_slots = [
     slot_id: "ezoic-pub-ad-placeholder-105",
     slot_name: "BTF_2",
   },
+  /*
   {
     img_src: monitor_banner_img,
     click_name: "monitor_banner",
@@ -73,4 +75,5 @@ const ad_slots = [
       "https://www.amazon.com/Secura-60-Minute-Mechanical-Countdown-Collapsible/dp/B07PKTNYWQ/ref=as_li_ss_tl?ie=UTF8&linkCode=ll1&tag=brilloutamazo-20&linkId=45b1e1943b94d959de9572cc73d372d1",
     is_product: true,
   },
+   */
 ];
