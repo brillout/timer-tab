@@ -14,7 +14,7 @@ export { notifyStart, notifyStop, notifyUpdate, debugLog };
 
 const YOUTUBE_TIMEOUT = 5;
 
-/*
+//*
 const DEBUG_NOTIFY = false;
 /*/
 const DEBUG_NOTIFY = true;
