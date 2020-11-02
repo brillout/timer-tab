@@ -1,4 +1,4 @@
-import { AdSlots } from "../../tab-utils/ads/adSlots";
+import { AdSlots } from "../../tab-utils/ads/slots";
 
 export { adSlots };
 
