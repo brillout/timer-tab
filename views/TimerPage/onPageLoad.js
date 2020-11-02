@@ -1,7 +1,7 @@
 import load_timer from "./js/load_timer";
 import { init_timer_settings } from "./init_timer_settings";
 import auto_remove_hash from "../../tab-utils/auto_remove_hash";
-import { ad_slots } from "./ad_slots";
+import { adSlots } from "./adSlots";
 import { audioPrefetch } from "./js/notify/audioAlarm";
 import { youtubePrefetch } from "./js/notify/youtubeAlarm";
 import { loadAds } from "../../tab-utils/ads/loadAds";
@@ -21,7 +21,7 @@ async function onPageLoad(load_common) {
 
   audioPrefetch();
 
-  loadAds(ad_slots);
+  loadAds(adSlots);
 }
 
 /* TODO
