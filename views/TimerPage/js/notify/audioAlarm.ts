@@ -1,9 +1,8 @@
+import { AsyncState } from "../../../../tab-utils/AsyncState";
+import { debugLog } from "./index";
 // @ts-ignore
 import glockenklang from "./glockenklang.ogg";
-
-import { AsyncState } from "../../../../tab-utils/AsyncState";
-
-import { debugLog } from "./index";
+const NUMBER_OF_REPEATS = 4;
 
 export { audioStart, audioStop, audioPrefetch };
 
@@ -47,7 +46,35 @@ async function start() {
     //   Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
     console.warn(err);
   }
+
+  stopAfterRepeats(failed);
+
   debugLog(`[audio] start (${failed ? "failed" : "success"})`);
+}
+
+function stopAfterRepeats(failed: boolean) {
+  if (failed) return;
+
+  let repeat = NUMBER_OF_REPEATS;
+  const onEnd = () => {
+    if (!state.isStarted) {
+      clean();
+      return;
+    }
+    repeat = repeat - 1;
+    if (repeat < 0) {
+      clean();
+      stop();
+    }
+  };
+
+  const clean = () => {
+    delete audio_tag.ontimeupdate;
+  };
+  audio_tag.ontimeupdate = () => {
+    if (audio_tag.currentTime !== 0) return;
+    onEnd();
+  };
 }
 
 function stop() {
