@@ -1,21 +1,22 @@
-import { AsyncState } from "../../../../tab-utils/AsyncState";
-import { debugLog } from "./index";
 // @ts-ignore
 import glockenklang from "./glockenklang.ogg";
-const NUMBER_OF_REPEATS = 4;
+import { AsyncState } from "../../../../tab-utils/AsyncState";
+import { debugLog } from "./index";
+
+const ALARM_DURATION_SECONDS = 50;
 
 export { audioStart, audioStop, audioPrefetch };
 
 // ** Synchronization **
 // We need to ensure that `pause` is always waiting on the `play` promise.
 // See https://developers.google.com/web/updates/2017/06/play-request-was-interrupted
-const { state } = new AsyncState<{ isStarted: boolean }>(
+const { state, runUpdate } = new AsyncState<{ isStarted: Date | false }>(
   { isStarted: false },
   update
 );
 
 function audioStart() {
-  state.isStarted = true;
+  state.isStarted = new Date();
 }
 function audioStop() {
   state.isStarted = false;
@@ -34,7 +35,6 @@ async function start() {
   install_audio_tag();
 
   audio_tag.muted = false;
-  audio_tag.loop = true;
   audio_tag.currentTime = 0;
 
   let failed = true;
@@ -47,33 +47,16 @@ async function start() {
     console.warn(err);
   }
 
-  stopAfterRepeats(failed);
-
   debugLog(`[audio] start (${failed ? "failed" : "success"})`);
 }
 
-function stopAfterRepeats(failed: boolean) {
-  if (failed) return;
-
-  let repeat = NUMBER_OF_REPEATS;
-  const onEnd = () => {
-    if (!state.isStarted) {
-      clean();
-      return;
+function loop(audio_tag: HTMLAudioElement) {
+  audio_tag.onended = () => {
+    if (!state.isStarted) return;
+    const audioDuration = new Date().getTime() - state.isStarted.getTime();
+    if (audioDuration < ALARM_DURATION_SECONDS * 1000) {
+      runUpdate();
     }
-    repeat = repeat - 1;
-    if (repeat < 0) {
-      clean();
-      stop();
-    }
-  };
-
-  const clean = () => {
-    delete audio_tag.ontimeupdate;
-  };
-  audio_tag.ontimeupdate = () => {
-    if (audio_tag.currentTime !== 0) return;
-    onEnd();
   };
 }
 
@@ -95,11 +78,15 @@ function install_audio_tag() {
   audio_tag = document.createElement("audio");
   audio_tag.id = "notify_sound";
   audio_tag.style.display = "none";
+
   const source_tag = audio_tag.appendChild(document.createElement("source"));
   //source_tag.type="audio/mpeg"; // for .mp3 files
   source_tag.type = "audio/ogg";
   source_tag.src = glockenklang;
+
   document.body.appendChild(audio_tag);
+
+  loop(audio_tag);
 }
 
 /*
