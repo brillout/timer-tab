@@ -1,0 +1,335 @@
+/* Layout - Overall */
+.pretty_scroll_area__hide_scroll_element {
+  position: relative;
+}
+.pretty_scroll_area__hide_scroll_element > #screen-buttons-wrapper {
+  position: absolute;
+}
+#screen-buttons-wrapper {
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.screen-button {
+  --height: 40px;
+  --margin: 10px;
+  height: var(--height);
+  margin-top: var(--margin);
+  white-space: nowrap;
+}
+
+/* Layout - Inside Button */
+.screen-button {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+.screen-button .button-icon {
+  vertical-align: middle;
+  position: relative;
+  --adjust-margin: calc(
+    -1 * (var(--icon-width) - var(--icon-default-width)) / 2
+  );
+  margin-right: var(--adjust-margin);
+  margin-left: var(--adjust-margin);
+}
+.screen-button .button-text {
+  position: relative;
+  top: 1px;
+}
+
+/* Text */
+#fullscreen-button .button-text::before {
+  content: "\A0\A0 Fullscreen";
+}
+#zoom-button .button-text::before {
+  content: "\A0\A0 Zoom in";
+}
+.zoomed-state #zoom-button .button-text::before {
+  content: "\A0\A0 Zoom out";
+}
+#settings-button .button-text::before {
+  content: "\A0\A0 Settings";
+}
+#donate-button .button-text::before,
+#width-setter-button .button-text::before {
+  content: "\A0\A0 Remove ads";
+}
+html:not(.show-ads) #donate-button .button-text::before {
+  content: "\A0\A0 Donate";
+}
+#thanks-button .button-text::before {
+  content: "\A0\A0 Thanks";
+}
+#center-button .button-text::before {
+  content: "\A0\A Center";
+}
+#center-button.auto-scroll-is-active .button-text::before {
+  content: "\A0\A Center";
+}
+@media (max-width: 849px) {
+  .screen-button {
+    padding: 11px;
+  }
+  .button-text {
+    display: none;
+  }
+}
+
+/* Icons */
+.screen-button .button-icon {
+  display: inline-block;
+  height: 15px;
+  --icon-default-width: 15px;
+  --icon-width: var(--icon-default-width);
+  width: var(--icon-width);
+  margin-top: -10px;
+  margin-bottom: -10px;
+
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#fullscreen-button .button-icon {
+  background-image: url(/fullscreen.hash_66d8040fda4e49d9985b774473848ea0.svg);
+}
+#zoom-button .button-icon {
+  background-image: url(/zoom-in.hash_0c9391bde77c301afa15b3f38a216605.svg);
+}
+.zoomed-state #zoom-button .button-icon {
+  background-image: url(/zoom-out.hash_ff64975ca091492672f413218fd8f36f.svg);
+}
+#settings-button .button-icon {
+  background-image: url(/settings.hash_45b5a358a0f030f7381537a43b4d573f.svg);
+  height: 17px;
+  --icon-width: 19px;
+}
+#donate-button .button-icon,
+#width-setter-button .button-text::before {
+  background-image: url(/sweep.hash_d27bc8a4563ebd25bf0e4fd5578af91d.svg);
+  height: 20px;
+  --icon-width: 20px;
+  margin-top: -2px;
+  margin-bottom: -2px;
+}
+html:not(.show-ads) #donate-button .button-icon {
+  background-image: url(/donate.hash_a0d107d677d1a39459f87c46a11a2179.svg);
+  height: 16px;
+  --icon-width: 16px;
+}
+#thanks-button .button-icon {
+  background-image: url(/thanks.hash_ab51482c374b085724c3f29b1b0d8f17.svg);
+  height: 16px;
+  --icon-width: 16px;
+}
+#center-button .button-icon {
+  background-image: url(/center.hash_8dd38704066e8fd9af355056dfa76415.svg);
+}
+#center-button.auto-scroll-is-active .button-icon {
+  transform: rotateZ(360deg);
+  background-image: url(/center__blinking.hash_d314a0d9dacc55d2fa768688948cff7d.svg);
+}
+
+/* Aesthetics */
+.screen-button {
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-color);
+}
+.screen-button {
+  position: relative;
+}
+.screen-button > .screen-button::before {
+  position: absolute;
+}
+.screen-button::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  content: "";
+  z-index: -1;
+  box-shadow: var(--common-shadow);
+}
+.screen-button::before,
+.screen-button > .button-background.glass-background,
+.screen-button > .button-background.glass-background::after {
+  border-radius: 8px;
+}
+.screen-button > .button-background {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+/* Function */
+#screen-buttons-wrapper {
+  pointer-events: none;
+}
+.screen-button {
+  pointer-events: all;
+}
+.screen-button {
+  opacity: 100;
+  visibility: visible;
+  --button-transition: opacity 0.7s ease-out;
+  transition: var(--button-transition);
+}
+.hide_scroll .screen-button {
+  pointer-events: none;
+  /* we set `visibility: hidden` in order to skip the animation computation of `center__blinking.svg` */
+  visibility: hidden;
+  opacity: 0;
+  --button-transition: visibility 0s 0.7s, opacity 0.7s ease-in;
+}
+#screen-buttons-wrapper {
+  --base-width: 16px;
+  right: calc(var(--base-width) + var(--scroll-bar-width));
+  transition: right 0.3s linear;
+}
+.hide_scroll #screen-buttons-wrapper {
+  right: var(--base-width);
+}
+html:not(.user-donated) #thanks-button {
+  display: none;
+}
+/* Donate button logic */
+#donate-button {
+  opacity: 100 !important;
+  visibility: visible !important;
+  pointer-events: all !important;
+}
+#donate-button {
+  transition: right 0.7s ease-out, margin-bottom 0.7s ease-out;
+  position: relative;
+  right: 0;
+  margin-bottom: 0;
+}
+html:not(.show-ads):not(.no-ads) #donate-button,
+html.user-donated #donate-button {
+  margin-bottom: calc(-1 * (var(--height) + var(--margin)));
+  right: -160px;
+}
+/* Width setter */
+/* Role of #width-setter-button: set the width of the screen button column. */
+/* So that column width is constant, no matter what buttons are shown. */
+#width-setter-button {
+  visibility: hidden !important;
+  pointer-events: all !important;
+}
+
+
+#header-container {
+  text-align: center;
+}
+#header-container > #header-content {
+  display: inline-flex;
+}
+
+.footer-section-title {
+  color: #5a5d61;
+}
+
+#footer_container {
+  padding-top: 40px;
+}
+
+.more_panel_block {
+  margin: auto;
+  max-width: var(--max-content-width);
+  padding-left: var(--content-side-padding);
+  padding-right: var(--content-side-padding);
+  padding-top: 17px;
+}
+.more_panel_block ~ .more_panel_block {
+  padding-top: 34px;
+}
+
+#fv_left-side {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+#fv_right-side {
+  flex-grow: 1;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+#fv_full-view-layout {
+  width: 100vw;
+  display: flex;
+  align-items: stretch;
+}
+
+#fv_left-side {
+  position: relative;
+}
+#fv_left-side > #fv_left-side_background {
+  position: absolute;
+}
+#fv_left-side_background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-right: 2px solid var(--text-color);
+}
+
+#fv_right-side > :not(.pretty_scroll_area__hide_scroll_element) {
+  padding-right: var(--scroll-bar-width);
+}
+
+:root {
+  --scroll-bar-width: 0px;
+}
+
+.pretty_scroll_area__parent {
+  overflow-x: hidden !important;
+}
+.pretty_scroll_area__parent > .pretty_scroll_area {
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  transition: width 0.3s linear !important;
+}
+.pretty_scroll_area__parent > .pretty_scroll_area > * {
+  /* We need to ensure that there is not overflow on the x-axis */
+  /* To create an x-axis scroll: create a new scrolling child element */
+  max-width: 100vw;
+}
+.pretty_scroll_area__parent > .pretty_scroll_area.hide_scroll {
+  width: calc(100vw + var(--scroll-bar-width)) !important;
+}
+
+.toastify,
+.toastify * {
+  cursor: default !important;
+}
+
+.zooming__scaler {
+  transform-origin: var(--zoom-center-x) var(--zoom-center-y);
+  transition: transform 0.6s ease;
+}
+.zoomed-state .zooming__scaler {
+  transform: translate(var(--translate-x), var(--translate-y))
+    scale(var(--scale));
+}
+
+.zoomed-state .zooming__overflow-container,
+.zooming__overflow-container.zoom-transition {
+  overflow: hidden !important;
+  /* I don't know why but 100% doesn't work for TT */
+  height: 100vh !important;
+  width: 100% !important;
+}
+
+.zooming__zoomable-element {
+  cursor: pointer;
+}
+
+
+/*# sourceMappingURL=timer.page.js.style.hash_796758830c445135c8a8.css.map*/

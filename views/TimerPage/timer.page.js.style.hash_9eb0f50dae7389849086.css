@@ -1,0 +1,1145 @@
+/* knowledge
+{{{
+
+ - css variables test: http://jsfiddle.net/3RnFR/
+  - chrome dev channel + enable flag "Enable experimental WebKit features."
+
+ - vh, vw, vmin, vmaxA
+   -font-size not adjusting on window resize: https://bugs.webkit.org/show_bug.cgi?id=106035
+   -not working inside calc: http://jsfiddle.net/EYZs5/
+   -http://caniuse.com/viewport-units
+
+
+ - mobile
+  - picker
+   - http://stackoverflow.com/questions/4946919/invoke-native-date-picker-from-web-app-on-ios-android
+   - http://stackoverflow.com/questions/4576281/jquery-date-time-picker-that-works-well-on-ios-android/4576291#4576291
+  - smoother movements -- html {-webkit-transform:translate3d(0px,0px,0px);}
+
+ - activate the GPU for compositing each page: html { -webkit-transform: translate3d(0, 0, 0); }
+  - made my previous OS version crash
+  - current version (feb 2013) makes pixely and sluggish
+
+}}}
+*/
+
+/*  general structure */
+/* {{{ */
+.timerInput {
+  width: 300px;
+  min-width: 300px;
+}
+#counter_wrapper {
+  width: 300px;
+  padding-top: 10px;
+  margin-top: 30px;
+  padding-bottom: 10px;
+}
+#counter {
+  width: 270px;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 10px;
+}
+#pause {
+  margin: auto;
+  display: block;
+}
+#alarmTime {
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+#middletable,
+#middletable > div {
+  height: 100%;
+}
+#timer_table {
+  display: table;
+
+  min-width: 100%;
+
+  /* min-height doesn't seem to have effect on a table
+  min-height: 100vh;
+  but height + hidden overflow seems to do the trick
+  */
+  height: 100vh;
+  overflow: hidden;
+}
+#timer_table > div {
+  display: table-row;
+}
+#bodypadding {
+  height: 7%;
+}
+#allcontent {
+  height: 100%;
+  margin: auto;
+}
+body.ringing #yt_vid_wrapper,
+#allcontent > div:first-child,
+#inputs,
+#stripH {
+  height: 150px;
+}
+#allcontent > div {
+  display: table-row;
+}
+
+.tr {
+  display: table-row;
+}
+.tr > div {
+  display: table-cell;
+}
+.timerInput {
+  display: table-cell;
+  vertical-align: middle;
+}
+#inputs tr {
+  vertical-align: top;
+}
+
+#filler {
+  display: table-row;
+}
+
+#vertical {
+  height: 100%;
+  display: table;
+}
+#stripH {
+  min-width: 100%;
+}
+#vertical,
+#inputs td {
+  width: 300px;
+}
+html.stopw #vertical {
+  margin-left: 600px;
+}
+html.alarm #vertical {
+  margin-left: 300px;
+}
+html.timer #vertical {
+  margin-left: 0px;
+}
+/*
+html #vertical
+{
+  -webkit-transform: translateX(600px);
+}
+html.alarm #vertical
+{
+  -webkit-transform: translateX(300px);
+}
+html.timer #vertical
+{
+  -webkit-transform: none;
+}
+*/
+#allcontent,
+#inputs,
+#head {
+  display: table;
+}
+
+#stripH {
+  position: absolute;
+  height: 150px;
+  width: 100%;
+}
+#stripV {
+  position: absolute;
+  height: 300%;
+  width: 300px;
+  bottom: 0;
+}
+#timer_table button {
+  padding: 8px 10px;
+}
+#vertical[data-name]:before {
+  content: attr(data-name);
+  font-size: 2em;
+  position: absolute;
+  display: inline-block;
+  top: -4%;
+  margin-top: -175px;
+  width: 100%;
+  text-align: center;
+}
+/* }}} */
+
+/* strips -- inner layout */
+/* {{{ */
+/* see http://stackoverflow.com/questions/339923/how-to-set-cellpadding-cellspacing-in-css */
+table {
+  border-spacing: 0;
+}
+table td {
+  padding: 0;
+}
+/* vertical strip */
+/* {{{ */
+html:not(.alarm) #alarmTime,
+html.alarm body:not(.ringing):not(.paused) #pause {
+  display: none;
+}
+#vertical td {
+  padding: 0;
+}
+#inputOverlap {
+  height: 150px;
+}
+#yt_vid_wrapper {
+  line-height: 0px;
+  font-size: 0px;
+  width: 100%;
+}
+/* }}} */
+/* horizontal strip */
+/* {{{ */
+#inputs {
+  font-size: 35px;
+}
+#inputs td {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+#timer_table #button {
+  font-size: 12px;
+}
+/*
+input.s
+{
+  position: relative;
+  margin-left: -12px;
+  left:         12px;
+}
+*/
+#timer_table input::-webkit-outer-spin-button,
+#timer_table input::-webkit-inner-spin-button {
+  /* hides controler buttons of input[type='number'] */
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+/*
+input.s,
+.win-timepicker-period
+{
+  -ms-transform:scale(0.7);
+  position: relative;
+  top:0.19em;
+  right:0.19em;
+}
+*/
+#inputs input {
+  width: 1.5em;
+  text-align: center; /*strangely text-algin value of body doesn't cascade on input*/
+}
+html.nevergoingtohappen {
+  background: red;
+} /*bugfix for cssmin.js*/
+/*warning: cssmin.js bugy when #inputs input selector used directly before*/
+#inputs input,
+select
+/*
+.win-timepicker-hour,
+.win-timepicker-minute,
+.win-timepicker-period
+*/ {
+  margin: 0px 7px !important;
+}
+select
+/*
+.win-timepicker-hour,
+.win-timepicker-minute,
+.win-timepicker-period
+*/ {
+  /*
+  min-width: 64px;
+  */
+  min-width: 50px !important;
+}
+.inputSep {
+  display: inline-block;
+  width: 0px;
+  position: relative;
+  left: -4px;
+  /*
+  letter-spacing: -3px;
+  position: relative;
+  left: -1px;
+  top: -1px;
+  */
+}
+.inputSep.s {
+  left: -3px;
+}
+/*
+.inputSep.s
+{
+  padding: 3px;
+}
+*/
+
+/* }}} */
+/* }}} */
+
+/* transitions & opacity & display */
+/* {{{ */
+#vertical,
+#timer_table button,
+#timer_table input,
+#counter {
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+}
+#vertical {
+  transition-property: none;
+}
+#counter {
+  transition-property: opacity;
+}
+#timer_table button,
+#timer_table input {
+  transition-property: background, color;
+}
+#yt_vid_wrapper {
+  transition: height 1.7s linear;
+}
+body.ringing #yt_vid_wrapper {
+  transition: height 0.7s linear;
+}
+
+/* }}} */
+
+/* text - I18N */
+
+/* text */
+/* {{{ */
+/*styles*/
+body.stoped #pause {
+  position: relative;
+  z-index: -1;
+  opacity: 0.7;
+}
+body.stoped #pause:before {
+  opacity: 0.5;
+}
+#alarmTime:before {
+  opacity: 0.7;
+  font-size: 15px;
+  white-space: pre;
+}
+/* }}} */
+
+/* strips */
+/* {{{ */
+#stripH:after,
+#stripV:after,
+#stripH:before,
+#stripV:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0; /*firefox*/
+}
+#stripH:after,
+#stripV:after {
+  background-color: rgba(255, 255, 255, 0.55);
+}
+#stripH:before,
+#stripV:before {
+  backdrop-filter: blur(var(--panel-bg-blur));
+}
+#stripV {
+  background-color: rgba(0, 0, 0, 0.065);
+}
+#stripH {
+  background-color: rgba(0, 0, 0, 0.07);
+}
+#stripV:before,
+#stripH:before {
+  z-index: -3;
+}
+#stripV:after,
+#stripH:after {
+  z-index: -2;
+}
+/* #head would sufficient if not for a chrome bug*/
+/*
+#head,
+*/
+#head > *,
+#inputs {
+  position: relative;
+  z-index: 1;
+}
+
+/* }}} */
+
+/* details */
+/* {{{ */
+body {
+  margin: 0;
+}
+html {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+/* for mobile: Native-style scrolling.
+http://developer.apple.com/library/safari/#documentation/appleapplications/reference/safaricssref/articles/standardcssproperties.html
+*/
+html {
+  -webkit-overflow-scrolling: touch;
+}
+#inputs form {
+  text-align: center;
+}
+#pause:before {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2NjIiB2aWV3Qm94PSIwIDAgMTUzNiAxNTM2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wIDcwdjEzOTZxMCAyOSAyMC41IDQ5LjV0NDkuNSAyMC41aDQ4OXEyOSAwIDQ5LjUgLTIwLjV0MjAuNSAtNDkuNXYtMTM5NnEwIC0yOSAtMjAuNSAtNDkuNXQtNDkuNSAtMjAuNWgtNDg5cS0yOSAwIC00OS41IDIwLjV0LTIwLjUgNDkuNXpNOTA3IDcwdjEzOTZxMCAyOSAyMC41IDQ5LjV0NDkuNSAyMC41aDQ4OXEyOSAwIDQ5LjUgLTIwLjV0MjAuNSAtNDkuNXYtMTM5NnEwIC0yOSAtMjAuNSAtNDkuNXQtNDkuNSAtMjAuNWgtNDg5IHEtMjkgMCAtNDkuNSAyMC41dC0yMC41IDQ5LjV6Ij48L3BhdGg+PC9zdmc+");
+}
+#timer_table button:before {
+  background-repeat: no-repeat;
+  background-position: 0px;
+  background-size: 13px;
+  padding-left: 20px;
+}
+#time:before {
+  position: relative;
+  top: -1px;
+  background-repeat: no-repeat;
+  background-position: 0px;
+  content: "";
+  padding-left: 25px;
+}
+#time {
+  font-size: 1.2em;
+}
+#verticalBottom {
+  padding-bottom: 5px;
+  padding-top: 12px;
+}
+
+.timerInput button:before,
+body.paused #pause:before {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2FjYWNhIiB2aWV3Qm94PSIwIDAgMTUzNiAxNTM2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wIDcwdjEzOTZxMCAzOSAzNSA2MHEzNyAyMyA2OSAwbDEyMTEgLTY5N3EzNSAtMjUgMzUgLTYxcTAgLTM3IC0zNSAtNjFsLTEyMTEgLTY5N3EtMTYgLTEwIC0zNCAtMTB0LTM1IDEwcS0zNSAyMCAtMzUgNjB6Ij48L3BhdGg+PC9zdmc+");
+}
+body.ringing #pause:before,
+body.stoped #pause:before {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2NjIiB2aWV3Qm94PSIwIDAgMTUzNiAxNTM2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0wIDcwdjEzOTZxMCAyOSAyMC41IDQ5LjV0NDkuNSAyMC41aDEzOTZxMjkgMCA0OS41IC0yMC41dDIwLjUgLTQ5LjV2LTEzOTZxMCAtMjkgLTIwLjUgLTQ5LjV0LTQ5LjUgLTIwLjVoLTEzOTZxLTI5IDAgLTQ5LjUgMjAuNXQtMjAuNSA0OS41eiI+PC9wYXRoPjwvc3ZnPg==");
+}
+#time:before {
+  background-image: url("data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjYmJiIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNIDI1Ni4wMCwwLjAwQyAxMTQuNjE1LDAuMDAsMC4wMCwxMTQuNjE1LDAuMDAsMjU2LjAwcyAxMTQuNjE1LDI1Ni4wMCwgMjU2LjAwLDI1Ni4wMHMgMjU2LjAwLTExNC42MTUsIDI1Ni4wMC0yNTYuMDBTIDM5Ny4zODUsMC4wMCwgMjU2LjAwLDAuMDB6IE0gMzI5LjM3MiwzNzQuNjI4TCAyMjQuMDAsMjY5LjI1NSBMIDIyNC4wMCwxMjguMDAgbCA2NC4wMCwwLjAwIGwwLjAwLDExNC43NDUgbCA4Ni42MjgsODYuNjI3TCAzMjkuMzcyLDM3NC42Mjh6Ij48L3BhdGg+PC9zdmc+");
+}
+/* TODO - remove .noIcons code
+html.noIcons button:before,
+html.noIcons #time:before {
+  background-image: none!important;
+  padding-left: 0!important;
+}
+*/
+#timer_table button::before,
+#timer_table button::after {
+  text-transform: uppercase;
+  display: inline-block;
+  height: 16px;
+  line-height: 19px;
+  vertical-align: middle;
+}
+#timer_table * {
+  -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+#timer_table input {
+  cursor: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -o-user-select: text;
+  user-select: text;
+}
+#timer_table button,
+#timer_table button *,
+#counter,
+#counter * {
+  cursor: pointer;
+}
+#pause {
+  /*make sure pause button is above counter*/
+  position: relative;
+  z-index: 9;
+}
+html:not(.stopw):not(.alarm):not(.timer) #vertical {
+  visibility: hidden;
+}
+/* }}} */
+
+/* fullscreen options */
+/* {{{ */
+html.fullscreenOptions #head > *:not(#verticalBottom) {
+  visibility: hidden;
+}
+html.fullscreenOptions #stripV {
+  height: 300%;
+  bottom: -100%;
+}
+/* }}} */
+
+/* common theme */
+/* {{{ */
+#inputs ::-webkit-input-placeholder {
+  opacity: 0.4;
+}
+#inputs :-moz-placeholder {
+  opacity: 0.4;
+}
+#inputs :-ms-input-placeholder {
+  color: rgba(0, 0, 0, 0.2);
+}
+.inputSep {
+  opacity: 0.5;
+}
+hr {
+  margin: 2px;
+}
+/* gray font */
+#verticalBottom,
+#vertical,
+#inputs {
+  color: #444;
+}
+/*
+#vertical,
+#inputs
+{
+  text-shadow: rgba(255,255,255,0.1) 0px 1px 0px;
+}
+*/
+body.paused #counter {
+  opacity: 0.3;
+}
+/* }}} */
+
+#verticalBottom {
+  display: flex;
+  justify-content: space-around;
+}
+
+#timer_table_scroll_area {
+  width: 100%;
+  overflow-x: auto;
+}
+
+#background-area-wrapper {
+  /* I'm not sure why the following is needed */
+  /* And why this is necessary for TT but not CT */
+  z-index: -2;
+}
+
+@media (max-width: 1099px) {
+  html {
+    --hide-left-ad: 1 !important;
+  }
+}
+
+#screen-buttons-wrapper {
+  z-index: 99999999;
+}
+
+/* font */
+/* {{{ */
+/*
+body,html,input,a
+{
+  font-family: Helvetica, Arial;
+}
+button
+{
+  font-family: arial,sans-serif;
+}
+*/
+#timer_table * {
+  font-family: "Lato", sans-serif;
+  font-weight: 300;
+}
+/* }}} */
+
+/* colors */
+/* {{{ */
+#timer_table input,
+#timer_table button {
+  background: rgba(255, 255, 255, 0.7);
+}
+#timer_table input.s {
+  color: #aaa;
+}
+/* button & input colors */
+#timer_table button,
+#timer_table input {
+  color: #666;
+}
+#timer_table button:hover,
+#timer_table button:focus,
+#timer_table input:hover,
+#timer_table input:focus {
+  background: rgba(255, 255, 255, 0.95);
+}
+/*split in two to get rid of following bug: scroll broken in the youtube url input when cursor moves out of visible area*/
+#timer_table button:hover,
+#timer_table button:focus,
+#timer_table #inputs input:hover,
+#timer_table #inputs input:focus {
+  color: #333;
+}
+/*
+button:after,
+a,
+#notiPermission,
+#install
+{
+  color: #33b;
+}
+*/
+
+/* selection styling only works in firefox for now */
+#timer_table input::selection {
+  background-color: rgba(48, 48, 178, 0.25); /* #33b ~= rgb(48,48,178) */
+}
+#timer_table input::-webkit-selection {
+  background-color: rgba(48, 48, 178, 0.25);
+}
+#timer_table input::-moz-selection /*firefox wants this selector to be alone*/ {
+  background-color: rgba(48, 48, 178, 0.25);
+}
+/* }}} */
+
+/* details (cursor+selectable+button+..) */
+/* {{{ */
+#timer_table button,
+#timer_table input {
+  outline: 0;
+  border: 0;
+  border-radius: 4px;
+}
+/* Remove button outline in Firefox, https://stackoverflow.com/questions/71074/how-to-remove-firefoxs-dotted-outline-on-buttons-as-well-as-links */
+button::-moz-focus-inner {
+  border: 0;
+}
+#timer_table button {
+  /* font-size: 12px; */
+  /* font-size: 4vw; */
+  font-weight: bold;
+  font-size: 13px;
+  max-width: 95%;
+  letter-spacing: 1px;
+  white-space: pre;
+}
+
+#timer_table #inputs input {
+  font-size: 100%;
+  padding: 0;
+  border: 0;
+}
+#timer_table .inputSep.s,
+#timer_table #inputs input.s {
+  font-size: 70%;
+  position: relative;
+  bottom: -2px;
+}
+#counter {
+  line-height: 0.8em;
+}
+/* }}} */
+
+#time {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.inputSep:before {
+  content: " : ";
+}
+
+#made_by:before {
+  content: "Made by ";
+}
+.timerInput button:before {
+  content: "start\A0\A0";
+}
+#timerButton:after {
+  content: "Countdown";
+}
+#alarmButton:after {
+  content: "Alarm Clock";
+}
+#stopwButton:after {
+  content: "Stopwatch";
+}
+#pause:before {
+  content: "pause";
+}
+body.ringing #pause:before,
+body.stoped #pause:before {
+  content: "stop";
+}
+body.paused #pause:before {
+  content: "resume";
+}
+#alarmTime:before {
+  content: "until ";
+}
+#hNoti > span:before {
+  content: "Popup-Notification";
+}
+#goto_description:before {
+  content: "YouTube Alarm";
+}
+#bg_description:before {
+  content: "Background";
+}
+/*
+#opt_name_desc:before {content:"Name:"}
+*/
+
+html.de #made_by:before {
+  content: "Hergestellt von ";
+}
+html.de .timerInput button:before {
+  content: "starte\A0\A0";
+}
+html.de #alarmButton:after {
+  content: "Wecker";
+}
+html.de #stopwButton:after {
+  content: "Stoppuhr";
+}
+html.de body.paused #pause:before {
+  content: "fortsetzen";
+}
+html.de #alarmTime:before {
+  content: "bis ";
+}
+html.de #hNoti > span:before {
+  content: "Popup-Notifizierung";
+}
+html.de #bg_description:before {
+  content: "Hintergrund";
+}
+
+html.fr #made_by:before {
+  content: "Crée par ";
+}
+html.fr .timerInput button:before {
+  content: "lancer\A0\A0";
+}
+html.fr #timerButton:after {
+  content: "Décompte";
+}
+html.fr #alarmButton:after {
+  content: "Réveil";
+}
+html.fr #stopwButton:after {
+  content: "Chronomètre";
+}
+html.fr body.paused #pause:before {
+  content: "continuer";
+}
+html.fr #alarmTime:before {
+  content: "jusqu'à ";
+}
+html.fr #hNoti > span:before {
+  content: "Notification Popup";
+}
+html.fr #goto_description:before {
+  content: "Alarme YouTube";
+}
+html.fr #bg_description:before {
+  content: "Arrière-Plan";
+}
+/*
+html.fr #opt_name_desc:before {content:"Nom:"}
+*/
+
+/* layout */
+/*
+#bodypadding .a-wrap {
+  position: relative;
+  z-index: 999990;
+}
+#bodypadding .a-wrap::after {
+  display: block;
+  content: "";
+  height: 20px;
+  width: 100px;
+}
+.screen-button {
+  position: relative;
+  z-index: 999991;
+}
+*/
+
+/* custom banner overrides */
+.custom-banner .vertical-slot-wrapper,
+.custom-banner #custom-banner {
+  height: 394px !important;
+}
+
+html {
+  --common-shadow: 0px 0px 7px -3px rgba(0, 0, 0, 0.65);
+}
+#more_panel,
+#header-container {
+  box-shadow: var(--common-shadow);
+}
+
+
+
+/* layout */
+@media (max-width: 729px) {
+  :root {
+    --ad-width: 320px;
+    --ad-height: 50px;
+  }
+}
+@media (min-width: 730px) {
+  :root {
+    --ad-width: 728px;
+    --ad-height: 90px;
+  }
+}
+:root {
+  --ad-remover-height: 24px;
+  --ad-border-width: 1px;
+}
+
+.horizontal-slot-wrapper,
+.horizontal-slot-wrapper .adsbygoogle {
+  display: block;
+  min-height: 20px;
+  max-height: var(--ad-height);
+  min-width: 20px;
+  max-width: var(--ad-width);
+  width: 100vw;
+  height: 100vh;
+}
+.horizontal-slot-wrapper {
+  /* avoids creeping out of ads when the user downsizes his browser */
+  overflow: hidden;
+}
+.horizontal-slot-wrapper {
+  margin: auto;
+  display: block;
+}
+
+/*
+.horizontal-slot-wrapper .adsbygoogle {
+  width: 550px;
+  height: 76px;
+  background: red;
+}
+*/
+
+/* function */
+
+html.no-ads .advi-wrap,
+html.no-ads .slot-left,
+html.no-ads .slot-BTF_2 {
+  display: none;
+}
+
+/* style */
+
+:root {
+  --ad-border-color: rgba(200, 200, 200, 0.7);
+}
+
+/* ad gray border */
+.horizontal-slot-wrapper {
+  border: var(--ad-border-width) solid var(--ad-border-color);
+  border-top-width: 0;
+  box-sizing: border-box !important;
+}
+
+.vertical-slot-wrapper {
+  /*
+  outline: 1px solid var(--ad-border-color);
+  */
+  margin-left: auto;
+  margin-right: auto;
+}
+.slot-left {
+  display: flex;
+  flex-direction: column;
+}
+.slot-left ~ .slot-left {
+  margin-top: 10px;
+}
+#ads-left {
+  position: relative;
+  z-index: 999999;
+}
+#ads-left:before {
+  position: absolute;
+  z-index: -1;
+  top: var(--header-height);
+  left: 0;
+}
+#ads-left:before {
+  content: "\A A \A d \A v \A e \A r \A t";
+  width: 100%;
+  height: 100vh;
+  font-size: 1.44em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  white-space: pre;
+}
+.vertical-slot-wrapper {
+  overflow: hidden;
+  max-width: 160px;
+}
+.slot-left .vertical-slot-wrapper .adsbygoogle {
+  display: block;
+  width: 160px;
+  height: 600px;
+}
+
+html {
+  --hide-left-ad: 0;
+}
+html:not(.show-ads) {
+  --hide-left-ad: 1;
+}
+
+#fv_left-side {
+  --width: 180px;
+  width: var(--width);
+
+  --margin-left: calc(var(--hide-left-ad) * -1 * var(--width));
+  margin-left: var(--margin-left);
+  transition: margin-left 0.7s ease-in-out;
+}
+
+#left-donate-icon,
+#left-donate-text {
+  vertical-align: middle;
+  display: inline-block;
+}
+#left-donate-icon {
+  background-image: url(/donate.hash_a0d107d677d1a39459f87c46a11a2179.svg);
+  height: 22px;
+  width: 22px;
+}
+#left-donate-icon {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+@media (max-width: 700px) {
+  .slot-left .vertical-slot-wrapper .adsbygoogle {
+    display: none !important;
+  }
+  html {
+    --hide-left-ad: 1;
+  }
+}
+
+.custom-banner #custom-banner {
+  cursor: pointer;
+}
+
+.slot-BTF_2 {
+  display: block;
+}
+
+.slot_btf_container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+html.is-dev:not(.user-donated) .slot-left .ezoic-dev-demo {
+  width: 160px;
+  height: 600px;
+}
+html.is-dev:not(.user-donated) .slot-BTF_2 .ezoic-dev-demo {
+  width: 728px;
+  height: 90px;
+}
+html.is-dev .slot-LEFT_AD_ATF {
+  background-color: green;
+}
+html.is-dev .slot-LEFT_AD_BTF {
+  background-color: yellow;
+}
+html.is-dev .slot-BTF_2 {
+  background-color: blue;
+}
+
+#youtube_wrapper:not(.youtube_alarm_show) {
+  position: absolute;
+  z-index: -999999;
+  visibility: hidden;
+  height: 0px;
+}
+#youtube_wrapper {
+  height: 150px;
+  overflow: hidden;
+  transition: height 0.7s;
+}
+
+/* transparent click-protecting cover */
+#youtube_wrapper {
+  position: relative;
+}
+#youtube_wrapper:before {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  cursor: pointer;
+  content: "";
+  display: block;
+}
+
+#background-area-wrapper {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+}
+#background-area {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /*
+  width: 100%;
+  */
+  width: 100vw;
+  height: 100vh;
+}
+#background-area {
+  background-repeat: no-repeat;
+  background-position: center;
+}
+#background-area.show-load-indicator::after {
+  content: "";
+  display: block;
+
+  background-image: url(/load_indicator.hash_c1ccd88e5782c1936f294ad043aa3b73.svg);
+
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  background-size: 50px;
+
+  background-repeat: no-repeat;
+  background-position: center;
+
+  pointer-events: none;
+}
+
+#more_panel {
+  --input-margin: 12px;
+}
+
+/* checkbox styling */
+input[type="checkbox"] {
+  background: #292a2d;
+  border: solid 1px #5e6064;
+  height: 16px;
+  width: 28px;
+  position: relative;
+  /*vertical-align: top;*/
+  margin-right: 3px;
+  -webkit-appearance: none;
+  -webkit-border-radius: 3px;
+  -webkit-transition: all 0.5s;
+}
+input[type="checkbox"]:after {
+  content: " ";
+  display: block;
+  width: 12px;
+  height: 12px;
+  background: #91949d;
+  position: absolute;
+  top: 1px;
+  left: 13px;
+  -webkit-border-radius: 2px;
+  -webkit-transition: all 0.5s;
+}
+input[type="checkbox"]:checked {
+  border: solid 1px #5ba4d5;
+  box-shadow: 0 0 5px #5ba4d5;
+}
+input[type="checkbox"]:checked:after {
+  background: #5ba4d5;
+  left: 1px;
+}
+
+label {
+  margin-right: var(--input-margin);
+  white-space: nowrap;
+  display: inline-block;
+}
+label > * {
+  margin: 2px;
+}
+
+label.pointer-cursor,
+label.pointer-cursor > * {
+  cursor: pointer !important;
+}
+
+/* vertical align options*/
+label:before {
+  content: " ";
+  height: 100%;
+  width: 0;
+}
+label:before,
+label > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* color input playground: http://jsfiddle.net/BC7JD/2/ */
+input[type="color"] {
+  padding: 0px;
+  height: 16px;
+  outline: 0;
+  border: 1px solid #888;
+  border-radius: 3px;
+}
+
+#share-content {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#share-container.no-share-link #share-content {
+  display: none;
+}
+#share-container:not(.no-share-link) #share-preamble {
+  display: none;
+}
+
+.action-button {
+  margin-right: var(--input-margin);
+}
+
+
+/*# sourceMappingURL=timer.page.js.style.hash_9eb0f50dae7389849086.css.map*/

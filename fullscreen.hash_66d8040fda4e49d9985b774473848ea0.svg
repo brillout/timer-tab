@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+  viewBox="0 0 20.0002 20.000198"
+  height="1.3333pc" width="1.3333pc"
+  style="stroke-linejoin:round;stroke:#373a4a;stroke-width:2;stroke-linecap:round;fill:none"
+>
+ <path d="m6.0001 1.0001h-3c-1.1046 0-2 .89543-2 2v3m13 13h3c1.1046 0 2-.89543 2-2v-3m-18 0v3c0 1.1046.89543 2 2 2h3"/>
+ <g transform="translate(-1.9741 -1.9998)">
+  <polyline points="15 3 21 3 21 9"/>
+  <line x2="14" y1="3" x1="21" y2="10"/>
+ </g>
+</svg>

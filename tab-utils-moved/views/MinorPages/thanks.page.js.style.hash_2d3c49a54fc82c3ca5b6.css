@@ -1,0 +1,83 @@
+/* layuout */
+#header-content,
+#page-wrapper {
+  margin: auto;
+  max-width: var(--max-content-width);
+  padding-left: var(--content-side-padding);
+  padding-right: var(--content-side-padding);
+  margin-bottom: 43px;
+}
+#footer_container {
+  margin-top: 50px;
+}
+h2 {
+  margin: 2.8rem 0 1.4rem;
+}
+h1 {
+  margin-top: 50px;
+}
+
+/* style */
+h1,
+h2 {
+  font-family: Lato, "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+}
+#page-wrapper {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+}
+h1,
+h2 {
+  font-weight: 500;
+}
+#page-wrapper {
+  font-size: 1.05em;
+}
+h2 {
+  font-size: 1.4rem;
+  font-style: normal;
+  letter-spacing: -0.03rem;
+  line-height: 2rem;
+}
+#footer_container {
+  color: #888;
+}
+.footer-section-title {
+  color: #999;
+}
+
+#page-wrapper {
+  color: #444;
+}
+h1 {
+  color: #333;
+}
+
+button[disabled] {
+  opacity: 0.4;
+}
+
+:root {
+  --scroll-bar-width: 0px;
+}
+
+.pretty_scroll_area__parent {
+  overflow-x: hidden !important;
+}
+.pretty_scroll_area__parent > .pretty_scroll_area {
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  transition: width 0.3s linear !important;
+}
+.pretty_scroll_area__parent > .pretty_scroll_area > * {
+  /* We need to ensure that there is not overflow on the x-axis */
+  /* To create an x-axis scroll: create a new scrolling child element */
+  max-width: 100vw;
+}
+.pretty_scroll_area__parent > .pretty_scroll_area.hide_scroll {
+  width: calc(100vw + var(--scroll-bar-width)) !important;
+}
+
+
+/*# sourceMappingURL=thanks.page.js.style.hash_2d3c49a54fc82c3ca5b6.css.map*/

@@ -1,0 +1,60 @@
+/* layuout */
+#header-content,
+#page-wrapper {
+  margin: auto;
+  max-width: var(--max-content-width);
+  padding-left: var(--content-side-padding);
+  padding-right: var(--content-side-padding);
+  margin-bottom: 43px;
+}
+#footer_container {
+  margin-top: 50px;
+}
+h2 {
+  margin: 2.8rem 0 1.4rem;
+}
+h1 {
+  margin-top: 50px;
+}
+
+/* style */
+h1,
+h2 {
+  font-family: Lato, "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+}
+#page-wrapper {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, sans-serif;
+}
+h1,
+h2 {
+  font-weight: 500;
+}
+#page-wrapper {
+  font-size: 1.05em;
+}
+h2 {
+  font-size: 1.4rem;
+  font-style: normal;
+  letter-spacing: -0.03rem;
+  line-height: 2rem;
+}
+#footer_container {
+  color: #888;
+}
+.footer-section-title {
+  color: #999;
+}
+
+#page-wrapper {
+  color: #444;
+}
+h1 {
+  color: #333;
+}
+
+button[disabled] {
+  opacity: 0.4;
+}
+
+
+/*# sourceMappingURL=repair.page.js.style.hash_a21a6668e8e2ec171ea1.css.map*/
