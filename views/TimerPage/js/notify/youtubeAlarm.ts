@@ -83,7 +83,7 @@ async function start(isNotLastUpdate: IsNotLastUpdate) {
 function playerStart(player: Player) {
   loadVideo(player);
   player.unMute();
-  player.setLoop(true);
+  // player.setLoop(true);
 }
 
 async function stop(isNotLastUpdate: IsNotLastUpdate) {
@@ -102,7 +102,7 @@ async function stop(isNotLastUpdate: IsNotLastUpdate) {
 }
 function playerStop(player: Player) {
   player.mute();
-  player.setLoop(false);
+  // player.setLoop(false);
 }
 
 var lastPrefetch: string;
@@ -117,7 +117,7 @@ async function prefetch(isNotLastUpdate: IsNotLastUpdate) {
   if (lastPrefetch === state.youtubeUrl) return;
 
   player.mute();
-  player.setLoop(false);
+  // player.setLoop(false);
   loadVideo(player);
 
   lastPrefetch = state.youtubeUrl;
