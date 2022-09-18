@@ -1,1 +1,13 @@
-tab-utils/_gitignore
+# jetbrains IDE settings
+.idea
+
+# Installed modules
+/node_modules/
+
+# Goldpage build
+.build/
+
+# Yarn/Npm debug info
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
