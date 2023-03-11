@@ -1,5 +1,7 @@
 export { PRESETS };
 
+// import miami_night_background from "../../backgrounds/miami_night.jpg"
+
 const PRESETS = {
   classic: {
     timer_background_color: "#FFFFFF",
@@ -12,6 +14,9 @@ const PRESETS = {
     timer_youtube_alarm: "https://www.youtube.com/watch?v=ziX9i7VKLQU",
   },
   miami_night: {
+    /* TODO
+    timer_background_image: miami_night_background,
+    */
     timer_background_image: "https://i.imgur.com/3lWI71b.jpg",
     // Original: https://www.youtube.com/watch?v=zZ0zPbh1QHE&feature=youtu.be&t=78
     timer_youtube_alarm: "https://www.youtube.com/watch?v=V6bhe6kiUko&t=78",

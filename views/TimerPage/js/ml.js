@@ -2166,6 +2166,7 @@ var scriptSource =
     //http://www.a-better-tomorrow.com/blog/wp-content/wallpaper_abt1.jpg
     //http://www.gowallpaper.net/wp-content/uploads/2011/04/Windows-7-3d-wide-wallpaper-1280x800.jpg
     //http://vistawallpapers.files.wordpress.com/2007/03/vista-wallpapers-69.jpg
+    //TODO: replace with downloaded loader icons at /tab-utils/utils/icons/loader-*.gif
     //TODO: replace with https://i.imgur.com/cvyOo.gif
     var LOAD_IMG_URL = "https://i.imgur.com/zqG5F.gif";
 
